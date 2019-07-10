@@ -5,6 +5,8 @@
 #ifndef BUS_DEF_HPP
 #define BUS_DEF_HPP
 
+//bug fix for rtl/c simulation
+#define __gmp_const const
 #include "ap_int.h"
 #include "hls_math.h"
 
@@ -18,8 +20,10 @@
 #define W_L1_ORDER 16 //width of l1 position integer in bits -> 2^16 * avgerage big chunk size(2 MB) = 130 GB
 #define W_L2_ORDER 16 //width of l2 position integer in bits -> 2^16 * average small chunk size(512 bytes) > average big chunk size(2MB)
 //relational definitions
-#define SC_STREAM_SIZE ((int) 40 * SMALL_CHUNK_SIZE/W_DATA) //size of data array containing a small chunk
-#define BC_STREAM_SIZE ((int) (BIG_CHUNK_SIZE+40*SMALL_CHUNK_SIZE)/W_DATA) //size of data array containing a big chunk
+#define MAX_SMALL_CHUNK_SIZE  	((int) 40 * SMALL_CHUNK_SIZE) //maximum size of a small chunk in bits
+#define MAX_BIG_CHUNK_SIZE		((int) MAX_SMALL_CHUNK_SIZE + BIG_CHUNK_SIZE) //maximum size of a big chunk in bits
+#define SC_STREAM_SIZE 			((int) MAX_SMALL_CHUNK_SIZE/W_DATA) //size of data array containing a small chunk
+#define BC_STREAM_SIZE 			((int) MAX_BIG_CHUNK_SIZE/W_DATA) //size of data array containing a big chunk
 // type definitions
 typedef ap_uint<W_DATA> c_data_t; //contains small and big chunks chunks
 typedef ap_uint<W_ADDR> addr_t; //adddr for BRAM access

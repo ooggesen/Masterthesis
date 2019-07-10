@@ -18,8 +18,6 @@ bool is_equal(const c_data_t a[SC_STREAM_SIZE], const c_data_t b[SC_STREAM_SIZE]
 //Small chunk packet operators initializations
 
 bool operator==(const sc_packet &a, const sc_packet &b){
-#pragma HLS PIPELINE II=1
-
 	if (a.hash != b.hash ||
 			a.is_duplicate != b.is_duplicate ||
 			a.l1_pos != b.l1_pos ||
@@ -41,7 +39,6 @@ bool operator!=(const sc_packet &a, const sc_packet &b){
  * Empty constructor of small chunk interface
  */
 sc_packet::sc_packet(){
-#pragma HLS PIPELINE II = 1
 	hash = 0;
 	size = 0;
 	l1_pos = 0;
@@ -56,7 +53,6 @@ sc_packet::sc_packet(){
  * Copy constructor of small chunk interface
  */
 sc_packet::sc_packet(const sc_packet &in){
-#pragma HLS PIPELINE II=1
 	is_duplicate = in.is_duplicate;
 	l1_pos = in.l1_pos;
 	l2_pos = in.l2_pos;
@@ -85,8 +81,6 @@ bool operator!=(const bc_packet &a, const bc_packet &b){
  * Empty constructor of big chunk bus interface
  */
 bc_packet::bc_packet(){
-#pragma HLS PIPELINE II=1
-
 	size = 0;
 	l1_pos = 0;
 }
@@ -97,8 +91,6 @@ bc_packet::bc_packet(){
  * Copy constructor of big chunk interface
  */
 bc_packet::bc_packet(const bc_packet &in){
-#pragma HLS PIPELINE II=1
-
 	l1_pos = in.l1_pos;
 	size = in.size;
 }
