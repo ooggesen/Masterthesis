@@ -5,6 +5,8 @@
 #include "bus_def.hpp"
 #include "reorder_buffer.hpp"
 //vitis libraries
+#define __gmp_const const
+#include "ap_int.h"
 #include "hls_stream.h"
 #include "hls_math.h"
 //std libraries

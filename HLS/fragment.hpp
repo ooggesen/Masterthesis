@@ -6,6 +6,7 @@
 #include "parsec/rabin.hpp"
 //vitis hls includes
 #include "hls_stream.h"
+#define __gmp_const const
 #include "ap_int.h"
 #include "hls_math.h"
 

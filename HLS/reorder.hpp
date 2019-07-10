@@ -7,6 +7,7 @@
 #include "reorder_buffer.hpp"
 //vitis libraries
 #include "hls_stream.h"
+#define __gmp_const const
 #include "ap_int.h"
 #include "hls_math.h"
 

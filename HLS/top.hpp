@@ -7,6 +7,7 @@
 #define NP_DEDUP 2
 
 //vitis hls includes
+#define __gmp_const const
 #include "ap_int.h"
 #include "hls_stream.h"
 #include "hls_math.h"

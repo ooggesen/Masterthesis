@@ -31,6 +31,10 @@
 #ifndef _XF_SECURITY_SHA1_HPP_
 #define _XF_SECURITY_SHA1_HPP_
 
+//bug fix for rtl/c simulation
+#include <gmp.h>
+#define __gmp_const const
+
 #include <ap_int.h>
 #include <hls_stream.h>
 
