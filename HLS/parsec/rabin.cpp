@@ -54,7 +54,7 @@ void rabininit(unsigned rabintab[], unsigned rabinwintab[]) {
 /*
  * Segments a unsigned byte FIFO into small grained chunks
  *
- * @param in : Input FIFO which contains continous data to be segmented
+ * @param in : Input FIFO which contains continuous data to be segmented
  * @param end: signals end of process -> if FIFO in is empty and end flag is set the process returns
  * @param out: empty FIFO which will hold exactly the data for one coarse grained chunk
  */
@@ -71,15 +71,14 @@ void rabinseg_in_stream(hls::stream< ap_uint< 8 > > &in,
 	unsigned h = 0;
 	unsigned x;
 
-	init_hash_from_stream: for (int i = 0; i < NWINDOW; i++) {
-#pragma HLS UNROLL
-		if (end && in.empty())
-			goto write_out_size;
-
+	init_hash: for (int i = 0; i < NWINDOW; i++) {
 		x = h >> 24;
 
-		unsigned char byte = in.read();
+		if (end && in.empty())
+			goto write_out_size;
+		ap_uint< 8 > byte = in.read();
 		size_buffer++;
+
 		h = (h << 8) | byte;
 		out.write(byte);
 		buffer.write(byte);
@@ -88,32 +87,30 @@ void rabinseg_in_stream(hls::stream< ap_uint< 8 > > &in,
 		h ^= rabintab[x];
 	}
 
-	if ((h & RabinMask) == 0)
-		goto write_out_size;
+    segment_stream: for (int i = 0 ; i < MAX_SMALL_CHUNK_SIZE/8 ; i++ ) {
+    	if ((h & RabinMask) == 0)
+    		goto write_out_size;
 
-    segment_stream: while (!in.empty() || !end) {
         x = buffer.read();
-
         h ^= rabinwintab[x];
-        x = h >> 24;
-        h <<= 8;
 
     	if (end && in.empty())
     		goto write_out_size;
-
-        unsigned char byte = in.read();
+        ap_uint< 8 > byte = in.read();
         size_buffer++;
-        h |= byte;
+
+        x = h >> 24;
+        h = byte | (h << 8);
+
         out.write(byte);
         buffer.write(byte);
 
         h ^= rabintab[x];
-        if ((h & RabinMask) == 0){
-        	goto write_out_size;
-        }
     }
 
     write_out_size:
+	while(!buffer.empty())
+		buffer.read();
 	size = size_buffer;
 }
 

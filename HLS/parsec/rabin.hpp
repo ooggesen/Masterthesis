@@ -5,6 +5,8 @@
 #include "../bus_def.hpp"
 #include "../parsec.hpp"
 //vitis hls includes
+#define __gmp_const const
+#include "ap_int.h"
 #include "hls_stream.h"
 
 /* Define USED macro */
