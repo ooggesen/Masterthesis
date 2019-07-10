@@ -2,12 +2,14 @@
 #define BRAM_HPP
 
 #include "bus_def.hpp"
+
+//bug fix for rtl/c simulation
 #include "hls_math.h"
 
-#define MAX_BRAM_SIZE 1024//(5 * BIG_CHUNK_SIZE / SMALL_CHUNK_SIZE) //number of small chunk packages the complete BRAM can hold
+#define MAX_BRAM_SIZE 512//(5 * BIG_CHUNK_SIZE / SMALL_CHUNK_SIZE) //number of small chunk packages the complete BRAM can hold
 
 //TODO change length of data stored in a bram cell
-#define BRAM_DEPTH ((int) SC_STREAM_SIZE/4)
+#define BRAM_DEPTH ((int) SC_STREAM_SIZE/4) //must be a fraction of SC_STREAM_SIZE
 struct bram_data{
 	c_data_t data[BRAM_DEPTH];
 	addr_t hash;
