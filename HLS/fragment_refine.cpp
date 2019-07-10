@@ -14,10 +14,9 @@ void read_in(hls::stream< bc_packet > &meta_in, hls::stream< c_data_t > &data_in
 		bc_packet packet = meta_in.read();
 		meta_out = bc_packet(packet);
 
-		read_bc_data: for (int i = 0 ; i < hls::ceil((double) packet.size.to_long()*8 / W_DATA) ; i++){
+		read_bc_data: for (int i = 0 ; i < hls::ceil((double) packet.size.to_long()*8 / W_DATA) || i < BC_STREAM_SIZE ; i++){
 			c_data_t data_in_buffer = data_in.read();
 			for (int j = 0 ; j < W_DATA/8 ; j++){
-#pragma HLS UNROLL
 				if (packet.size.to_long() > i*W_DATA/8 + j){
 					data_out.write(data_in_buffer.range(7 + 8*j, 8*j));
 				}
@@ -35,7 +34,7 @@ void convert_to_sc(bc_packet &meta_in,
 		hls::stream< sc_packet > &meta_out,
 		hls::stream< c_data_t > &data_out){
 	c_data_t c_data_buffer = 0;
-	convert_loop: for (int i = 0 ; i < hls::ceil((double)sc_size.to_long()*8 / W_DATA) ; i++){
+	convert_loop: for (int i = 0 ; i < hls::ceil((double)sc_size.to_long()*8 / W_DATA) || i < SC_STREAM_SIZE ; i++){
 		for (int j = 0 ; j < W_DATA/8 ; j++){
 #pragma HLS UNROLL
 			if (i*W_DATA/8 + j < sc_size.to_long()){

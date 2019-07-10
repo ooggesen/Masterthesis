@@ -39,7 +39,6 @@ static void write_out(hls::stream< ap_uint< 8 > > &buffer,
 
 		c_data_t c_buffer;
 		byte_to_c_data_t: for (int j = 0 ; j < W_DATA/8 ; j++){
-#pragma HLS LOOP_FLATTEN off
 			if (size.to_long() > i*W_DATA/8 + j)
 				c_buffer.range(7 + 8*j, 8*j) = buffer.read();
 			else
@@ -76,9 +75,13 @@ static void segment_bc_packet(hls::stream< ap_uint< 8 > > &in,
 }
 
 void fragment(hls::stream< ap_uint< 8 > > &in, bool end,  hls::stream< bc_packet > &meta, hls::stream< c_data_t > &data ){
-	hls::stream< ap_uint< 8 > , BC_STREAM_SIZE * W_DATA/8 > buffer("buffer"); //contains big chunk data
+#pragma HLS DATAFLOW
+	hls::stream< ap_uint< 8 > , MAX_BIG_CHUNK_SIZE > buffer("buffer"); //contains big chunk data
+	c_size_t size;
 	//intialize the rabin lookup tables
 	unsigned rabintab[256], rabinwintab[256];
+#pragma HLS BIND_STORAGE variable=rabintab type=ROM_1P
+#pragma HLS BIND_STORAGE variable=rabinwintab type=ROM_1P
 	rabininit(rabintab, rabinwintab);
 
 	//run segmentation until end
@@ -86,7 +89,6 @@ void fragment(hls::stream< ap_uint< 8 > > &in, bool end,  hls::stream< bc_packet
 	fragment_stream: while(!end || !in.empty()){
 #pragma HLS LOOP_FLATTEN off
 		//fill the buffer with a minimum of data for a big chunk packet
-		c_size_t size;
 		segment_bc_packet(in, end, buffer, size, rabintab, rabinwintab);
 
 		//convert to big chunk packet

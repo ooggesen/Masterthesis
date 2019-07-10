@@ -52,6 +52,7 @@ int fragment_tb(){
 		for (int  i = 0 ; i < hls::ceil((double) current_bc.size.to_long()*8 / W_DATA) ; i++){
 			c_data_t c_out_buffer = out_data.read();
 			c_data_t c_compare_buffer;
+			//build compare data as c_data_t
 			for (int j = 0 ; j < W_DATA/8 ; j++){
 				if (current_bc.size.to_long() > i*W_DATA/8 + j){
 					c_compare_buffer.range(7 + j*8, j*8) = compare_data.read();
