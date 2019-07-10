@@ -64,7 +64,6 @@ static void read_in(hls::stream< sc_packet > &meta_in,
 
 			//write to sha1 kernel
 			write_to_sha1_buff: for (int j = 0; j < W_DATA/32 ; j++){
-#pragma HLS UNROLL
 				// stop after the last package in stream
 				if (size_remaining - j*4 > 0){
 					sha1_msg.write(current.range(31 + 32 * j, 32 * j));
@@ -164,7 +163,6 @@ void dedup(hls::stream< sc_packet > &meta_in,
 	hls::stream< bool , 2 > sha1_end_digest("sha1_end_digest");
 
 	dedup_loop: while (!meta_in.empty() || !end){
-#pragma HLS PIPELINE
 		//flush the buffers
 		//reset_buffers(sha1_msg, sha1_len, sha1_end_len, sha1_digest, sha1_end_digest);
 
@@ -174,17 +172,16 @@ void dedup(hls::stream< sc_packet > &meta_in,
 		//calculate sha1 hash
 		xf::security::sha1< 32 >(sha1_msg, sha1_len, sha1_end_len, sha1_digest, sha1_end_digest);
 
+		flush_buffer<bool, 2>(sha1_end_digest);
 		//check for duplicate
-		parse_buffer: while (!sha1_end_digest.read()) {
-			//create bus packet
-			bram_packet to_bram;
-			convert_to_bram(bram_meta_buffer, bram_data_buffer, sha1_digest, dedup_meta_buffer, write_out_data_buffer, to_bram);
+		//create bus packet
+		bram_packet to_bram;
+		convert_to_bram(bram_meta_buffer, bram_data_buffer, sha1_digest, dedup_meta_buffer, write_out_data_buffer, to_bram);
 
-			//check for duplicate
-			check_duplicate(to_bram, dedup_meta_buffer, write_out_meta_buffer);
+		//check for duplicate
+		check_duplicate(to_bram, dedup_meta_buffer, write_out_meta_buffer);
 
-			//pass to next stage
-			write_out(write_out_meta_buffer, write_out_data_buffer, meta_out, data_out);
-		}
+		//pass to next stage
+		write_out(write_out_meta_buffer, write_out_data_buffer, meta_out, data_out);
 	}
 }

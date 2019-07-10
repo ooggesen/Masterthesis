@@ -60,17 +60,13 @@ int dedup_tb()
 			cout << left << "out_stream: " << right << setw(2) << current.is_duplicate << endl;
 			++errors;
 		}
-	}
 
-	if (!compare_meta.empty()){
-		cout << "Data lost. Compare stream is not empty." << endl;
-		int counter = 0;
-		while(!compare_meta.empty()){
-			compare_meta.read();
-			counter++;
+		for (int j = 0 ; j < hls::ceil((double) compare.size.to_long()*8 /W_DATA) ; j++){
+			if (compare_data.read() != out_data.read()){
+				cout << "Wrong data output." << endl;
+				errors++;
+			}
 		}
-		cout << "Lost " << counter << " small chunk packets." << endl;
-		errors++;
 	}
 
 	if (errors == 0){
