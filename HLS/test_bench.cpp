@@ -51,7 +51,7 @@ void generate_test_data(unsigned num_tests,
 		hls::stream< bool > &end){
 	srand(time(NULL));
 
-	int file_length = (int) 1.1*BIG_CHUNK_SIZE/8*num_tests;
+	int file_length = (int) 1.2*BIG_CHUNK_SIZE/8*num_tests;
 	for (int i = 0 ; i < hls::ceil((double) file_length/8) ; i++){
 		ap_uint< 64 > buffer;
 		for (int j = 0 ; j < 8 ; j++){

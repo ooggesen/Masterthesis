@@ -24,7 +24,10 @@ static void write_out(
 	while(!end){
 		c_size_t chunk_length = size_in.read();
 
-		write_chunk: for (int i = 0 ; i < hls::ceil((double) chunk_length.to_long()*8 / W_DATA) ; i++){
+		write_chunk: for (int i = 0 ; i < (int) MAX_BIG_CHUNK_SIZE / W_DATA + 1 ; i++){
+			if (i >= hls::ceil((double) chunk_length.to_long()*8 / W_DATA))
+				break;
+
 			c_data_t buffer;
 			convert_to_c_data_t: for (c_size_t j = 0 ; j < W_DATA/8 ; j++){
 				if (chunk_length.to_long() > i*W_DATA/8 + j)
