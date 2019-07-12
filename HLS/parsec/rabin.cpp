@@ -8,8 +8,8 @@
 static void fpreduce(unsigned x, unsigned irr, unsigned &out) {
     int i;
 
-
     for (i = 32; i != 0; i--) {
+#pragma HLS LOOP_FLATTEN
         if (x >> 31) {
             x <<= 1;
             x ^= irr;
@@ -19,53 +19,49 @@ static void fpreduce(unsigned x, unsigned irr, unsigned &out) {
     out = x;
 }
 
-static void fpmkredtab(unsigned irr, int s, unsigned tab[]) {
+static void fpmkredtab(unsigned irr, unsigned tab[]) {
+#pragma HLS INLINE recursive
     int i;
 
-    for (i = 0; i < 256; i++)
-        fpreduce(i << s, irr, tab[i]);
-    return;
+    for (i = 0; i < 256; i++){
+#pragma HLS LOOP_FLATTEN
+        fpreduce(i , irr, tab[i]);
+    }
 }
 
 static void fpwinreduce(unsigned x, unsigned rabintab[], unsigned &winval) {
-    int i;
-
-    winval = 0;
-    winval = ((winval << 8) | x) ^ rabintab[(winval >> 24)];
+	winval = x ^ rabintab[0];
 }
 
 static void fpmkwinredtab(unsigned rabintab[], unsigned rabinwintab[]) {
+#pragma HLS INLINE recursive
     int i;
 
-    for (i = 0; i < 256; i++)
+    for (i = 0; i < 256; i++){
+#pragma HLS LOOP_FLATTEN
         fpwinreduce(i, rabintab, rabinwintab[i]);
+    }
 }
 
 void rabininit(unsigned rabintab[], unsigned rabinwintab[]) {
     //rabintab = malloc(256*sizeof rabintab[0]);
     //rabinwintab = malloc(256*sizeof rabintab[0]);
 	unsigned irrpoly = 0x45c2b6a1;
-    fpmkredtab(irrpoly, 0, rabintab);
+    fpmkredtab(irrpoly, rabintab);
     fpmkwinredtab(rabintab, rabinwintab);
 }
 
 
 
-/*
- * Segments a unsigned byte FIFO into small grained chunks
- *
- * @param in : Input FIFO which contains continuous data to be segmented
- * @param end: signals end of process -> if FIFO in is empty and end flag is set the process returns
- * @param out: empty FIFO which will hold exactly the data for one coarse grained chunk
- */
 void rabinseg_in_stream(hls::stream< ap_uint< 8 > > &in,
-		bool end,
+		c_size_t &bc_size,
 		hls::stream< ap_uint< 8 > > &out,
 		c_size_t &size,
 		unsigned rabintab[],
 		unsigned rabinwintab[]){
 	hls::stream< ap_uint< 8 > , NWINDOW> buffer;
 	c_size_t size_buffer = 0;
+	c_size_t bc_size_buffer = bc_size;
 
 	int i = NWINDOW;
 	unsigned h = 0;
@@ -74,10 +70,11 @@ void rabinseg_in_stream(hls::stream< ap_uint< 8 > > &in,
 	init_hash: for (int i = 0; i < NWINDOW; i++) {
 		x = h >> 24;
 
-		if (end && in.empty())
+		if (bc_size_buffer == 0)
 			goto write_out_size;
 		ap_uint< 8 > byte = in.read();
 		size_buffer++;
+		bc_size_buffer--;
 
 		h = (h << 8) | byte;
 		out.write(byte);
@@ -94,10 +91,11 @@ void rabinseg_in_stream(hls::stream< ap_uint< 8 > > &in,
         x = buffer.read();
         h ^= rabinwintab[x];
 
-    	if (end && in.empty())
+    	if (bc_size_buffer == 0)
     		goto write_out_size;
         ap_uint< 8 > byte = in.read();
         size_buffer++;
+        bc_size_buffer--;
 
         x = h >> 24;
         h = byte | (h << 8);
@@ -109,8 +107,13 @@ void rabinseg_in_stream(hls::stream< ap_uint< 8 > > &in,
     }
 
     write_out_size:
-	while(!buffer.empty())
+	//flush the buffer
+	for (int i = 0 ; i < NWINDOW ; i++){
+		if (buffer.empty())
+			break;
 		buffer.read();
+	}
 	size = size_buffer;
+	bc_size = bc_size_buffer;
 }
 

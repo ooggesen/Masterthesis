@@ -84,7 +84,6 @@ void fragment_refine(hls::stream< bc_packet > &meta_in,
 	hls::stream< ap_uint< 8 > , SC_STREAM_SIZE*W_DATA/8 > sc_data_buffer("sc_data_buffer");
 
 	while(!end || !meta_in.empty()){
-#pragma HLS PIPELINE
 		//read data in
 		read_in(meta_in, data_in, meta_buffer, bc_data_buffer);
 

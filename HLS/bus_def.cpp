@@ -67,7 +67,8 @@ sc_packet::sc_packet(const sc_packet &in){
 
 bool operator==(const bc_packet &a, const bc_packet &b){
 	if(a.l1_pos != b.l1_pos ||
-			a.size != b.size) return false;
+			a.size != b.size)
+		return false;
 	return true;
 }
 

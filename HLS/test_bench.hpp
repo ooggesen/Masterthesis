@@ -19,8 +19,11 @@
 void print_test_data(sc_packet test_data);
 void print_test_data(bc_packet test_data);
 void generate_test_data(unsigned num_tests,
-		hls::stream< ap_uint< 8 > > &test_data,
-		hls::stream< ap_uint< 8 > > &compare_data);
+		hls::stream< ap_uint< 64 > > &test_data,
+		hls::stream< ap_uint< 8 > > &compare_data,
+		hls::stream< c_size_t > &test_size,
+		hls::stream< c_size_t > &compare_size,
+		hls::stream< bool > &end);
 void generate_test_data(unsigned num_tests,
 		hls::stream< bc_packet > &test_meta,
 		hls::stream< c_data_t > &test_data,
@@ -42,10 +45,10 @@ int dedup_tb();
 int reorder_tb();
 int bram_tb();
 int copy_tb();
-int reorder_buffer_tb();
-int fragment_refine_tb();
+//int reorder_buffer_tb();
+//int fragment_refine_tb();
 int fragment_tb();
-int top_tb();
+//int top_tb();
 int generate_test_data_tb();
 int shuffle_tb();
 int is_equal_tb();

@@ -43,24 +43,35 @@ void print_test_data(bc_packet test_data){
 
 
 
-/*
- * Generates random test data in a unsigned char FIFO, based on the rand() function of the stdlib library
- *
- * @param num_tests   : expected number of big chunks that can be generated out of generated data -> emphasis on too much data rather then too less
- * @param test_data   : output stream containing the generated data
- * @param compare_data: copy of test data (Use for comparing with the results)
- */
-void generate_test_data(unsigned num_tests, hls::stream< ap_uint< 8 > > &test_data, hls::stream< ap_uint< 8 > > &compare_data){
+void generate_test_data(unsigned num_tests,
+		hls::stream< ap_uint< 64 > > &test_data,
+		hls::stream< ap_uint< 8 > > &compare_data,
+		hls::stream< c_size_t > &test_size,
+		hls::stream< c_size_t > &compare_size,
+		hls::stream< bool > &end){
 	srand(time(NULL));
 
-	for (int test_nr = 0 ; test_nr < num_tests ; test_nr++){
-		for (int byte_pos = 0 ; byte_pos < 1.1*BIG_CHUNK_SIZE/8 ; byte_pos++){
-			unsigned char byte = rand() % 256;
-
-			test_data.write(byte);
-			compare_data.write(byte);
+	int file_length = (int) 1.1*BIG_CHUNK_SIZE/8*num_tests;
+	for (int i = 0 ; i < hls::ceil((double) file_length/8) ; i++){
+		ap_uint< 64 > buffer;
+		for (int j = 0 ; j < 8 ; j++){
+			if (i*8 + j < file_length){
+				ap_uint< 8 > byte = rand() % 256;
+				buffer.range(7 + 8*j, 8*j) = byte;
+				compare_data.write(byte);
+			} else {
+				buffer.range(7 + 8*j, 8*j) = 0;
+			}
 		}
+
+
+		test_data.write(buffer);
 	}
+	test_size.write(file_length);
+	compare_size.write(file_length);
+	end.write(false);
+
+	end.write(true);
 }
 
 

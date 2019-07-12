@@ -21,7 +21,7 @@ enum {
 //function declarations
 void rabininit(unsigned rabintab[], unsigned rabinwintab[]);
 void rabinseg_in_stream(hls::stream< ap_uint< 8 > > &in,
-		bool end,
+		c_size_t &bc_size,
 		hls::stream< ap_uint< 8 > > &out,
 		c_size_t &size,
 		unsigned rabintab[],

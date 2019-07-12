@@ -11,6 +11,11 @@
 #include "hls_math.h"
 
 //function declarations
-void fragment(hls::stream< ap_uint< 8 > > &in, bool end,  hls::stream< bc_packet > &meta, hls::stream< c_data_t > &data );
+void fragment(hls::stream< ap_uint< 64 > > &in,
+		hls::stream< c_size_t > &size_in,
+		hls::stream< bool > &end_in,
+		hls::stream< bc_packet > &meta_out,
+		hls::stream< c_data_t > &out,
+		hls::stream< bool > &end_out);
 
 #endif //FRAGMENT_HPP
