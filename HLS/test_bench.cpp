@@ -87,6 +87,8 @@ void generate_test_data(unsigned num_tests,
 
 	unsigned l1 = 0;
 	for (int td = 0 ; td < num_tests ; td++){
+		test_end.write(false);
+
 		bc_packet packet;
 		packet.size = (BIG_CHUNK_SIZE - 10*SMALL_CHUNK_SIZE + rand() % (40 * SMALL_CHUNK_SIZE))/8;
 		packet.l1_pos = l1++;
@@ -110,12 +112,10 @@ void generate_test_data(unsigned num_tests,
 				}
 			}
 
-			compare_data.write(data_buffer);
 			test_data.write(data_buffer);
-
-			test_end.write(false);
 		}
 	}
+	test_end.write(true);
 }
 
 

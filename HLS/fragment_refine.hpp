@@ -13,7 +13,8 @@
 //function declarations
 void fragment_refine(hls::stream< bc_packet > &meta_in,
 		hls::stream< c_data_t > &data_in,
-		bool end,
+		hls::stream< bool >  &end_in,
 		hls::stream< sc_packet > &meta_out,
-		hls::stream< c_data_t > &data_out);
+		hls::stream< c_data_t > &data_out,
+		hls::stream< bool > &end_out);
 #endif //FRAGMENT_REFINE_HPP

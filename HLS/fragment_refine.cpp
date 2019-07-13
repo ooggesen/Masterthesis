@@ -6,97 +6,153 @@
 
 
 
-/*
- * read in pipeline stage
- */
-void read_in(hls::stream< bc_packet > &meta_in, hls::stream< c_data_t > &data_in, bc_packet &meta_out, hls::stream< ap_uint< 8 > > &data_out){
-	if (!meta_in.empty()){
-		bc_packet packet = meta_in.read();
-		meta_out = bc_packet(packet);
+static void write_out(
+		hls::stream< sc_packet > &meta_in,
+		hls::stream< ap_uint< 8 > > &in,
+		hls::stream< bool > &end_in,
+		hls::stream< sc_packet > &meta_out,
+		hls::stream< c_data_t > &out,
+		hls::stream< bool > &end_out){
+	bool end = end_in.read();
 
-		read_bc_data: for (int i = 0 ; i < hls::ceil((double) packet.size.to_long()*8 / W_DATA) || i < BC_STREAM_SIZE ; i++){
-			c_data_t data_in_buffer = data_in.read();
-			for (int j = 0 ; j < W_DATA/8 ; j++){
-				if (packet.size.to_long() > i*W_DATA/8 + j){
-					data_out.write(data_in_buffer.range(7 + 8*j, 8*j));
-				}
+	while(!end){
+#pragma HLS LOOP_TRIPCOUNT min = 1 max = 1 avg = 1
+#pragma HLS LOOP_FLATTEN off
+		sc_packet sc_meta = meta_in.read();
+		meta_out.write(sc_meta);
+		end_out.write(false);
+
+		write_chunk: for (int i = 0 ; i < (int) MAX_SMALL_CHUNK_SIZE / W_DATA + 1 ; i++){
+#pragma HLS LOOP_FLATTEN off
+			if (i >= hls::ceil((double) sc_meta.size.to_long()*8 / W_DATA))
+				break;
+
+			c_data_t buffer;
+			convert_to_c_data_t: for (c_size_t j = 0 ; j < W_DATA/8 ; j++){
+#pragma HLS PIPELINE II=1
+				if (sc_meta.size.to_long() > i*W_DATA/8 + j)
+					buffer.range(7 + 8*j , 8*j) = in.read();
+				else
+					buffer.range(7 + 8*j , 8*j) = 0;
 			}
+			out.write(buffer);
 		}
+
+		end = end_in.read();
 	}
+
+	end_out.write(true);
 }
 
 
 
-void convert_to_sc(bc_packet &meta_in,
-		hls::stream< ap_uint< 8 > > &data_in,
-		unsigned &l2_pos,
-		c_size_t sc_size,
+static void segment_sc_packet(
+		hls::stream< bc_packet > &meta_in,
+		hls::stream< ap_uint< 8 > > &in,
+		hls::stream< bool > &end_in,
 		hls::stream< sc_packet > &meta_out,
-		hls::stream< c_data_t > &data_out){
-	c_data_t c_data_buffer = 0;
-	convert_loop: for (int i = 0 ; i < hls::ceil((double)sc_size.to_long()*8 / W_DATA) || i < SC_STREAM_SIZE ; i++){
-		for (int j = 0 ; j < W_DATA/8 ; j++){
-#pragma HLS UNROLL
-			if (i*W_DATA/8 + j < sc_size.to_long()){
-				//read data
-				c_data_buffer.range(7 + j*8, j*8) = data_in.read();
-			} else {
-				//fill with zeros
-				c_data_buffer.range(7 + j*8, j*8) = 0;
-			}
-		}
-		data_out.write(c_data_buffer);
-	}
-
-	meta_in.size -= sc_size;
-
-	sc_packet scp;
-	scp.size = sc_size;
-	scp.l2_pos = l2_pos++;
-	scp.l1_pos = meta_in.l1_pos;
-	scp.last_l2_chunk = meta_in.size.to_long() == 0;
-	scp.hash = 0; //default value, is correctly set by the dedup kernel
-	scp.is_duplicate = false; //default value, is correctly set by the dedup kernel
-
-	meta_out.write(scp);
-}
-
-
-
-/*
- * kernel which segments the big chunks into small chunks
- *
- * @param in : input stream of big chunk data
- * @param out: output stream of small chunks
- */
-void fragment_refine(hls::stream< bc_packet > &meta_in,
-		hls::stream< c_data_t > &data_in,
-		bool end,
-		hls::stream< sc_packet > &meta_out,
-		hls::stream< c_data_t > &data_out){
+		hls::stream< ap_uint< 8 > > &out,
+		hls::stream< bool > &end_out){
 	//intialize the rabin lookup tables
 	unsigned rabintab[256], rabinwintab[256];
+#pragma HLS BIND_STORAGE variable=rabintab type=ROM_1P
+#pragma HLS BIND_STORAGE variable=rabinwintab type=ROM_1P
 	rabininit(rabintab, rabinwintab);
 
-	//buffer for processed big chunk
-	bc_packet meta_buffer;
-	hls::stream< ap_uint< 8 > , BC_STREAM_SIZE*W_DATA/8 > bc_data_buffer("bc_data_buffer");
-	hls::stream< ap_uint< 8 > , SC_STREAM_SIZE*W_DATA/8 > sc_data_buffer("sc_data_buffer");
+	bool end = end_in.read();
 
-	while(!end || !meta_in.empty()){
-		//read data in
-		read_in(meta_in, data_in, meta_buffer, bc_data_buffer);
+	while(!end){
+#pragma HLS LOOP_TRIPCOUNT min = 1 max = 1 avg = 1
+#pragma HLS LOOP_FLATTEN off
+		bc_packet bc_meta = meta_in.read();
+		c_size_t bc_length = bc_meta.size;
 
-		//segment the big chunk packet into a stream of small chunk packets
-		unsigned l2_pos = 0;
-		refine_loop: while(meta_buffer.size.to_long() > 0){
-			//segment a small chunk
+		l2_pos_t l2 = 0;
+		segment_bc: while(bc_length > 0){
+#pragma HLS LOOP_FLATTEN off
 			c_size_t sc_size;
-			rabinseg_in_stream(bc_data_buffer, end,
-					sc_data_buffer, sc_size, rabintab, rabinwintab);
+			rabinseg_in_stream(in, bc_length, out, sc_size, rabintab, rabinwintab);
 
-			//write out as sc_packet type
-			convert_to_sc(meta_buffer, sc_data_buffer, l2_pos, sc_size, meta_out, data_out);
+			sc_packet sc_meta;
+			sc_meta.l1_pos = bc_meta.l1_pos;
+			sc_meta.l2_pos = l2++;
+			sc_meta.last_l2_chunk = bc_length == 0;
+			sc_meta.size = sc_size;
+			//deafult values. Get correctly set by dedup kernel.
+			sc_meta.hash = 0;
+			sc_meta.is_duplicate = false;
+
+			meta_out.write(sc_meta);
+
+			end_out.write(false);
 		}
+
+		end = end_in.read();
 	}
+
+	end_out.write(true);
+}
+
+
+
+static void convert_to_byte_stream(
+		hls::stream< bc_packet > &meta_in,
+		hls::stream< c_data_t > &in,
+		hls::stream< bool > & end_in,
+		hls::stream< bc_packet > &meta_out,
+		hls::stream< ap_uint< 8 > > &out,
+		hls::stream< bool > &end_out){
+
+	bool end = end_in.read();
+
+	while(!end){
+#pragma HLS LOOP_TRIPCOUNT min = 1 max = 1 avg = 1
+#pragma HLS LOOP_FLATTEN off
+		bc_packet bc_meta = meta_in.read();
+		meta_out.write(bc_meta);
+		end_out.write(false);
+
+		read_data: for (c_size_t i = 0 ; i < MAX_BIG_CHUNK_SIZE / W_DATA ; i++){
+#pragma HLS LOOP_FLATTEN  off
+			if (i*W_DATA/8 >= bc_meta.size.to_long())
+				break;
+
+			c_data_t current_data = in.read();
+			convert_to_byte: for (int j = 0 ; j < W_DATA / 8 ; j++){
+#pragma HLS PIPELINE II=1
+				if (i*W_DATA/8 + j < bc_meta.size)
+					out.write(current_data.range(7 + 8*j, 8*j));
+			}
+		}
+
+		end = end_in.read();
+	}
+
+	end_out.write(true);
+}
+
+
+
+void fragment_refine(hls::stream< bc_packet > &meta_in,
+		hls::stream< c_data_t > &data_in,
+		hls::stream< bool >  &end_in,
+		hls::stream< sc_packet > &meta_out,
+		hls::stream< c_data_t > &data_out,
+		hls::stream< bool > &end_out){
+#pragma HLS INTERFACE mode=ap_ctrl_none port=return
+#pragma HLS DATAFLOW
+
+	hls::stream< bc_packet, 2 > segment_meta("segment_meta");
+	hls::stream< ap_uint< 8 > , W_DATA/8*2 > segment_data("segment_data");
+	hls::stream< bool, 2 > segment_end("segment_end");
+
+	hls::stream< sc_packet, 2 > write_meta("write_meta");
+	hls::stream< ap_uint< 8 > , MAX_SMALL_CHUNK_SIZE/8 > write_data("write_data");
+	hls::stream< bool , 2 > write_end("write_end");
+
+	convert_to_byte_stream(meta_in, data_in, end_in, segment_meta, segment_data, segment_end);
+
+	segment_sc_packet(segment_meta, segment_data, segment_end, write_meta, write_data, write_end);
+
+	write_out(write_meta, write_data, write_end, meta_out, data_out, end_out);
 }

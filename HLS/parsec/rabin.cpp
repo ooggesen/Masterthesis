@@ -68,6 +68,7 @@ void rabinseg_in_stream(hls::stream< ap_uint< 8 > > &in,
 	unsigned x;
 
 	init_hash: for (int i = 0; i < NWINDOW; i++) {
+#pragma HLS PIPELINE II=1
 		x = h >> 24;
 
 		if (bc_size_buffer == 0)
