@@ -22,14 +22,27 @@ static void write_out(
 	l1_pos_t l1 = 0;
 
 	while(!end){
+#pragma HLS LOOP_TRIPCOUNT min = 1 max = 1 avg = 1
+#pragma HLS LOOP_FLATTEN off
 		c_size_t chunk_length = size_in.read();
 
+		//write meta data
+		bc_packet tmp_meta;
+		tmp_meta.l1_pos = l1++;
+		tmp_meta.size = chunk_length;
+		meta_out.write(tmp_meta);
+
+		end_out.write(false);
+
+		//write data
 		write_chunk: for (int i = 0 ; i < (int) MAX_BIG_CHUNK_SIZE / W_DATA + 1 ; i++){
+#pragma HLS LOOP_FLATTEN off
 			if (i >= hls::ceil((double) chunk_length.to_long()*8 / W_DATA))
 				break;
 
 			c_data_t buffer;
 			convert_to_c_data_t: for (c_size_t j = 0 ; j < W_DATA/8 ; j++){
+#pragma HLS PIPELINE II=1
 				if (chunk_length.to_long() > i*W_DATA/8 + j)
 					buffer.range(7 + 8*j , 8*j) = in.read();
 				else
@@ -38,12 +51,6 @@ static void write_out(
 			data_out.write(buffer);
 		}
 
-		bc_packet tmp_meta;
-		tmp_meta.l1_pos = l1++;
-		tmp_meta.size = chunk_length;
-		meta_out.write(tmp_meta);
-
-		end_out.write(false);
 		end = end_in.read();
 	}
 
@@ -89,10 +96,12 @@ static void segment_bc_packet(
 	bool end = end_in.read();
 
 	while(!end){
+#pragma HLS LOOP_TRIPCOUNT min = 1 max = 1 avg = 1
 #pragma HLS PIPELINE off
 		c_size_t file_length = size_in.read();
 
 		segment_file: while(file_length > 0){
+#pragma HLS LOOP_FLATTEN off
 			c_size_t bc_size;
 			fill_buffer(in, file_length, bc_size, out);
 
@@ -123,9 +132,14 @@ static void convert_to_byte_stream(
 	bool end = end_in.read();
 
 	while(!end){
+#pragma HLS LOOP_FLATTEN off
+#pragma HLS LOOP_TRIPCOUNT min = 1 max = 1 avg = 1
 		c_size_t file_length = size_in.read();
+		end_out.write(false);
+		size_out.write(file_length);
 
 		read_data: for (c_size_t i = 0 ; i < (int) MAX_FILE_SIZE/8 ; i++){
+#pragma HLS PIPELINE II=8
 			if (i*8 >= file_length)
 				break;
 
@@ -135,10 +149,6 @@ static void convert_to_byte_stream(
 					out.write(current_long.range(7 + 8*j, 8*j));
 			}
 		}
-
-		end_of_file:
-		end_out.write(false);
-		size_out.write(file_length);
 
 		end = end_in.read();
 	}
@@ -156,11 +166,11 @@ void fragment(hls::stream< ap_uint< 64 > > &in,
 		hls::stream< bool > &end_out){
 #pragma HLS INTERFACE mode=ap_ctrl_none port=return
 #pragma HLS DATAFLOW
-	hls::stream< ap_uint< 8 > , 16 > segment_data("segment_data");
+	hls::stream< ap_uint< 8 > , 128 > segment_data("segment_data");
 	hls::stream< c_size_t , 2 > segment_size("segment_size");
 	hls::stream< bool , 2 > segment_end("segment_end");
 
-	hls::stream< ap_uint< 8 > , 16 > write_data("write_data");
+	hls::stream< ap_uint< 8 > , MAX_BIG_CHUNK_SIZE > write_data("write_data");
 	hls::stream< c_size_t , 2 > write_size("write_size");
 	hls::stream< bool , 2 > write_end("write_end");
 

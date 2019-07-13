@@ -49,7 +49,7 @@ void generate_test_data(unsigned num_tests,
 		hls::stream< c_size_t > &test_size,
 		hls::stream< c_size_t > &compare_size,
 		hls::stream< bool > &end){
-	srand(time(NULL));
+	srand(0);
 
 	int file_length = (int) 1.2*BIG_CHUNK_SIZE/8*num_tests;
 	for (int i = 0 ; i < hls::ceil((double) file_length/8) ; i++){
@@ -79,9 +79,11 @@ void generate_test_data(unsigned num_tests,
 void generate_test_data(unsigned num_tests,
 		hls::stream< bc_packet > &test_meta,
 		hls::stream< c_data_t > &test_data,
+		hls::stream< bool > &test_end,
 		hls::stream< bc_packet > &compare_meta,
-		hls::stream< c_data_t > &compare_data){
-	srand(time(NULL));
+		hls::stream< ap_uint< 8 > > &compare_data){
+	//srand(time(NULL));
+	srand(0);
 
 	unsigned l1 = 0;
 	for (int td = 0 ; td < num_tests ; td++){
@@ -101,6 +103,7 @@ void generate_test_data(unsigned num_tests,
 			for (int byte_pos = 0 ; byte_pos < W_DATA/8 ; byte_pos++){
 				if (packet.size.to_long() > elem*W_DATA/8 + byte_pos){
 					ap_uint< 8 > random_byte = rand() % (1 << 7);
+					compare_data.write(random_byte);
 					data_buffer.range(7 + 8*byte_pos , 8*byte_pos) = random_byte;
 				} else {
 					data_buffer.range(7 + 8*byte_pos , 8*byte_pos) = 0;
@@ -109,6 +112,8 @@ void generate_test_data(unsigned num_tests,
 
 			compare_data.write(data_buffer);
 			test_data.write(data_buffer);
+
+			test_end.write(false);
 		}
 	}
 }
@@ -122,7 +127,8 @@ void generate_test_data(unsigned num_tests,
 		hls::stream< sc_packet > &compare_meta,
 		hls::stream< c_data_t > &compare_data){
 	c_data_t data_buffer[SC_STREAM_SIZE];
-	srand(time(NULL));
+	//srand(time(NULL));
+	srand(0);
 
 	unsigned l1 = 0, l2 = 0;
 	sc_packet last;
@@ -210,6 +216,8 @@ void shuffle(hls::stream< sc_packet > &sorted_meta,
 		hls::stream< c_data_t > &sorted_data,
 		hls::stream< sc_packet > &shuffeled_meta,
 		hls::stream< c_data_t > &shuffeled_data){
+	srand(time(NULL));
+
 	hls::stream< sc_packet > meta_buffer("meta_buffer");
 	hls::stream< c_data_t > data_buffer("data_buffer");
 	int in_buffer = 0;
