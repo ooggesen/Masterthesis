@@ -35,14 +35,16 @@ int dedup_tb()
 
 	hls::stream< sc_packet > test_meta("test_meta"), compare_meta("compare_meta");
 	hls::stream< c_data_t >  test_data("test_data"), compare_data("compare_data");
-	generate_test_data(NUM_TESTS, false,  test_meta, test_data, compare_meta, compare_data);
+	hls::stream< bool > test_end("test_end");
+	generate_test_data(NUM_TESTS, false,  test_meta, test_data, test_end, compare_meta, compare_data);
 
 	//running dedup
 	cout << "Starting dedup kernel." << endl;
 
 	hls::stream< sc_packet > out_meta("out_meta");
 	hls::stream< c_data_t > out_data("out_data");
-	dedup(test_meta, test_data, true, out_meta, out_data);
+	hls::stream< bool > out_end("out_end");
+	dedup(test_meta, test_data, test_end, out_meta, out_data, out_end);
 
 	cout << endl << "Dedup run finished." << endl;
 
@@ -52,11 +54,16 @@ int dedup_tb()
 	cout << "Checking results." << endl;
 
 	for (int i = 0 ; i < NUM_TESTS ; i++){
+		if (out_end.read()){
+			cout << "Wrong end flag. Set too early." << endl;
+			errors++;
+		}
+
 		sc_packet compare = compare_meta.read();
 		sc_packet current = out_meta.read();
 		if (current.is_duplicate != compare.is_duplicate){
 			cout << left << "Wrong prediction:" << endl;
-			cout << left << "test data: "  << right << setw(2) << compare.is_duplicate << endl;
+			cout << left << "compare data: "  << right << setw(2) << compare.is_duplicate << endl;
 			cout << left << "out_stream: " << right << setw(2) << current.is_duplicate << endl;
 			++errors;
 		}
@@ -67,6 +74,11 @@ int dedup_tb()
 				errors++;
 			}
 		}
+	}
+
+	if (!out_end.read()){
+		cout << "Wrong end flag." << endl;
+		errors++;
 	}
 
 	if (errors == 0){

@@ -124,6 +124,7 @@ void generate_test_data(unsigned num_tests,
 		bool set_duplicate,
 		hls::stream< sc_packet > &test_meta,
 		hls::stream< c_data_t > &test_data,
+		hls::stream< bool > &test_end,
 		hls::stream< sc_packet > &compare_meta,
 		hls::stream< c_data_t > &compare_data){
 	c_data_t data_buffer[SC_STREAM_SIZE];
@@ -133,6 +134,8 @@ void generate_test_data(unsigned num_tests,
 	unsigned l1 = 0, l2 = 0;
 	sc_packet last;
 	for (int td = 0; td < num_tests; td ++){
+		test_end.write(false);
+
 		sc_packet packet;
 
 		//increment hash as a filler
@@ -208,6 +211,8 @@ void generate_test_data(unsigned num_tests,
 
 		last = sc_packet(packet);
 	}
+
+	test_end.write(true);
 }
 
 

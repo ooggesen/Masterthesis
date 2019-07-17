@@ -9,14 +9,14 @@
 #include "sha1.hpp"
 #include "hls_math.h"
 
-//MACRO definitions
-#define MSG_BUFF_SIZE 64 //size of the message FIFO to the SHA1 kernel
+#define MSG_BUFF_SIZE ((int)MAX_SMALL_CHUNK_SIZE/32)
 
 //function definitions
 void dedup(hls::stream< sc_packet > &meta_in,
 		hls::stream< c_data_t > &data_in,
-		bool end,
+		hls::stream< bool > &end_in,
 		hls::stream< sc_packet > &meta_out,
-		hls::stream< c_data_t > &data_out);
+		hls::stream< c_data_t > &data_out,
+		hls::stream< bool > &end_out);
 
 #endif //DEDUP_HPP

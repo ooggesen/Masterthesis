@@ -39,13 +39,19 @@ void bram(bool wren, bool rden,
 	else if (wren)
 		addr = packet_w.addr % MAX_BRAM_SIZE;
 
-	check_size: for (int i = 0 ; i < hls::ceil((double) size.to_long()*8 / W_DATA / BRAM_DEPTH) ; i++){
-		find_addr: while (buffer[addr].hash != 0 && buffer[addr].hash != packet_r.addr)
+	check_size: for (int i = 0 ; i < (int) MAX_SMALL_CHUNK_SIZE/BRAM_DEPTH + 1 ; i++){
+		if (i >= hls::ceil((double) size.to_long()*8 / W_DATA / BRAM_DEPTH))
+			break;
+
+		find_addr: while (buffer[addr].hash != 0 && buffer[addr].hash != packet_r.addr){
+#pragma HLS PIPELINE II=2
 			increment_addr(addr);
+		}
 
 		//transfer data data
 		if (wren) buffer[addr].hash =  packet_w.addr;
 		transfer_loop_bram: for (int j = 0 ; j < BRAM_DEPTH ; j++){
+#pragma HLS PIPELINE II=1
 			if (rden)
 				packet_r.data[i*BRAM_DEPTH + j] = buffer[addr].data[j];
 			if (wren)

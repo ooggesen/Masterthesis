@@ -34,6 +34,7 @@ void generate_test_data(unsigned num_tests,
 		bool set_duplicate,
 		hls::stream< sc_packet > &test_meta,
 		hls::stream< c_data_t > &test_data,
+		hls::stream< bool > &test_end,
 		hls::stream< sc_packet > &compare_meta,
 		hls::stream< c_data_t > &compare_data);
 void shuffle(hls::stream< sc_packet > &sorted_meta,

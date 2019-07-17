@@ -18,11 +18,17 @@ int generate_test_data_tb(){
 
 	hls::stream< sc_packet > test_meta("test_meta"), compare_meta("compare_meta");
 	hls::stream< c_data_t > test_data("test_data"), compare_data("compare_data");
-	generate_test_data(NUM_TESTS, true, test_meta, test_data, compare_meta, compare_data);
+	hls::stream< bool > test_end("test_end");
+	generate_test_data(NUM_TESTS, true, test_meta, test_data, test_end, compare_meta, compare_data);
 
 	cout << endl << endl << "Checking data." << endl;
 	int errors = 0;
 	for (int i = 0 ; i < NUM_TESTS ; i++){
+		if (test_end.read()){
+			cout << "Wrong end flag." << endl;
+			errors++;
+		}
+
 		sc_packet t_meta = test_meta.read();
 		sc_packet c_meta = compare_meta.read();
 
@@ -37,6 +43,11 @@ int generate_test_data_tb(){
 				errors++;
 			}
 		}
+	}
+
+	if (!test_end.read()){
+		cout << "Wrong end flag." << endl;
+		errors++;
 	}
 
 	if (!compare_data.empty() || !test_data.empty()){
@@ -59,7 +70,8 @@ int shuffle_tb(){
 
 	hls::stream< sc_packet > test_meta("test_meta"), compare_meta("compare_meta");
 	hls::stream< c_data_t > test_data("test_data"), compare_data("compare_data");
-	generate_test_data(NUM_TESTS, true, test_meta, test_data, compare_meta, compare_data);
+	hls::stream< bool > test_end("test_end");
+	generate_test_data(NUM_TESTS, true, test_meta, test_data, test_end, compare_meta, compare_data);
 
 
 	cout << "Run the shuffle function." << endl << endl;;
@@ -67,10 +79,12 @@ int shuffle_tb(){
 	hls::stream< c_data_t > shuffled_data("shuffled_data");
 	shuffle(test_meta, test_data, shuffled_meta, shuffled_data);
 
-	//Build correct data order
+	//Checking
 	cout << "Finished." << endl << endl;
 	hls::stream< c_data_t > sorted_data[NUM_TESTS];
 	for (int i = 0 ; i < NUM_TESTS ; i++){
+		test_end.read();
+
 		sc_packet tmp_meta = shuffled_meta.read();
 
 		for (int j = 0 ; j < hls::ceil((double) tmp_meta.size.to_long()*8 / W_DATA) ; j++){
@@ -78,6 +92,7 @@ int shuffle_tb(){
 			sorted_data[tmp_meta.l2_pos].write(shuffled_data.read());
 		}
 	}
+	test_end.read();
 
 	//Checking
 	int errors = 0;
