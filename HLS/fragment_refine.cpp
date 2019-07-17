@@ -112,7 +112,7 @@ static void convert_to_byte_stream(
 		meta_out.write(bc_meta);
 		end_out.write(false);
 
-		read_data: for (c_size_t i = 0 ; i < MAX_BIG_CHUNK_SIZE / W_DATA ; i++){
+		read_data: for (c_size_t i = 0 ; i < MAX_BIG_CHUNK_SIZE / W_DATA + 1; i++){
 #pragma HLS LOOP_FLATTEN  off
 			if (i*W_DATA/8 >= bc_meta.size.to_long())
 				break;
