@@ -20,11 +20,15 @@ int reorder_buffer_tb(){
 	//Generate test data
 	hls::stream< sc_packet > test_meta("test_meta"), compare_meta("compare_meta");
 	hls::stream< c_data_t > test_data("test_data"), compare_data("compare_data");
-	generate_test_data(BUFFER_SIZE_2, true, test_meta, test_data, compare_meta, compare_data);
+	hls::stream< bool > test_end("test_end");
+	generate_test_data(BUFFER_SIZE_2, true, test_meta, test_data, test_end, compare_meta, compare_data);
 
 	//Save data to buffer
 	cout << "Save generated data to buffer." << endl;
+	int counter = 0;
 	for (int i = 0 ; i < BUFFER_SIZE_2 ; i++){
+		test_end.read();
+
 		sc_packet bp = test_meta.read();
 		c_data_t data[SC_STREAM_SIZE];
 
@@ -39,8 +43,9 @@ int reorder_buffer_tb(){
 		}
 
 		//write buffer
-		write_buffer(bp, data, buffer);
+		write_buffer(bp, data, buffer, counter);
 	}
+	test_end.read();
 	cout << endl;
 
 	//Check data
@@ -51,7 +56,7 @@ int reorder_buffer_tb(){
 		sc_packet out,  compare = compare_meta.read();
 		bool success = false;
 		c_data_t data_buffer[SC_STREAM_SIZE];
-		read_buffer(compare.l1_pos, compare.l2_pos, buffer, out, data_buffer, success);
+		read_buffer(compare.l1_pos, compare.l2_pos, buffer, out, data_buffer, success, counter);
 
 		//Check errors
 		if (!success){
@@ -84,6 +89,11 @@ int reorder_buffer_tb(){
 				errors++;
 			}
 		}
+	}
+
+	if (counter != 0){
+		cout << "Data lost in buffer" << endl;
+		errors++;
 	}
 
 	cout << "Test passed with " << errors << " errors." << endl;

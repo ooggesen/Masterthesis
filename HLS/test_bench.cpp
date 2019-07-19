@@ -219,12 +219,15 @@ void generate_test_data(unsigned num_tests,
 
 void shuffle(hls::stream< sc_packet > &sorted_meta,
 		hls::stream< c_data_t > &sorted_data,
+		hls::stream< bool > &sorted_end,
 		hls::stream< sc_packet > &shuffeled_meta,
-		hls::stream< c_data_t > &shuffeled_data){
-	srand(time(NULL));
+		hls::stream< c_data_t > &shuffeled_data,
+		hls::stream< bool > &shuffeled_end){
+	srand(0);
 
 	hls::stream< sc_packet > meta_buffer("meta_buffer");
 	hls::stream< c_data_t > data_buffer("data_buffer");
+	hls::stream< bool > end_buffer("end_buffer");
 	int in_buffer = 0;
 	while(!sorted_meta.empty() || !meta_buffer.empty()){
 		unsigned percent = rand() % 101;
@@ -232,6 +235,7 @@ void shuffle(hls::stream< sc_packet > &sorted_meta,
 			//write directly from input to output
 			sc_packet packet = sorted_meta.read();
 			shuffeled_meta.write(packet);
+			shuffeled_end.write(sorted_end.read());
 			for (int i = 0  ; i < hls::ceil((double) packet.size.to_long()*8 / W_DATA) ; i++){
 				shuffeled_data.write(sorted_data.read());
 			}
@@ -241,7 +245,7 @@ void shuffle(hls::stream< sc_packet > &sorted_meta,
 			//write from buffer to output
 			sc_packet packet = meta_buffer.read();
 			shuffeled_meta.write(packet);
-
+			shuffeled_end.write(end_buffer.read());
 			for (int i = 0 ; i < hls::ceil((double) packet.size.to_long()*8 / W_DATA) ; i ++){
 				shuffeled_data.write(data_buffer.read());
 			}
@@ -250,12 +254,13 @@ void shuffle(hls::stream< sc_packet > &sorted_meta,
 			//write from input to buffer
 			sc_packet packet = sorted_meta.read();
 			meta_buffer.write(packet);
-
+			end_buffer.write(sorted_end.read());
 			for (int i = 0 ; i < hls::ceil((double) packet.size.to_long()*8 / W_DATA) ; i ++){
 				data_buffer.write(sorted_data.read());
 			}
 			in_buffer++;
 		}
 	}
+	shuffeled_end.write(sorted_end.read());
 	return;
 }

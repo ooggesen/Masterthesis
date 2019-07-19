@@ -30,136 +30,151 @@ int reorder_tb(){
 
 	hls::stream< sc_packet > test_meta("test_meta"), compare_meta("compare_meta");
 	hls::stream< c_data_t > test_data("test_data"), compare_data("compare_data");
-	generate_test_data(NUM_TESTS, true,  test_meta, test_data, compare_meta, compare_data);
+	hls::stream< bool > test_end("test_end");
+	generate_test_data(NUM_TESTS, true,  test_meta, test_data, test_end, compare_meta, compare_data);
 
 	//shuffle the order of the packages to the reorder stage
 	cout << "Shuffle test data." << endl;
 	hls::stream< sc_packet > shuffled_meta("shuffeled_meta");
 	hls::stream< c_data_t > shuffled_data("shuffeled_data");
-	shuffle(test_meta, test_data, shuffled_meta, shuffled_data);
+	hls::stream< bool > shuffled_end("shuffled_end");
+	shuffle(test_meta, test_data, test_end, shuffled_meta, shuffled_data, shuffled_end);
 
 	cout << "Finished generating test data." << endl << endl;
 	cout << "Running the reorder kernel." << endl;
 
-	hls::stream< ap_uint< 8 > > output_data("output_data");
-	reorder(shuffled_meta, shuffled_data, true, output_data);
+	hls::stream< ap_uint< 64 > > output_data("output_data");
+	hls::stream < c_size_t > output_size("output_size");
+	hls::stream< bool > output_end("output_end");
+	reorder(shuffled_meta, shuffled_data, shuffled_end, output_size, output_data, output_end);
 
 	cout << "Checking results." << endl << endl;
 	int errors = 0;
+	c_size_t file_length;
+	bool end = output_end.read();
+	while(!end){
+		file_length = 0;
 
-	//check header
-	ap_uint< 32 > checkbit;
-	for (int i = 0 ; i < 4 ; i++){
-		checkbit.range(7 + i*8, i*8) = output_data.read();
-	}
-	if (checkbit != CHECKBIT){
-		cout << "Wrong checkbit." << endl;
-		errors++;
-	}
+		//check header
+		if (output_data.read() != CHECKBIT){
+			cout << "Wrong checkbit." << endl;
+			errors++;
+		}
 
-	ap_uint< 8 > compress_type = output_data.read();
-	if (compress_type != COMPRESS_NONE){
-		cout << "Wrong compress type." << endl;
-		errors++;
-	}
-
-
-	//Check the data stream
-	for (int td = 0 ; td < NUM_TESTS ; td++){
-		cout << endl <<"Check test data nr. " << dec << td+1 << endl << "----------" << endl;
-		//read package meta data
-		sc_packet to_compare_meta = compare_meta.read();
-
-		ap_uint< 8 > type = output_data.read();
-
-		c_size_t size;
-		for (int i = 0 ; i < W_CHUNK_SIZE/8 ; i++){
-			size.range(7 + i*8, i*8) = output_data.read();
+		if (output_data.read() != COMPRESS_NONE){
+			cout << "Wrong compress type." << endl;
+			errors++;
 		}
 
 
+		//Check the data stream
+		for (int td = 0 ; td < NUM_TESTS ; td++){
+			cout << endl <<"Check test data nr. " << dec << td+1 << endl << "----------" << endl;
+			//read package meta data
+			sc_packet to_compare_meta = compare_meta.read();
 
-		//if duplicate expect sha1 sum
-		if (to_compare_meta.is_duplicate){
-			cout << "Found duplicate chunk." << endl;
-			//check seperator
-			//check type
-			if (type != TYPE_FINGERPRINT){
-				cout << "Wrong type written to file." << endl;
-				cout << "expected: " << TYPE_FINGERPRINT << endl;
-				cout << "received: " << type << endl;
-				errors++;
-			}
+			ap_uint< 64 > type = output_data.read();
 
-			//check size
-			if(size != 20){
-				cout << "Wrong size written to file." << endl;
-				cout << "expected: " << to_compare_meta.size << endl;
-				cout << "received: " << size << endl;
-				errors++;
-			}
+			c_size_t size = output_data.read();
 
-			//check hash
-			addr_t hash;
-			for (int j = 0 ; j < W_ADDR/8 ; j++){
-				hash.range(7 + 8*j, 8*j) = output_data.read();
-			}
 
-			if (hash != td){
-				cout << left << "Wrong hash" << endl;
-				cout << left << "expected: " << right << hex << setw(W_ADDR/16) << td << endl;
-				cout << left << "received: " << right << hex << setw(W_ADDR/16) << hash << endl;
+			//if duplicate expect sha1 sum
+			if (to_compare_meta.is_duplicate){
+				cout << "Found duplicate chunk." << endl;
 
-				errors++;
-			}
+				file_length += 20;
 
-			//clean up data from compare stream
-			for (int i = 0 ; i < hls::ceil((double) to_compare_meta.size.to_long()*8 / W_DATA) ; i++){
-				compare_data.read();
-			}
-		} else {
-		//if unique chunk expect chunk as output
-			cout << "Received unique chunk." << endl;
-			//check seperator
-			//check type
-			if (type != TYPE_COMPRESS){
-				cout << "Wrong type written to file." << endl;
-				cout << "expected: " << TYPE_COMPRESS << endl;
-				cout << "received: " << type << endl;
-				errors++;
-			}
-
-			//check size
-			if(size != to_compare_meta.size){
-				cout << "Wrong size written to file." << endl;
-				cout << "expected: " << to_compare_meta.size << endl;
-				cout << "received: " << size << endl;
-				errors++;
-			}
-
-			//check chunk data
-			for (int i = 0 ; i < hls::ceil((double) size.to_long()*8 / W_DATA) ; i++){
-				c_data_t compare = compare_data.read();
-				c_data_t output;
-				//build output data
-				for (int j = 0 ; j < W_DATA/8 ; j++){
-					if (size.to_long() > i*W_DATA/8 + j){
-						output.range(7 + 8*j, 8*j) = output_data.read();
-					} else {
-						output.range(7 + 8*j, 8*j) = 0;
-					}
+				//check seperator
+				//check type
+				if (type != TYPE_FINGERPRINT){
+					cout << "Wrong type written to file." << endl;
+					cout << "expected: " << TYPE_FINGERPRINT << endl;
+					cout << "received: " << type << endl;
+					errors++;
 				}
 
-				//check
-				if(output != compare){
-					cout << left << "Wrong chunk data" << endl;
-					cout << left << "expected: " << right << hex << compare << endl;
-					cout << left << "received: " << right << hex << output << endl;
+				//check size
+				if(size != 20){
+					cout << "Wrong size written to file." << endl;
+					cout << "expected: " << to_compare_meta.size << endl;
+					cout << "received: " << size << endl;
+					errors++;
+				}
+
+				//check hash
+				addr_t hash;
+				hash.range(63, 0) = output_data.read();
+				hash.range(127, 64) = output_data.read();
+				ap_uint< 64 > buffer = output_data.read();
+				hash.range(159, 128) = buffer.range(31, 0);
+
+				if (hash != td){
+					cout << left << "Wrong hash" << endl;
+					cout << left << "expected: " << right << hex << setw(W_ADDR/16) << td << endl;
+					cout << left << "received: " << right << hex << setw(W_ADDR/16) << hash << endl;
 
 					errors++;
 				}
+
+				//clean up data from compare stream
+				for (int i = 0 ; i < hls::ceil((double) to_compare_meta.size.to_long()*8 / W_DATA) ; i++){
+					compare_data.read();
+				}
+			} else {
+			//if unique chunk expect chunk as output
+				cout << "Received unique chunk." << endl;
+
+				file_length += size;
+
+				//check seperator
+				//check type
+				if (type != TYPE_COMPRESS){
+					cout << "Wrong type written to file." << endl;
+					cout << "expected: " << TYPE_COMPRESS << endl;
+					cout << "received: " << type << endl;
+					errors++;
+				}
+
+				//check size
+				if(size != to_compare_meta.size){
+					cout << "Wrong size written to file." << endl;
+					cout << "expected: " << to_compare_meta.size << endl;
+					cout << "received: " << size << endl;
+					errors++;
+				}
+
+				//check chunk data
+				for (int i = 0 ; i < hls::ceil((double) size.to_long()*8 / W_DATA) ; i++){
+					c_data_t compare = compare_data.read();
+					c_data_t output;
+					//build output data
+					for (int j = 0 ; j < W_DATA/64 ; j++){
+						if (size.to_long() > i*W_DATA/8 + j*8){
+							output.range(63 + 64*j, 64*j) = output_data.read();
+						} else {
+							output.range(63 + 64*j, 64*j) = 0;
+						}
+					}
+
+					//check
+					if(output != compare){
+						cout << left << "Wrong chunk data" << endl;
+						cout << left << "expected: " << right << hex << compare << endl;
+						cout << left << "received: " << right << hex << output << endl;
+
+						errors++;
+					}
+				}
 			}
 		}
+
+		c_size_t read_size = output_size.read();
+		if (read_size != file_length){
+			cout << "Data lost. Output_size does not match the read bytes." << endl;
+			errors++;
+		}
+
+		end = output_end.read();
 	}
 
 	cout << "Finished processing." << endl << endl;
@@ -172,6 +187,7 @@ int reorder_tb(){
 			cout << hex << output_data.read() << endl;
 			counter++;
 		}
+		errors++;
 		cout << endl;
 		cout << "Number of bytes which were left in FIFO: " << counter << endl;
 	}
@@ -183,6 +199,7 @@ int reorder_tb(){
 			cout << hex << compare_data.read() << endl;
 			counter++;
 		}
+		errors++;
 		cout << "Number of c_data_t chunks left in compare stream: " << counter << endl;
 	}
 
