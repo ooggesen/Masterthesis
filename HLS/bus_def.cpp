@@ -36,9 +36,6 @@ bool operator!=(const sc_packet &a, const sc_packet &b){
 
 
 
-/*
- * Empty constructor of small chunk interface
- */
 sc_packet::sc_packet(){
 	hash = 0;
 	size = 0;
@@ -50,9 +47,6 @@ sc_packet::sc_packet(){
 
 
 
-/*
- * Copy constructor of small chunk interface
- */
 sc_packet::sc_packet(const sc_packet &in){
 	is_duplicate = in.is_duplicate;
 	l1_pos = in.l1_pos;
@@ -79,9 +73,6 @@ bool operator!=(const bc_packet &a, const bc_packet &b){
 
 
 
-/*
- * Empty constructor of big chunk bus interface
- */
 bc_packet::bc_packet(){
 	size = 0;
 	l1_pos = 0;
@@ -89,9 +80,6 @@ bc_packet::bc_packet(){
 
 
 
-/*
- * Copy constructor of big chunk interface
- */
 bc_packet::bc_packet(const bc_packet &in){
 	l1_pos = in.l1_pos;
 	size = in.size;

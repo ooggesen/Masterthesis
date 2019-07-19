@@ -16,7 +16,7 @@
 #define SMALL_CHUNK_SIZE (512 * 8) //average small chunk size in bits
 #define BIG_CHUNK_SIZE (128 * SMALL_CHUNK_SIZE) //(1024 * SMALL_CHUNK_SIZE) //in PARSEC: (2*1024*1024*8)-> too big for FPGA; average big chunk size in bits
 //bus width definitions
-#define W_DATA 1024 //must be a multiple of 32 for compliance with the sha1 kernel
+#define W_DATA 1024 //must be a multiple of 64 for compliance with the sha1 kernel and input output stages
 #define W_ADDR 160 //width of SHA1 signature in bits
 #define W_CHUNK_SIZE 64 //width of size integer in bits, like in PARSEC
 #define W_L1_ORDER 16 //width of l1 position integer in bits -> 2^16 * avgerage big chunk size(2 MB) = 130 GB
