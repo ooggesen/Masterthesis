@@ -77,14 +77,13 @@ int shuffle_tb(){
 	cout << "Run the shuffle function." << endl << endl;;
 	hls::stream< sc_packet > shuffled_meta("shuffled_meta");
 	hls::stream< c_data_t > shuffled_data("shuffled_data");
-	shuffle(test_meta, test_data, shuffled_meta, shuffled_data);
+	hls::stream< bool > shuffled_end("shuffled_end");
+	shuffle(test_meta, test_data, test_end, shuffled_meta, shuffled_data, shuffled_end);
 
 	//Checking
 	cout << "Finished." << endl << endl;
 	hls::stream< c_data_t > sorted_data[NUM_TESTS];
 	for (int i = 0 ; i < NUM_TESTS ; i++){
-		test_end.read();
-
 		sc_packet tmp_meta = shuffled_meta.read();
 
 		for (int j = 0 ; j < hls::ceil((double) tmp_meta.size.to_long()*8 / W_DATA) ; j++){
@@ -92,12 +91,12 @@ int shuffle_tb(){
 			sorted_data[tmp_meta.l2_pos].write(shuffled_data.read());
 		}
 	}
-	test_end.read();
 
 	//Checking
 	int errors = 0;
 	cout << "Checking data coherency." << endl;
 	for (int i = 0 ; i < NUM_TESTS ; i++){
+		shuffled_end.read();
 		sc_packet tmp_compare = compare_meta.read();
 		for(int j = 0 ; j < hls::ceil((double) tmp_compare.size.to_long()*8 / W_DATA) ; j++){
 			if (sorted_data[i].read() != compare_data.read()){
@@ -106,6 +105,7 @@ int shuffle_tb(){
 			}
 		}
 	}
+	shuffled_end.read();
 
 	if (!compare_data.empty()){
 		cout << "Data was lost in function. Compare stream is not empty." << endl;

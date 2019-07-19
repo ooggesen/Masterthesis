@@ -39,15 +39,17 @@ void generate_test_data(unsigned num_tests,
 		hls::stream< c_data_t > &compare_data);
 void shuffle(hls::stream< sc_packet > &sorted_meta,
 		hls::stream< c_data_t > &sorted_data,
+		hls::stream< bool > &sorted_end,
 		hls::stream< sc_packet > &shuffeled_meta,
-		hls::stream< c_data_t > &shuffeled_data);
+		hls::stream< c_data_t > &shuffeled_data,
+		hls::stream< bool > &shuffeled_end);
 
 //test benches
 int dedup_tb();
 int reorder_tb();
 int bram_tb();
 int copy_tb();
-//int reorder_buffer_tb();
+int reorder_buffer_tb();
 int fragment_refine_tb();
 int fragment_tb();
 //int top_tb();
