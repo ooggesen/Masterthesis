@@ -102,13 +102,13 @@ static void check_input(
 		hls::stream< bool > &end_in,
 		l1_pos_t &l1,
 		l2_pos_t &l2,
+		c_size_t &file_length,
 		buffer_cell buffer[][BUFFER_SIZE_2],
 		int &buffer_counter,
 		bool &end,
 		hls::stream< c_size_t > &size_out,
 		hls::stream< ap_uint< 64 > > &out,
 		hls::stream< bool > &end_out){
-	static c_size_t file_length = 0;
 	sc_packet read_current;
 	c_data_t data_in_buffer[SC_STREAM_SIZE];
 #pragma HLS ARRAY_PARTITION variable=data_in_buffer type=complete
@@ -172,6 +172,8 @@ void reorder(hls::stream< sc_packet > &meta_in,
 	//positions for the next chunk
 	l1_pos_t l1_pos;
 	l2_pos_t l2_pos;
+	//file length buffer
+	c_size_t file_length = 0;
 	//buffer for storing chunks
 	buffer_cell buffer[BUFFER_SIZE_1][BUFFER_SIZE_2];
 #pragma HLS BIND_STORAGE variable=buffer type=ram_2p
@@ -182,7 +184,7 @@ void reorder(hls::stream< sc_packet > &meta_in,
 	reorder_loop: while(!end || buffer_counter != 0) {
 #pragma HLS PIPELINE off
 #pragma HLS LOOP_FLATTEN off
-		check_input(meta_in, data_in, end_in, l1_pos, l2_pos, buffer, buffer_counter,
+		check_input(meta_in, data_in, end_in, l1_pos, l2_pos, file_length, buffer, buffer_counter,
 				end, size_out, data_out, end_out);
 
 		check_buffer(l1_pos, l2_pos, buffer, buffer_counter, data_out);
