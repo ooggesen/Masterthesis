@@ -89,6 +89,13 @@ static void read_in(
 
 
 
+static void write_header(hls::stream< ap_uint< 64 > > &out){
+	out.write(CHECKBIT);
+	out.write(COMPRESS_NONE);
+}
+
+
+
 static void check_input(
 		hls::stream< sc_packet > &meta_in,
 		hls::stream< c_data_t > &data_in,
@@ -112,20 +119,29 @@ static void check_input(
 
 			//at start of file
 			if (read_current.l1_pos == 0 && read_current.l2_pos == 0){
+				write_header(out);
 				end_out.write(false);
+
+				l1 = 0;
+				l2 = 0;
 
 				//not on the initial run
 				if (file_length != 0){
 					size_out.write(file_length);
-					file_length = 0;
 				}
+
+				file_length = 16; //8 byte checkbit plus 8 byte compress type information
 			}
 
 			//add output length to total file length
 			if (read_current.is_duplicate)
-				file_length += 20;
-			else
-				file_length += read_current.size;
+				file_length += 40; // 160 bit(20 byte) + 4 byte zero stuffing + 8 byte chunk type + 8 byte size
+			else{
+				file_length += read_current.size + 16; // size + 8 byte chunk type + 8 byte size + max of 8 byte zero stuffing
+				if (read_current.size % 8 != 0){
+					file_length += 8 - (read_current.size % 8); // account for zero stuffing
+				}
+			}
 
 			//check if this is the next chunk
 			if (l1 == read_current.l1_pos && l2 == read_current.l2_pos){
@@ -146,12 +162,6 @@ static void check_input(
 
 
 
-static void write_header(hls::stream< ap_uint< 64 > > &out){
-	out.write(CHECKBIT);
-	out.write(COMPRESS_NONE);
-}
-
-
 //assumes buffer is empty at arrival of next file
 void reorder(hls::stream< sc_packet > &meta_in,
 		hls::stream< c_data_t > &data_in,
@@ -160,14 +170,11 @@ void reorder(hls::stream< sc_packet > &meta_in,
 		hls::stream< ap_uint< 64 > > &data_out,
 		hls::stream< bool > &end_out){
 	//positions for the next chunk
-	l1_pos_t l1_pos = 0;
-	l2_pos_t l2_pos = 0;
+	l1_pos_t l1_pos;
+	l2_pos_t l2_pos;
 	//buffer for storing chunks
 	buffer_cell buffer[BUFFER_SIZE_1][BUFFER_SIZE_2];
 #pragma HLS BIND_STORAGE variable=buffer type=ram_2p
-
-	//write header
-	write_header(data_out);
 
 	//reorder loop
 	bool end = false;
@@ -175,7 +182,8 @@ void reorder(hls::stream< sc_packet > &meta_in,
 	reorder_loop: while(!end || buffer_counter != 0) {
 #pragma HLS PIPELINE off
 #pragma HLS LOOP_FLATTEN off
-		check_input(meta_in, data_in, end_in, l1_pos, l2_pos, buffer, buffer_counter, end, size_out, data_out, end_out);
+		check_input(meta_in, data_in, end_in, l1_pos, l2_pos, buffer, buffer_counter,
+				end, size_out, data_out, end_out);
 
 		check_buffer(l1_pos, l2_pos, buffer, buffer_counter, data_out);
 	}

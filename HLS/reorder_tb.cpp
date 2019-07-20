@@ -60,11 +60,13 @@ int reorder_tb(){
 			cout << "Wrong checkbit." << endl;
 			errors++;
 		}
+		file_length += 8;
 
 		if (output_data.read() != COMPRESS_NONE){
 			cout << "Wrong compress type." << endl;
 			errors++;
 		}
+		file_length += 8;
 
 
 		//Check the data stream
@@ -76,13 +78,14 @@ int reorder_tb(){
 			ap_uint< 64 > type = output_data.read();
 
 			c_size_t size = output_data.read();
+			file_length += 16;
 
 
 			//if duplicate expect sha1 sum
 			if (to_compare_meta.is_duplicate){
 				cout << "Found duplicate chunk." << endl;
 
-				file_length += 20;
+				file_length += 24;
 
 				//check seperator
 				//check type
@@ -125,6 +128,9 @@ int reorder_tb(){
 				cout << "Received unique chunk." << endl;
 
 				file_length += size;
+				if (size % 8 != 0){
+					file_length += 8 - (size % 8);//zero stuffing
+				}
 
 				//check seperator
 				//check type
