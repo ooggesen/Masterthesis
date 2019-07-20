@@ -1,3 +1,12 @@
+/**
+ * @file test_bench.hpp
+ *
+ * @brief Contains function declarations for the testbench helper functions as well as the testbenches itself.
+ *
+ * @author Ole Oggesen
+ * @bug No known bugs
+ */
+
 #ifndef TEST_BENCH_HPP
 #define TEST_BENCH_HPP
 
@@ -15,21 +24,49 @@
 
 #include <iostream>
 
-//helper functions
+/*
+ * @brief Prints out the values of a small chunk packet type
+ *
+ * @param test_data bus packet to print
+ */
 void print_test_data(sc_packet test_data);
+
+
+
+/*
+ * @brief Prints out the values of a big chunk packet type
+ *
+ * @param test_data: bus packet to print
+ */
 void print_test_data(bc_packet test_data);
+
+
+
+/**
+ * @brief Generates test data for top and fragment pipeline stage
+ */
 void generate_test_data(unsigned num_tests,
 		hls::stream< ap_uint< 64 > > &test_data,
 		hls::stream< ap_uint< 8 > > &compare_data,
 		hls::stream< c_size_t > &test_size,
 		hls::stream< c_size_t > &compare_size,
 		hls::stream< bool > &end);
+
+
+/**
+ * @brief generates test data for the fragment_refine pipeline stage
+ */
 void generate_test_data(unsigned num_tests,
 		hls::stream< bc_packet > &test_meta,
 		hls::stream< c_data_t > &test_data,
 		hls::stream< bool > &test_end,
 		hls::stream< bc_packet > &compare_meta,
 		hls::stream< ap_uint< 8 > > &compare_data);
+
+
+/**
+ * @brief Gnerates test data for the dedup and reorder pipeline stages
+ */
 void generate_test_data(unsigned num_tests,
 		bool set_duplicate,
 		hls::stream< sc_packet > &test_meta,
@@ -37,6 +74,12 @@ void generate_test_data(unsigned num_tests,
 		hls::stream< bool > &test_end,
 		hls::stream< sc_packet > &compare_meta,
 		hls::stream< c_data_t > &compare_data);
+
+
+
+/**
+ * @brief shuffles the input streams for usage in the reorder pipeline stage
+ */
 void shuffle(hls::stream< sc_packet > &sorted_meta,
 		hls::stream< c_data_t > &sorted_data,
 		hls::stream< bool > &sorted_end,
@@ -44,7 +87,8 @@ void shuffle(hls::stream< sc_packet > &sorted_meta,
 		hls::stream< c_data_t > &shuffeled_data,
 		hls::stream< bool > &shuffeled_end);
 
-//test benches
+//TESTBENCHES
+
 int dedup_tb();
 int reorder_tb();
 int bram_tb();

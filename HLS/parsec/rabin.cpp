@@ -1,6 +1,18 @@
-#include <assert.h>
-#include <stdlib.h>
-#include <stdint.h>
+/**
+ * @file rabin.cpp
+ *
+ * @brief Rabin fingerprint algorithm and helper functions.
+ *
+ * This rabin fingerprint algorithm is takes from the dedup kernel of the PARSEC benchmark suite.
+ * It is adapted to the needs of thesis.
+ *
+ * https://github.com/bamos/parsec-benchmark/tree/master
+ * path:
+ * 	pkgs/kernels/dedup/src/rabin.c
+ *
+ * @author Ole Oggesen
+ * @bug No known bugs
+ */
 
 #include "rabin.hpp"
 

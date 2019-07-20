@@ -1,11 +1,14 @@
-/*
- * This file contains the main function for calling different tb
+/**
+ * @file main_tb.cpp
+ *
+ * @brief Contains the main function for calling different tb
  *
  * Usage:
  * 	uncomment the testbenches you want to run. Then start simulation.
  *
- * TODOs:
- * 	No module is tested for immediate deduplication of several files without intermediate pause.
+ *@author Ole Oggesen
+ *
+ * @bug No module is tested for immediate deduplication of several files without intermediate pause.
  */
 
 #include "test_bench.hpp"

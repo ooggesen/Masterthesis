@@ -1,6 +1,10 @@
 /*
- * This file contains the testbench for the coarse grained fragmentation kernel
- * -> tests the rabin segmentation as well as metadata
+ * @file fragment_tb.cpp
+ *
+ * @brief Contains fragment testbench
+ *
+ * @author Ole Oggesen
+ * @bug No known bugs
  */
 
 #include "test_bench.hpp"

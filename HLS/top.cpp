@@ -1,11 +1,20 @@
-/*
- * This file contains the top function with the interface for synthesis of the dedup toolchain
+/**
+ * @file top.cpp
+ *
+ * @brief Contains the top function with the interface for synthesis of the dedup toolchain.
+ *
+ * @author Ole Oggesen
+ * @bug Not tested for successive parsing of files.
  */
 
 #include "top.hpp"
 
 
-//Round robin schedulers
+/**
+ * @brief Round robin splitter
+ *
+ * @param np 	Number of outputs
+ */
 template <typename M, typename D>
 static void split(hls::stream< M > &meta_in,
 		hls::stream< D > &data_in,
@@ -18,18 +27,15 @@ static void split(hls::stream< M > &meta_in,
 	bool end = end_in.read();
 	splitter: while(!end){
 #pragma HLS LOOP_FLATTEN off
-		if (!meta_in.empty()){
-			end_out[n].write(false);
+		end_out[n].write(false);
 
-			M meta_data = meta_in.read();
-			meta_out[n].write(meta_data);
+		M meta_data = meta_in.read();
+		meta_out[n].write(meta_data);
 
-			D buffer;
-			for (int i = 0 ; i < hls::ceil((double)meta_data.size.to_long()*8 / buffer.length()) ; i++){
+		D buffer;
+		for (int i = 0 ; i < hls::ceil((double)meta_data.size.to_long()*8 / buffer.length()) ; i++){
 #pragma HLS PIPELINE II=6
-				data_out[n].write(data_in.read());
-			}
-
+			data_out[n].write(data_in.read());
 		}
 		n = ++n % np;
 
@@ -41,6 +47,15 @@ static void split(hls::stream< M > &meta_in,
 	}
 }
 
+
+
+/**
+ * @brief Round robin merger.
+ *
+ * Not blocking of input does not contain data.
+ *
+ * @param np Number of inputs
+ */
 template <typename M, typename D>
 static void merge(hls::stream< M > meta_in[],
 		hls::stream< D > data_in[],
@@ -52,7 +67,7 @@ static void merge(hls::stream< M > meta_in[],
 	bool end = false;
 	bool end_np[NP_MERGE];
 
-	init_end_buffer: for (int i = 0 ; i < np ; i++){
+	init_end_buffer: for (int i = 0 ; i < NP_MERGE ; i++){
 		end_np[i] = false;
 	}
 
@@ -87,7 +102,9 @@ static void merge(hls::stream< M > meta_in[],
 }
 
 
-//Read and write functions
+/**
+ * @brief read in stage, needed for dataflow circuit
+ */
 static void read_in(
 		hls::stream< ap_uint< 64 > > &in,
 		hls::stream< c_size_t > &size_in,
@@ -118,6 +135,10 @@ static void read_in(
 }
 
 
+
+/**
+ * @brief write out stage, needed for dataflow circuit
+ */
 static void write_out(
 		hls::stream< c_size_t > &size_in,
 		hls::stream< ap_uint< 64 > > &in,
@@ -175,39 +196,23 @@ void top(hls::stream< ap_uint< 64 > > &in,
 	hls::stream< c_data_t , SC_STREAM_SIZE> 				pre_reorder_data_buffer("pre_reorder_data_buffer");
 	hls::stream< bool , 2 > 								pre_reorder_end_buffer("pre_reorder_end_buffer");
 
-	hls::stream< sc_packet, 2 > 							post_refine_meta_buffer[NP];
-	hls::stream< c_data_t, SC_STREAM_SIZE > 				post_refine_data_buffer[NP];
-	hls::stream< bool , 2 > 								post_refine_end_buffer[NP];
+	hls::stream< sc_packet, 2 > 							post_refine_meta_buffer("post_refine_meta_buffer");
+	hls::stream< c_data_t, SC_STREAM_SIZE > 				post_refine_data_buffer("post_refine_data_buffer");
+	hls::stream< bool , 2 > 								post_refine_end_buffer("post_refine_end_buffer");
 
-	hls::stream< sc_packet, 2 > 							post_dedup_meta_buffer[NP];
-	hls::stream< c_data_t, SC_STREAM_SIZE > 				post_dedup_data_buffer[NP];
-	hls::stream< bool , 2 > 								post_dedup_end_buffer[NP];
+	hls::stream< sc_packet, 2 > 							post_dedup_meta_buffer("post_dedup_meta_buffer");
+	hls::stream< c_data_t, SC_STREAM_SIZE > 				post_dedup_data_buffer("post_dedup_data_buffer");
+	hls::stream< bool , 2 > 								post_dedup_end_buffer("post_dedup_end_buffer");
 
 	//splitter
-	hls::stream< bc_packet , 2 > 							pre_refine_meta_split[NP][NP_REFINE];
-	hls::stream< c_data_t , SC_STREAM_SIZE > 				pre_refine_data_split[NP][NP_REFINE];
-	hls::stream< bool, 2 > 									pre_refine_end_split[NP][NP_REFINE];
-
-	hls::stream< sc_packet , 2 > 							pre_dedup_meta_split[NP][NP_DEDUP];
-	hls::stream< c_data_t , SC_STREAM_SIZE > 				pre_dedup_data_split[NP][NP_DEDUP];
-	hls::stream< bool , 2 > 								pre_dedup_end_split[NP][NP_DEDUP];
-
-	hls::stream< bc_packet , 2 > 							post_fragment_meta_split[NP];
-	hls::stream< c_data_t , BC_STREAM_SIZE > 				post_fragment_data_split[NP];
-	hls::stream< bool , 2 > 								post_fragment_end_split[NP];
+	hls::stream< bc_packet , 2 > 							pre_refine_meta_split[NP_REFINE];
+	hls::stream< c_data_t , SC_STREAM_SIZE > 				pre_refine_data_split[NP_REFINE];
+	hls::stream< bool, 2 > 									pre_refine_end_split[NP_REFINE];
 
 	//merger
-	hls::stream< sc_packet, 2 > 							post_refine_meta_merge[NP][NP_REFINE];
-	hls::stream< c_data_t, SC_STREAM_SIZE > 				post_refine_data_merge[NP][NP_REFINE];
-	hls::stream< bool, 2 > 									post_refine_end_merge[NP][NP_REFINE];
-
-	hls::stream< sc_packet, 2 > 							post_dedup_meta_merge[NP][NP_DEDUP];
-	hls::stream< c_data_t, SC_STREAM_SIZE > 				post_dedup_data_merge[NP][NP_DEDUP];
-	hls::stream< bool , 2 > 								post_dedup_end_merge[NP][NP_DEDUP];
-
-	hls::stream< sc_packet, 2 > 							pre_reorder_meta_merge[NP];
-	hls::stream< c_data_t, SC_STREAM_SIZE > 				pre_reorder_data_merge[NP];
-	hls::stream< bool , 2 > 								pre_reorder_end_split[NP];
+	hls::stream< sc_packet, 2 > 							post_refine_meta_merge[NP_REFINE];
+	hls::stream< c_data_t, SC_STREAM_SIZE > 				post_refine_data_merge[NP_REFINE];
+	hls::stream< bool, 2 > 									post_refine_end_merge[NP_REFINE];
 
 	//START OF PIPELINE
 #pragma HLS DATAFLOW
@@ -217,40 +222,19 @@ void top(hls::stream< ap_uint< 64 > > &in,
 	//segment into coarse grained chunks, serial
 	fragment(in_buffer, size_in_buffer, end_in_buffer, post_fragment_meta_buffer, post_fragment_data_buffer, post_fragment_end_buffer);
 
-	//split to parallel pipelines
+	//segment into fine grained chunks, NP_REFINE parallel
 	split< bc_packet , c_data_t >(post_fragment_meta_buffer,
-			post_fragment_data_buffer, post_fragment_end_buffer, NP, post_fragment_meta_split, post_fragment_data_split, post_fragment_end_split);
-
-	//NP parallel pipelines
-	pipelines_parallel: for (int i = 0 ; i < NP ; i++){
+			post_fragment_data_buffer, post_fragment_end_buffer, NP_REFINE,
+			pre_refine_meta_split, pre_refine_data_split, pre_refine_end_split);
+	refine_parallel: for (int n = 0; n < NP_REFINE ; n++){
 #pragma HLS UNROLL
-
-		//segment into fine grained chunks, NP_REFINE parallel
-		split< bc_packet , c_data_t >(post_fragment_meta_split[i],
-				post_fragment_data_split[i], post_fragment_end_split[i], NP_REFINE,
-				pre_refine_meta_split[i], pre_refine_data_split[i], pre_refine_end_split[i]);
-		refine_parallel: for (int n = 0; n < NP_REFINE ; n++){
-#pragma HLS UNROLL
-			fragment_refine(pre_refine_meta_split[i][n], pre_refine_data_split[i][n], pre_refine_end_split[i][n],
-					post_refine_meta_merge[i][n], post_refine_data_merge[i][n], post_refine_end_merge[i][n]);
-		}
-		merge< sc_packet , c_data_t >(post_refine_meta_merge[i], post_refine_data_merge[i], post_refine_end_merge[i], NP_REFINE,
-				post_refine_meta_buffer[i], post_refine_data_buffer[i], post_refine_end_buffer[i]);
-
-		//deduplicate data stream
-		split< sc_packet , c_data_t >(post_refine_meta_buffer[i], post_refine_data_buffer[i] , post_refine_end_buffer[i], NP_DEDUP,
-				pre_dedup_meta_split[i], pre_dedup_data_split[i], pre_dedup_end_split[i]);
-		dedup_parallel: for (int n = 0 ; n < NP_DEDUP ; n++){
-#pragma HLS UNROLL
-			dedup(pre_dedup_meta_split[i][n], pre_dedup_data_split[i][n], pre_dedup_end_split[i][n],
-					post_dedup_meta_merge[i][n], post_dedup_data_merge[i][n], post_dedup_end_merge[i][n]);
-		}
-		merge< sc_packet , c_data_t > (post_dedup_meta_merge[i], post_dedup_data_merge[i], post_dedup_end_merge[i], NP_DEDUP,
-				post_dedup_meta_buffer[i], post_dedup_data_buffer[i], post_dedup_end_buffer[i]);
+		fragment_refine(pre_refine_meta_split[n], pre_refine_data_split[n], pre_refine_end_split[n],
+				post_refine_meta_merge[n], post_refine_data_merge[n], post_refine_end_merge[n]);
 	}
+	merge< sc_packet , c_data_t >(post_refine_meta_merge, post_refine_data_merge, post_refine_end_merge, NP_REFINE,
+			post_refine_meta_buffer, post_refine_data_buffer, post_refine_end_buffer);
 
-	//merge from parallel pipelines
-	merge< sc_packet , c_data_t >(post_dedup_meta_buffer, post_dedup_data_buffer, post_dedup_end_buffer, NP,
+	dedup(post_refine_meta_buffer, post_refine_data_buffer, post_refine_end_buffer,
 			pre_reorder_meta_buffer, pre_reorder_data_buffer, pre_reorder_end_buffer);
 
 	//reorder the sc_packets for output

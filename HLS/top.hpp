@@ -1,14 +1,19 @@
+/**
+ * @file top.hpp
+ *
+ * @brief Top level function declaration
+ *
+ * @author Ole Oggesen
+ * @bug No known bugs
+ */
+
+
 #ifndef TOP_HPP
 #define TOP_HPP
 
-#define MAX(a,b)         ((a < b) ?  (b) : (a))
-#define BIGGEST(a,b,c)   ((MAX(a,b) < c) ?  (c) : (MAX(a,b)))
-
 //Number of Threads
-#define NP 1
 #define NP_REFINE 2
-#define NP_DEDUP 1
-#define NP_MERGE BIGGEST(NP, NP_REFINE, NP_DEDUP)
+#define NP_MERGE NP_REFINE
 //vitis hls includes
 #define __gmp_const const
 #include "ap_int.h"
@@ -24,7 +29,21 @@
 #include "reorder.hpp"
 #include "reorder_buffer.hpp"
 
-//function declarations
+
+
+/**
+ * @brief Top level interace for the dedup kernel
+ *
+ * Since in dataflow region only one read and write access to an array is allowed we could not implement parallel dedup pipeline stages.
+ * Refer to future work in thesis paper.
+ *
+ * @param in 		Input data stream
+ * @param size_in	Size of input file
+ * @param end_in	Indicates end of process after each file
+ * @param out		Deduplicated output stream
+ * @param size_out	Size of deduplicated file
+ * @param end_out 	Indicates end of process after each file
+ */
 void top(hls::stream< ap_uint< 64 > > &in,
 		hls::stream< c_size_t > &size_in,
 		hls::stream< bool > &end_in,

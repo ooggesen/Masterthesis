@@ -1,5 +1,10 @@
 /*
- * This file contains the testbench and helper functions for testing the reorder kernel of the dedup toolchain.
+ * @file reorder_tb.cpp
+ *
+ * @brief Contains reorder testbench
+ *
+ * @author Ole Oggesen
+ * @bug No known bugs
  */
 
 #include "reorder.hpp"

@@ -1,6 +1,13 @@
 /*
- * This file contains all trestbenches for the testbenches helper functions
+ * @file test_bench_tb.cpp
+ *
+ * @brief Contains tests for helper functions used in test benches.
+ *
+ * @author Ole Oggesen
+ * @bug No known bugs
  */
+
+
 #include "test_bench.hpp"
 #include "bus_def.hpp"
 #include "hls_math.h"

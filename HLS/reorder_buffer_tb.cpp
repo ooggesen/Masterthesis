@@ -1,6 +1,13 @@
 /*
- * This file contains the testbench for the reorder buffer
+ * @file reorder_buffer_tb.cpp
+ *
+ * @brief Contains reorder_buffer testbench
+ *
+ * @author Ole Oggesen
+ * @bug No known bugs
  */
+
+
 #include "reorder.hpp"
 #include "reorder_buffer.hpp"
 #include "test_bench.hpp"

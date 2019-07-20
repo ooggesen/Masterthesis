@@ -1,8 +1,18 @@
+/**
+ * @file parsec.hpp
+ *
+ * @brief Contains macro definitions takes from the dedup kernel of the PARSEC benchmark suite.
+ *
+ * https://github.com/bamos/parsec-benchmark/tree/master
+ * path:
+ * 	pkgs/kernels/dedup
+ *
+ * @author Ole Oggesen
+ * @bug No known bugs
+ */
+
 #ifndef PARSEC_H
 #define PARSEC_H
-/*
- * This file contains macros and definitions from the PARSEC benchmark suite.
- */
 
 #define CHECKBIT 123456 //implemented as an int in the header of the output file
 

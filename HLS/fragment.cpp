@@ -1,15 +1,25 @@
 /*
- * This file contains the kernel for the coarse grained chunking algorithm
+ * @file fragment.cpp
+ *
+ * @brief Contains the definition of the pipeline stage for coarse grained chunking algorithm.
+ *
+ * @author Ole Oggesen
+ * @bug No known bugs
  */
 
 #include "fragment.hpp"
 
 
-
+//defines how many bytes are put into big chunk before rabin fingerprint
 #define MIN_BC_SIZE (BIG_CHUNK_SIZE - 10*SMALL_CHUNK_SIZE)
 
 
 
+/**
+ * @brief Writes big chunk data to the output of the fragment pipeline stage
+ *
+ * Converts byte stream to c_data_t type and generates the meta data for the big chunk.
+ */
 static void write_out(
 		hls::stream< ap_uint< 8 > > &in,
 		hls::stream< c_size_t > &size_in,
@@ -59,6 +69,9 @@ static void write_out(
 
 
 
+/**
+ * @brief fills the buffer with a minimum number of bytes defined by the MIN_BC_SIZE macro
+ */
 static void fill_buffer(hls::stream< ap_uint< 8 > > &in,
 		c_size_t &file_length,
 		c_size_t &read,

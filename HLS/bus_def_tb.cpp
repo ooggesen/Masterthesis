@@ -1,5 +1,10 @@
 /*
- * testbenches for the helper functions in the bus_def.h header file
+ * @file bus_def_tb.cpp
+ *
+ * @brief Contains testbench for helper functions declared in bus_def.hpp
+ *
+ * @author Ole Oggesen
+ * @bug No known bugs
  */
 
 #include "test_bench.hpp"

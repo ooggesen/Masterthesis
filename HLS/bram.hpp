@@ -1,3 +1,11 @@
+/*
+ * @file bram.hpp
+ *
+ * @brief Function prototypes for the BRAM module, implemented in the dedup pipeline stage
+ *
+ * @author Ole Oggesen
+ */
+
 #ifndef BRAM_HPP
 #define BRAM_HPP
 
@@ -15,6 +23,22 @@ struct bram_data{
 	addr_t hash;
 };
 
+
+/*
+ * @brief interface to the BRAM for the dedup pipeline stage
+ *
+ * bram function implements a hash table with linear probing
+ * be aware: These functions do not implement bit stuffing with 0, if size is not a multiple of W_DATA * BRAM_DEPTH
+ * 	-> stuff the data correctly when passing it to the BRAM
+ *
+ * TODO data is only reset by transmission of bit code
+ *
+ * @param wren write flag
+ * @param ren read flag
+ * @param packet_w write data interface
+ * @param packet_r read data interface
+ * @param size number of bytes to process
+ */
 void bram(bool wren, bool rden,
 		bram_packet packet_w,
 		bram_packet &packet_r,

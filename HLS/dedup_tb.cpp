@@ -1,8 +1,13 @@
 /*
- * This file contains the testbench for the dedup kernel
+ * @file dedup_tb.cpp
  *
+ * @brief Contains dedup testbench
  *
+ * @author Ole Oggesen
+ * @bug No known bugs
  */
+
+
 #include "dedup.hpp"
 #include "test_bench.hpp"
 

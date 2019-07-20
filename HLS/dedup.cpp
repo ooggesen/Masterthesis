@@ -1,6 +1,13 @@
 /*
- * This file contains the dedup kernel for the dedup toolchain
+ * @file dedup.cpp
  *
+ * @brief Contains the dedup pipeline stage
+ *
+ * This module checks if input chunks are a duplicate in the data stream and accesses a BRAM module for storage of all unique chunks it encountered so far.
+ * Can only be instantiated once, since access to BRAM can not be shared in current implementation.
+ *
+ * @author Ole Oggesen
+ * @bugs No known bugs.
  */
 
 

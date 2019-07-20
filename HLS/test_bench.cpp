@@ -1,5 +1,10 @@
 /*
- * This file contains all the helper functions for the testbenches
+ * @file test_bench.cpp
+ *
+ * @brief Contains all the helper functions for the testbenches.
+ *
+ * @author Ole Oggesen
+ * @bug No known bugs
  */
 
 
@@ -8,11 +13,6 @@ using namespace std;
 
 
 
-/*
- * prints out the values of a small chunk packet type
- *
- * @param test_data: bus packet to print
- */
 void print_test_data(sc_packet test_data){
 	cout << "-----" << endl;
 
@@ -27,11 +27,6 @@ void print_test_data(sc_packet test_data){
 
 
 
-/*
- * prints out the values of a big chunk packet type
- *
- * @param test_data: bus packet to print
- */
 void print_test_data(bc_packet test_data){
 	cout << "-----" << endl;
 

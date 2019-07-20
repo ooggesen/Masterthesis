@@ -1,11 +1,18 @@
 /*
- * This file contains the fragment refine function which takes a big chunk and cuts it into smaller chunks
+ * @file fragment_refine.cpp
+ *
+ * @brief Contains the fragment refine function and helper functions.
+ *
+ * @author Ole Oggesen
+ * @bug No known bugs
  */
 
 #include "fragment_refine.hpp"
 
 
-
+/**
+ * @brief Converts byte stream to bus data stream and writes to output of fragment refine pipeline stage
+ */
 static void write_out(
 		hls::stream< sc_packet > &meta_in,
 		hls::stream< ap_uint< 8 > > &in,
@@ -45,7 +52,11 @@ static void write_out(
 }
 
 
-
+/**
+ * @brief Segments the byte stream according to the rabin fingerprint.
+ *
+ * Generates small chunk meta information.
+ */
 static void segment_sc_packet(
 		hls::stream< bc_packet > &meta_in,
 		hls::stream< ap_uint< 8 > > &in,
@@ -94,7 +105,9 @@ static void segment_sc_packet(
 }
 
 
-
+/**
+ * @brief Converts bus interface data to a byte stream.
+ */
 static void convert_to_byte_stream(
 		hls::stream< bc_packet > &meta_in,
 		hls::stream< c_data_t > &in,

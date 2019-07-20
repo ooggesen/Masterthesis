@@ -1,5 +1,13 @@
-/*
- * This file contains the functions for the buffer, used in the reorder kernel
+/**
+ * @file reorder_buffer.cpp
+ *
+ * @brief Contains the functions for the buffer, used in the reorder kernel
+ *
+ * This file exists so the reorder buffer can be tested individually.
+ * Data is written and read according to the level 1 and level 2 positions of the chunk in the file.
+ *
+ * @author Ole Oggesen
+ * @bug No known bugs
  */
 
 #include "reorder_buffer.hpp"
@@ -16,6 +24,8 @@ void write_buffer(sc_packet &meta, c_data_t data[SC_STREAM_SIZE], buffer_cell bu
 	}
 	counter++;
 }
+
+
 
 void read_buffer(l1_pos_t &l1, l2_pos_t &l2, buffer_cell buffer[][BUFFER_SIZE_2],
 		sc_packet &meta_out, c_data_t *data_out, bool &success, int &counter){

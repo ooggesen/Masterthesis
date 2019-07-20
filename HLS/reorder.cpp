@@ -1,11 +1,18 @@
 /*
- * This file contains the reorder kernel of the dedup toolchain
+ * @file reorder.cpp
+ *
+ * @brief Contains the reorder pipeline stage
+ *
+ * @author Ole Oggesen
+ * @bug Reorder stage assumes an empty buffer before the arrival of a new file.
  */
 
 #include "reorder.hpp"
 
 
-
+/**
+ * @brief Writes seperator between small chunks to the output
+ */
 static void write_seperator(ap_uint< 64 > type, c_size_t size, hls::stream< ap_uint< 64 > > &out){
 	out.write(type);
 	out.write(size);
@@ -13,6 +20,9 @@ static void write_seperator(ap_uint< 64 > type, c_size_t size, hls::stream< ap_u
 
 
 
+/**
+ * @brief Writes small chunk to output of reorder pipeline stage
+ */
 static void write_out(sc_packet &meta_in, c_data_t *data_in, hls::stream< ap_uint< 64 > > &out){
 	if (meta_in.is_duplicate){
 		//write seperator
@@ -41,7 +51,9 @@ static void write_out(sc_packet &meta_in, c_data_t *data_in, hls::stream< ap_uin
 
 
 
-
+/**
+ * @brief Updates level 1 and level 2 positions of the small chunk in the file.
+ */
 static void update_pos(bool &last_l2_chunk, l1_pos_t &l1_pos, l2_pos_t &l2_pos){
 	if (last_l2_chunk){
 		l1_pos++;
@@ -53,6 +65,9 @@ static void update_pos(bool &last_l2_chunk, l1_pos_t &l1_pos, l2_pos_t &l2_pos){
 
 
 
+/**
+ * @brief Checks the buffer for the next small chunk according to level 1 and level 2 positions
+ */
 static void check_buffer(l1_pos_t &l1, l2_pos_t &l2, buffer_cell buffer[][BUFFER_SIZE_2], int &buffer_counter, hls::stream< ap_uint< 64 > > &out){
 	sc_packet bram_current;
 	c_data_t bram_data_buffer[SC_STREAM_SIZE];
@@ -70,7 +85,9 @@ static void check_buffer(l1_pos_t &l1, l2_pos_t &l2, buffer_cell buffer[][BUFFER
 }
 
 
-
+/**
+ * @brief Reads data in
+ */
 static void read_in(
 		hls::stream< sc_packet > &meta_in,
 		hls::stream< c_data_t > &data_in,
@@ -88,7 +105,9 @@ static void read_in(
 }
 
 
-
+/**
+ * @brief Writes header of output stream with file informations.
+ */
 static void write_header(hls::stream< ap_uint< 64 > > &out){
 	out.write(CHECKBIT);
 	out.write(COMPRESS_NONE);
@@ -96,6 +115,9 @@ static void write_header(hls::stream< ap_uint< 64 > > &out){
 
 
 
+/**
+ * @brief Checks the input for the next small chunk according to level 1 and level 2 positions.
+ */
 static void check_input(
 		hls::stream< sc_packet > &meta_in,
 		hls::stream< c_data_t > &data_in,
@@ -162,7 +184,7 @@ static void check_input(
 
 
 
-//assumes buffer is empty at arrival of next file
+
 void reorder(hls::stream< sc_packet > &meta_in,
 		hls::stream< c_data_t > &data_in,
 		hls::stream< bool > &end_in,

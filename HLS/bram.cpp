@@ -1,5 +1,11 @@
 /*
- * This file contains the interface to the bram modules used for the global hash table of the dedup kernels
+ * @file bram.cpp
+ *
+ * @brief contains the BRAM module and interface for the dedup pipeline stage
+ *
+ *
+ * @author Ole Oggesen
+ * @bug data in BRAM module is only initialized by transmission of bitcode with the static keyword
  */
 
 
@@ -13,13 +19,6 @@ static void increment_addr(unsigned long int &addr){
 
 
 
-/*
- * bram function implements a hash table with linear probing
- * be aware: These functions do not implement bit stuffing with 0, if size is not a multiple of W_DATA * BRAM_DEPTH
- * 	-> stuff the data correctly when passing it to the BRAM
- *
- * TODO data is only reset by transmission of bit code
- */
 void bram(bool wren, bool rden,
 		bram_packet packet_w,
 		bram_packet &packet_r,

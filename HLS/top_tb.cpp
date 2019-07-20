@@ -1,6 +1,12 @@
 /*
- * This file contains all testbenches for the top module. This refers to testbenches that check intermediate results as well as the whole programm.
- * -> top functions which output intermediate results, must be created by adapting the top function to output intermediate values
+ * @file top_tb.cpp
+ *
+ * @brief Contains testbench for the top level function.
+ *
+ * Tests two cases. Input is complete unique and input is completely indentical.
+ *
+ * @author Ole Oggesen
+ * @bug No known bugs
  */
 
 
@@ -38,7 +44,6 @@ static void read_seperator(hls::stream< ap_uint< 64 > > &out_stream, ap_uint< 64
 
 /*
  * This testbench tests the whole top module with all components
- * -> can only test data coherency up the the first data duplicate
  */
 int top_tb(){
 	cout << "**********************************" << endl;

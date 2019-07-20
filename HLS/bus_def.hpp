@@ -1,12 +1,20 @@
 /*
- * This file contains the definitions of the bus interface of the dedup pipeline stages
+ * @file bus_def.hpp
+ *
+ * @brief Contains macros and function definitions for the bus interface and file limitations
+ *
+ * This file contains all restrictions for the top module and it is used in every pipeline stage.
+ * Limitations to the choice of macros and descriptions are given in comments in the same line.
+ *
+ * @author Ole Oggesen
+ * @bug No known bugs
  */
 
 #ifndef BUS_DEF_HPP
 #define BUS_DEF_HPP
 
 //bug fix for rtl/c simulation
-#define __gmp_const const
+#define __gmp_const const //fix to a bug with ap_in.h in VitisHLS 2021.2
 #include "ap_int.h"
 #include "hls_math.h"
 
@@ -34,7 +42,9 @@ typedef ap_uint<W_L1_ORDER> l1_pos_t; //level 1 position of chunk
 typedef ap_uint<W_L2_ORDER> l2_pos_t; //level 2 position of chunk
 
 
-//big chunk bus interface
+/**
+ * Meta data for coarse grained chunks (big chunks)
+ */
 struct bc_packet{
 	c_size_t size;
 	l1_pos_t l1_pos;
@@ -43,7 +53,9 @@ struct bc_packet{
 	bc_packet();
 };
 
-//small chunk bus interface
+/**
+ * Meta data for fine grained chunks (small chunks)
+ */
 struct sc_packet{
 	addr_t hash;
 	c_size_t size;
@@ -56,15 +68,29 @@ struct sc_packet{
 	sc_packet();
 };
 
-//BRAM access interface
+/**
+ * BRAM data access interface
+ */
 struct bram_packet{
 	c_data_t data[SC_STREAM_SIZE];
 	addr_t addr;
 };
 
 
-//helper functions
+/**
+ * @brief Compares c_data_t type arrays
+ *
+ * @param a input array 1
+ * @param b input array 2
+ * @size how many bytes are compared
+ *
+ * @return true if a and b are equal, with respect to size.
+ */
 bool is_equal(const c_data_t a[SC_STREAM_SIZE], const c_data_t b[SC_STREAM_SIZE], c_size_t &size);
+
+
+
+//operator definitions
 bool operator==(const bc_packet &a, const bc_packet &b);
 bool operator!=(const bc_packet &a, const bc_packet &b);
 bool operator==(const sc_packet &a, const sc_packet &b);

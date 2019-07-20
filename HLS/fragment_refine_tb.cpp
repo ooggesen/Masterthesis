@@ -1,8 +1,12 @@
 /*
- * This file contains the testbench for the fragment refine function
- * -> this testbench does not test the correct segementation of the big chunk, this is done in the rabin_tb()
+ * @file fragment_refine_tb.cpp
  *
+ * @brief Contains fragment_refine testbench
+ *
+ * @author Ole Oggesen
+ * @bug No known bugs
  */
+
 #include "test_bench.hpp"
 #include "fragment_refine.hpp"
 

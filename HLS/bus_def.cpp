@@ -1,5 +1,10 @@
 /*
- * This file contains the helper functions for manipulation of the bus packet data types
+ * @file bus_def.cpp
+ *
+ * @brief Contains the helper functions for manipulation of the bus packet data types.
+ *
+ * @author Ole Oggesen
+ * @bug No known bugs.
  */
 
 #include "bus_def.hpp"

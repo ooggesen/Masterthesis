@@ -1,5 +1,10 @@
 /*
- * This file contains the testbench for the bram module
+ * @file bram_tb.cpp
+ *
+ * @brief Contains bram testbench
+ *
+ * @author Ole Oggesen
+ * @bug No known bugs
  */
 
 #include <iostream>
