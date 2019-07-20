@@ -55,8 +55,8 @@ static void segment_sc_packet(
 		hls::stream< bool > &end_out){
 	//intialize the rabin lookup tables
 	unsigned rabintab[256], rabinwintab[256];
-#pragma HLS BIND_STORAGE variable=rabintab type=ROM_1P
-#pragma HLS BIND_STORAGE variable=rabinwintab type=ROM_1P
+#pragma HLS BIND_STORAGE variable=rabintab type=rom_1p
+#pragma HLS BIND_STORAGE variable=rabinwintab type=rom_1p
 	rabininit(rabintab, rabinwintab);
 
 	bool end = end_in.read();

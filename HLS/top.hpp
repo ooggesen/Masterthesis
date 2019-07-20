@@ -7,7 +7,7 @@
 //Number of Threads
 #define NP 1
 #define NP_REFINE 2
-#define NP_DEDUP 2
+#define NP_DEDUP 1
 #define NP_MERGE BIGGEST(NP, NP_REFINE, NP_DEDUP)
 //vitis hls includes
 #define __gmp_const const

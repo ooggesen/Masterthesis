@@ -11,7 +11,7 @@
 #include "hls_math.h"
 
 //file definitions
-#define MAX_FILE_SIZE 20000000 //max file size in bytes
+#define MAX_FILE_SIZE (3*BIG_CHUNK_SIZE/8)//20000000 //max file size in bytes
 //chunk size definitions
 #define SMALL_CHUNK_SIZE (512 * 8) //average small chunk size in bits
 #define BIG_CHUNK_SIZE (128 * SMALL_CHUNK_SIZE) //(1024 * SMALL_CHUNK_SIZE) //in PARSEC: (2*1024*1024*8)-> too big for FPGA; average big chunk size in bits

@@ -17,6 +17,7 @@ static void split(hls::stream< M > &meta_in,
 	int n = 0;
 	bool end = end_in.read();
 	splitter: while(!end){
+#pragma HLS LOOP_FLATTEN off
 		if (!meta_in.empty()){
 			end_out[n].write(false);
 
@@ -25,6 +26,7 @@ static void split(hls::stream< M > &meta_in,
 
 			D buffer;
 			for (int i = 0 ; i < hls::ceil((double)meta_data.size.to_long()*8 / buffer.length()) ; i++){
+#pragma HLS PIPELINE II=6
 				data_out[n].write(data_in.read());
 			}
 
@@ -55,6 +57,7 @@ static void merge(hls::stream< M > meta_in[],
 	}
 
 	merger: while(!end){
+#pragma HLS LOOP_FLATTEN  off
 		end = true;
 		round_robin: for (int n = 0 ; n < np ; n++){
 			if (!end_np[n]){
@@ -73,6 +76,7 @@ static void merge(hls::stream< M > meta_in[],
 
 					D buffer; //dummy buffer for length info
 					for (int i = 0 ; i < hls::ceil((double) meta_data.size.to_long()*8 / buffer.length()) ; i++){
+#pragma HLS PIPELINE II=6
 						data_out.write(data_in[n].read());
 					}
 				}
@@ -94,6 +98,7 @@ static void read_in(
 	bool end = end_in.read();
 
 	read_in_loop: while(!end){
+#pragma HLS LOOP_FLATTEN off
 		end_out.write(false);
 
 		c_size_t size = size_in.read();
@@ -123,6 +128,7 @@ static void write_out(
 	bool end = end_in.read();
 
 	write_out_loop: while(!end){
+#pragma HLS LOOP_FLATTEN off
 		end_out.write(false);
 
 		c_size_t size = size_in.read();
@@ -155,7 +161,7 @@ void top(hls::stream< ap_uint< 64 > > &in,
 	//buffer
 	hls::stream< ap_uint< 64 > , MAX_BIG_CHUNK_SIZE/64> 	in_buffer("in_buffer");
 	hls::stream< c_size_t , 2> 								size_in_buffer("size_in_buffer");
-	hls::stream< bool > 									end_in_buffer("end_in");
+	hls::stream< bool , 2> 									end_in_buffer("end_in");
 
 	hls::stream< ap_uint< 64 > , MAX_BIG_CHUNK_SIZE/64> 	out_buffer("out_buffer");
 	hls::stream< c_size_t , 2> 								size_out_buffer("size_out_buffer");
