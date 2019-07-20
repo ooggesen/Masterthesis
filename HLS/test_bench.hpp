@@ -52,7 +52,7 @@ int copy_tb();
 int reorder_buffer_tb();
 int fragment_refine_tb();
 int fragment_tb();
-//int top_tb();
+int top_tb();
 int generate_test_data_tb();
 int shuffle_tb();
 int is_equal_tb();

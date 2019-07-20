@@ -2,7 +2,10 @@
  * This file contains the main function for calling different tb
  *
  * Usage:
- * 	uncomment the testbenches you want to run,
+ * 	uncomment the testbenches you want to run. Then start simulation.
+ *
+ * TODOs:
+ * 	No module is tested for immediate deduplication of several files without intermediate pause.
  */
 
 #include "test_bench.hpp"
@@ -18,8 +21,8 @@ int main(){
 //	std::cout << std::endl;
 //	retval += generate_test_data_tb();
 //	std::cout << std::endl;
-	retval += bram_tb();
-	std::cout << std::endl;
+//	retval += bram_tb();
+//	std::cout << std::endl;
 //	retval += copy_tb();
 //	std::cout << std::endl;
 //	retval += reorder_buffer_tb();
@@ -38,8 +41,8 @@ int main(){
 
 
 //TOP TESTBENCH
-//	retval += top_tb();
-//	std::cout << std::endl;
+	retval += top_tb();
+	std::cout << std::endl;
 
 
 	return retval;
