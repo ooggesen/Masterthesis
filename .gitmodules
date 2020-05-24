@@ -1,0 +1,3 @@
+[submodule "Submodules/Vitis_libraries"]
+	path = Submodules/Vitis_libraries
+	url = https://github.com/Xilinx/Vitis_Libraries.git
