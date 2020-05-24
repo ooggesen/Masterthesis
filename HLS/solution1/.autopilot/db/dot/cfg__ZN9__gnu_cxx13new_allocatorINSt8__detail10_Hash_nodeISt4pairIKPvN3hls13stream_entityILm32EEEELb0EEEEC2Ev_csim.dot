@@ -1,0 +1,7 @@
+digraph "CFG for '__gnu_cxx::new_allocator\<std::__detail::_Hash_node\<std::pair\<void* const, hls::stream_entity\<32ul\> \>, false\> \>::new_allocator' function" {
+	label="CFG for '__gnu_cxx::new_allocator\<std::__detail::_Hash_node\<std::pair\<void* const, hls::stream_entity\<32ul\> \>, false\> \>::new_allocator' function";
+
+	Node0x595cd40 [shape=record,filename="",linenumber="",label="{.predFake}"];
+	Node0x595cd40 -> Node0x60a8130[ callList="" memoryops="" filename="/mnt/xilinx/Vitis_HLS/2021.2/tps/lnx64/gcc-6.2.0/lib/gcc/x86_64-pc-linux-gnu/6.2.0/../../../../include/c++/6.2.0/ext/new_allocator.h" execusionnum="1"];
+	Node0x60a8130 [shape=record,filename="/mnt/xilinx/Vitis_HLS/2021.2/tps/lnx64/gcc-6.2.0/lib/gcc/x86_64-pc-linux-gnu/6.2.0/../../../../include/c++/6.2.0/ext/new_allocator.h",linenumber="79",label="{.succFake}"];
+}

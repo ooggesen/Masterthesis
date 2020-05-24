@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autopilotfilemapping:AutoPilotFileMapping xmlns:autopilotfilemapping="www.autoesl.com/autopilotfilemapping">
+  <source>
+    <originFiles name="type_conversions.h" path="/mnt/ole/Documents/coderepo/HLS/type_conversions.h"/>
+    <originFiles name="type_conversions.cpp" path="/mnt/ole/Documents/coderepo/HLS/type_conversions.cpp"/>
+    <originFiles name="sha1.hpp" path="/mnt/ole/Documents/coderepo/Submodules/Vitis_libraries/security/L1/include/xf_security/sha1.hpp"/>
+    <originFiles name="main.h" path="/mnt/ole/Documents/coderepo/HLS/main.h"/>
+    <originFiles name="main.cpp" path="/mnt/ole/Documents/coderepo/HLS/main.cpp"/>
+    <originFiles name="dedup.h" path="/mnt/ole/Documents/coderepo/HLS/dedup.h"/>
+    <originFiles name="dedup.cpp" path="/mnt/ole/Documents/coderepo/HLS/dedup.cpp"/>
+    <originFiles name="bus_def.h" path="/mnt/ole/Documents/coderepo/HLS/bus_def.h"/>
+  </source>
+  <testbench>
+    <originFiles name="dedup_tb.cpp" path="/mnt/ole/Documents/coderepo/HLS/dedup_tb.cpp"/>
+  </testbench>
+</autopilotfilemapping:AutoPilotFileMapping>

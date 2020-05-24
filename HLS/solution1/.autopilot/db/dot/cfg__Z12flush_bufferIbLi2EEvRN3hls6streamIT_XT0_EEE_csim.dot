@@ -1,0 +1,18 @@
+digraph "CFG for 'void flush_buffer\<bool, 2\>' function" {
+	label="CFG for 'void flush_buffer\<bool, 2\>' function";
+
+	Node0x58b3280 [shape=record,filename="",linenumber="",label="{.predFake}"];
+	Node0x58b3280 -> Node0x58b3f10[ callList="" memoryops="" filename="../../../dedup.cpp" execusionnum="0"];
+	Node0x50943e0 [shape=record,filename="../../../dedup.cpp",linenumber="22",label="{.succFake2}"];
+subgraph cluster_0 {
+	label=".predFake1";
+	tripcount="0";
+	invocationtime="0";
+
+	Node0x58b3f10 [shape=record,filename="../../../dedup.cpp",linenumber="21",label="{.predFake1}"];
+	Node0x58b3f10 -> Node0x5094390[ callList="" memoryops="" filename="../../../dedup.cpp" execusionnum="0"];
+	Node0x5094390 [shape=record,filename="../../../dedup.cpp",linenumber="21",label="{.succFake|{<s0>T|<s1>F}}"];
+	Node0x5094390:s0 -> Node0x58b3f10[ callList="" memoryops="" filename="../../../dedup.cpp" execusionnum="0"];
+	Node0x5094390:s1 -> Node0x50943e0[ callList="" memoryops="" filename="../../../dedup.cpp" execusionnum="0"];
+}
+}

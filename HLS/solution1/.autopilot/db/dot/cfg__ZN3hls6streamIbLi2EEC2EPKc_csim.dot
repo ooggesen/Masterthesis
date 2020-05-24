@@ -1,0 +1,7 @@
+digraph "CFG for 'hls::stream\<bool, 2\>::stream' function" {
+	label="CFG for 'hls::stream\<bool, 2\>::stream' function";
+
+	Node0x5bd4d30 [shape=record,filename="",linenumber="",label="{.predFake}"];
+	Node0x5bd4d30 -> Node0x6136db0[ callList="" memoryops="" filename="/mnt/xilinx/Vitis_HLS/2021.2/include/hls_stream_thread_unsafe.h" execusionnum="2"];
+	Node0x6136db0 [shape=record,filename="/mnt/xilinx/Vitis_HLS/2021.2/include/hls_stream_thread_unsafe.h",linenumber="422",label="{.succFake}"];
+}
