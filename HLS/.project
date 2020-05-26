@@ -42,6 +42,21 @@
 			<location>/mnt/ole/Documents/coderepo/HLS/solution1/.tcls</location>
 		</link>
 		<link>
+			<name>source/bram.cpp</name>
+			<type>1</type>
+			<location>/mnt/ole/Documents/coderepo/HLS/bram.cpp</location>
+		</link>
+		<link>
+			<name>source/bram.h</name>
+			<type>1</type>
+			<location>/mnt/ole/Documents/coderepo/HLS/bram.h</location>
+		</link>
+		<link>
+			<name>source/bus_def.cpp</name>
+			<type>1</type>
+			<location>/mnt/ole/Documents/coderepo/HLS/bus_def.cpp</location>
+		</link>
+		<link>
 			<name>source/bus_def.h</name>
 			<type>1</type>
 			<location>/mnt/ole/Documents/coderepo/HLS/bus_def.h</location>
@@ -72,14 +87,9 @@
 			<location>/mnt/ole/Documents/coderepo/Submodules/Vitis_libraries/security/L1/include/xf_security/sha1.hpp</location>
 		</link>
 		<link>
-			<name>source/type_conversions.cpp</name>
+			<name>testbench/bram_tb.cpp</name>
 			<type>1</type>
-			<location>/mnt/ole/Documents/coderepo/HLS/type_conversions.cpp</location>
-		</link>
-		<link>
-			<name>source/type_conversions.h</name>
-			<type>1</type>
-			<location>/mnt/ole/Documents/coderepo/HLS/type_conversions.h</location>
+			<location>/mnt/ole/Documents/coderepo/HLS/bram_tb.cpp</location>
 		</link>
 		<link>
 			<name>testbench/dedup_tb.cpp</name>

@@ -11,8 +11,8 @@
 #define SMALL_CHUNK_SIZE 512 * 8 //512 bytes is average small chunk size in the PARCEL benchmark suite
 #define BIG_CHUNK_SIZE 2000000
 //bus width definitions
-#define W_DATA_SMALL_CHUNK 512 // TODO adapt width for whole chunk transfer; must be a multiple of 32 !!!
-#define W_DATA_BIG_CHUNK 1024 //TODO adapt width for whole chunk transfer
+#define W_DATA_SMALL_CHUNK 512 // TODO adapt width for whole chunk transfer; must be a multiple of 32 !!! ; width of small chunk bus line in bits
+#define W_DATA_BIG_CHUNK 1024 //TODO adapt width for whole chunk transfer ; width of big chunk bus line in bits
 #define W_ADDR 160 //width of SHA1 signature
 #define W_CHUNK_SIZE 22 //2^22 = 4.19 MB
 #define W_L1_ORDER 16 //2^16 * avgerage big chunk size(2 MB) = 130 GB
@@ -42,12 +42,17 @@ typedef struct{
 	l1_pos_t l1_pos;
 	l2_pos_t l2_pos;
 	bool is_duplicate;
+	bool end; //signals end of process
 }bus_packet;
 
 //BRAM access interface
 typedef struct{
-	sc_data_t data;
+	sc_data_t data[SC_ARRAY_SIZE];
 	addr_t addr;
 }bram_packet;
+
+
+//helper functions
+bool is_equal(sc_data_t a[SC_ARRAY_SIZE], sc_data_t b[SC_ARRAY_SIZE]);
 
 #endif //BUS_DEF_H

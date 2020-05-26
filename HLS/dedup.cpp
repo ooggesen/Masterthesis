@@ -43,13 +43,18 @@ void reset_buffers(	hls::stream< ap_uint< 32 > , MSG_BUFF_SIZE > &sha1_msg,
 /*
  * Function for performing the read of the interface to the FIFO streams
  */
-void read_in(bus_packet &in,
+void read_in(bus_packet in,
 		hls::stream< ap_uint< 32 > , MSG_BUFF_SIZE > &sha1_msg,
 		hls::stream< ap_uint< 64 > , 2 > &sha1_len,
 		hls::stream< bool , 2 > &sha1_end_len)
 {
-	sha1_len.write((unsigned long long) in.size);
+#ifdef FOR_SYNTHESIS
+	if (in.end) goto write_end_stream;
+#else
 	sha1_end_len.write(false);
+#endif
+
+	sha1_len.write((unsigned long long) in.size);
 
 	read_data:
 	for (int i = 0; i < SC_ARRAY_SIZE; i++){
@@ -73,6 +78,44 @@ void read_in(bus_packet &in,
 
 	write_end_stream:
 	sha1_end_len.write(true);
+
+}
+
+
+void convert_to_bram(bus_packet in, addr_t sha1_sum, bram_packet to_bram){
+	to_bram.addr = sha1_sum;
+	for (int i = 0 ; i < SC_ARRAY_SIZE ; i++){
+#pragma HLS UNROLL
+		to_bram.data[i] = in.data[i];
+	}
+}
+
+bool check_duplicate(bram_packet to_bram){
+	bram_packet packet_r;
+	packet_r.addr = to_bram.addr;
+
+	bram(false, true, to_bram, packet_r);
+
+	if (is_equal(to_bram.data, packet_r.data)){
+		return true; //found duplicate
+	} else {
+		//found unique chunk
+		bram(true, false, to_bram, packet_r); //write to bram
+		return false;
+	}
+}
+
+
+void read_out(bus_packet in, bus_packet &out){
+	out.end = in.end;
+	out.is_duplicate = in.is_duplicate;
+	out.l1_pos = in.l1_pos;
+	out.l2_pos = in.l2_pos;
+	out.size = in.size;
+
+	for (int i = 0 ; i < SC_ARRAY_SIZE ; i++){
+		out.data[i] = in.data[i];
+	}
 }
 
 
@@ -88,13 +131,12 @@ void read_in(bus_packet &in,
  * TODOs:
  * 	.insert pragmas where necessary
  */
-void dedup(bus_packet &in, ap_uint< 160 > &sha1_debug_out, bool &sha1_debug_end){//bram_packet to_bram, hls::stream< bus_packet > to_compress, hls::stream< bus_packet > to_reorder){
-	//TODO: find out why hls_thread_local did not work
+void dedup(bus_packet in, bus_packet &out){
 	//sha1 streams
 	hls::stream< ap_uint< 32 > , MSG_BUFF_SIZE > sha1_msg("sha1_msg");
 	hls::stream< ap_uint< 64 > , 2 > sha1_len("sha1_len");
 	hls::stream< bool , 2 > sha1_end_len("sha1_end_len");
-	hls::stream< ap_uint< 160 > , 2 > sha1_digest("sha1_digest");
+	hls::stream< addr_t , 2 > sha1_digest("sha1_digest");
 	hls::stream< bool , 2 > sha1_end_digest("sha1_end_digest");
 
 	//flush the buffers
@@ -104,12 +146,18 @@ void dedup(bus_packet &in, ap_uint< 160 > &sha1_debug_out, bool &sha1_debug_end)
 	read_in(in, sha1_msg, sha1_len, sha1_end_len);
 
 	//calculate sha1 hash
-	//hls::task sha1_task(xf::security::sha1< 32 >, sha1_msg, sha1_len, sha1_end_len, sha1_digest, sha1_end_digest);
 	xf::security::sha1< 32 >(sha1_msg, sha1_len, sha1_end_len, sha1_digest, sha1_end_digest);
 
-	//write
-	sha1_debug_out = sha1_digest.read();
-	sha1_debug_end = sha1_end_digest.read();
+	//create bus packet
+	bram_packet to_bram;
+	convert_to_bram(in, sha1_digest.read(), to_bram);
+	bool sha1__end = sha1_end_digest.read();
+
+	//check for duplicate
+	in.is_duplicate = check_duplicate(to_bram);
+
+	//pass to next stage
+	read_out(in, out);
 }
 
 
