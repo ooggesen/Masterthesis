@@ -18,6 +18,7 @@
  */
 template <typename T, int w>
 void flush_buffer(hls::stream<T, w> &buffer){
+	flush_buffer:
 	while(!buffer.empty())buffer.read();
 }
 
@@ -59,7 +60,7 @@ void read_in(bus_packet in,
 
 		int size_remaining = in.size * 8 - i * W_DATA_SMALL_CHUNK;
 		if (size_remaining > 0){
-		write_to_sha1_buff:
+			write_to_sha1_buff:
 			for (int j = 0; j < W_DATA_SMALL_CHUNK / 32 ; j++){
 				// break after the last package in stream
 				if (size_remaining - j * 32 <= 0){
@@ -80,6 +81,7 @@ void read_in(bus_packet in,
 
 void convert_to_bram(bus_packet in, addr_t sha1_sum, bram_packet &to_bram){
 	to_bram.addr = sha1_sum;
+	copy_to_bram_loop:
 	for (int i = 0 ; i < SC_ARRAY_SIZE ; i++){
 #pragma HLS UNROLL
 		to_bram.data[i] = in.data[i];
@@ -102,14 +104,16 @@ bool check_duplicate(bram_packet to_bram){
 }
 
 
-void read_out(bus_packet in, bus_packet &out){
+void write_out(bus_packet in, bus_packet &out){
 	out.end = in.end;
 	out.is_duplicate = in.is_duplicate;
 	out.l1_pos = in.l1_pos;
 	out.l2_pos = in.l2_pos;
 	out.size = in.size;
 
+	write_out_loop:
 	for (int i = 0 ; i < SC_ARRAY_SIZE ; i++){
+#pragma HLS UNROLL
 		out.data[i] = in.data[i];
 	}
 }
@@ -128,18 +132,13 @@ void read_out(bus_packet in, bus_packet &out){
  * 	.insert pragmas where necessary
  */
 void dedup(bus_packet in, bus_packet &out){
+#pragma HLS DATAFLOW
 	//sha1 streams
 	hls::stream< ap_uint< 32 > , MSG_BUFF_SIZE > sha1_msg("sha1_msg");
 	hls::stream< ap_uint< 64 > , 2 > sha1_len("sha1_len");
 	hls::stream< bool , 2 > sha1_end_len("sha1_end_len");
 	hls::stream< addr_t , 2 > sha1_digest("sha1_digest");
 	hls::stream< bool , 2 > sha1_end_digest("sha1_end_digest");
-
-	//check for end of stream
-	if (in.end) {
-		initialize_buffer();
-		return;
-	}
 
 	//flush the buffers
 	//reset_buffers(sha1_msg, sha1_len, sha1_end_len, sha1_digest, sha1_end_digest);
@@ -159,7 +158,7 @@ void dedup(bus_packet in, bus_packet &out){
 	in.is_duplicate = check_duplicate(to_bram);
 
 	//pass to next stage
-	read_out(in, out);
+	write_out(in, out);
 }
 
 
