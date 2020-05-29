@@ -1,12 +1,6 @@
 /*
- * This file contains the dedup kernel
+ * This file contains the dedup kernel for the dedup toolchain
  *
- * Steps of computation:
- * 	.copy input in buffer
- * 	.compute SHA1 sum of input
- * 	.check for duplicate
- * 		.foreward to reorder kernel if duplicate
- * 		.store copy in hash table and foreward to compression kernel if not duplicate
  */
 
 
@@ -79,8 +73,8 @@ void read_in(bus_packet in,
 }
 
 
-void convert_to_bram(bus_packet in, addr_t sha1_sum, bram_packet &to_bram){
-	to_bram.addr = sha1_sum;
+void convert_to_bram(bus_packet in, bram_packet &to_bram){
+	to_bram.addr = in.hash;
 	copy_to_bram_loop:
 	for (int i = 0 ; i < SC_ARRAY_SIZE ; i++){
 #pragma HLS UNROLL
@@ -104,21 +98,6 @@ bool check_duplicate(bram_packet to_bram){
 }
 
 
-void write_out(bus_packet in, bus_packet &out){
-	out.end = in.end;
-	out.is_duplicate = in.is_duplicate;
-	out.l1_pos = in.l1_pos;
-	out.l2_pos = in.l2_pos;
-	out.size = in.size;
-
-	write_out_loop:
-	for (int i = 0 ; i < SC_ARRAY_SIZE ; i++){
-#pragma HLS UNROLL
-		out.data[i] = in.data[i];
-	}
-}
-
-
 
 /*
  * main function for dedup kernel
@@ -129,10 +108,10 @@ void write_out(bus_packet in, bus_packet &out){
  * @param to_reorder: interface to the reorder stage, used if chunk is a duplicate
  *
  * TODOs:
- * 	.insert pragmas where necessary
+ * 	.in.end not yet implemented
  */
 void dedup(bus_packet in, bus_packet &out){
-#pragma HLS DATAFLOW
+#pragma HLS PIPELINE
 	//sha1 streams
 	hls::stream< ap_uint< 32 > , MSG_BUFF_SIZE > sha1_msg("sha1_msg");
 	hls::stream< ap_uint< 64 > , 2 > sha1_len("sha1_len");
@@ -151,14 +130,15 @@ void dedup(bus_packet in, bus_packet &out){
 
 	//create bus packet
 	bram_packet to_bram;
-	convert_to_bram(in, sha1_digest.read(), to_bram);
-	bool sha1__end = sha1_end_digest.read();
+	bool sha1__end = sha1_end_digest.read(); //FIXME: not yet used
+	in.hash = sha1_digest.read();
+	convert_to_bram(in, to_bram);
 
 	//check for duplicate
 	in.is_duplicate = check_duplicate(to_bram);
 
 	//pass to next stage
-	write_out(in, out);
+	copy(in, out);
 }
 
 

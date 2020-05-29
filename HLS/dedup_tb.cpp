@@ -45,13 +45,6 @@ int main()
 	cout << "       Testing dedup kernel       " << endl;
 	cout << "**********************************" << endl;
 
-	//file to write the results
-	ofstream ofile("../../../output.dat");
-	if (!ofile){
-		cout << "Can not open file!" <<  endl;
-		return 1;
-	}
-
 	//Generating input data
 	cout << "Generating " << NUM_TESTS << " tests for the dedup kernel." << endl;
 	test_result_pair test_data[NUM_TESTS];
@@ -75,10 +68,11 @@ int main()
 			trp->is_duplicate = false;
 		}
 
-
+		trp->test.hash = 0;
 		trp->test.l1_pos = 0;
 		trp->test.l2_pos = 0;
 		trp->test.is_duplicate = false;
+		trp->test.last_l2_chunk = false; //no effect in the dedup kernel
 		trp->test.end = (td == SC_ARRAY_SIZE - 1);
 
 		print_test_data(trp->test);
@@ -114,9 +108,6 @@ int main()
 	}else {
 		cout << errors << " out of " << NUM_TESTS <<" tests failed." << endl;
 	}
-
-	//Destruct file streams
-	ofile.close();
 
 	return errors;
 

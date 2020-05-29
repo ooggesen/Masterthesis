@@ -38,9 +38,11 @@ typedef struct{
 //small chunk bus interface
 typedef struct{
 	sc_data_t data[SC_ARRAY_SIZE];
+	addr_t hash;
 	c_size_t size;
 	l1_pos_t l1_pos;
 	l2_pos_t l2_pos;
+	bool last_l2_chunk;
 	bool is_duplicate;
 	bool end; //signals end of process
 }bus_packet;
@@ -54,5 +56,6 @@ typedef struct{
 
 //helper functions
 bool is_equal(sc_data_t a[SC_ARRAY_SIZE], sc_data_t b[SC_ARRAY_SIZE]);
+void copy(bus_packet in, bus_packet &out);
 
 #endif //BUS_DEF_H
