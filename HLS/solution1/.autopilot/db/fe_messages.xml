@@ -1,6 +1,0 @@
-<xilinx:hls_fe_msgs>
-    <msg msg_groups="" msg_id="207-812" msg_severity="ERROR" msg_loc="HLS/dedup.h:13:10" msg_body="'sha1.hpp' file not found">
-        <args/>
-    </msg>
-</xilinx:hls_fe_msgs>
-

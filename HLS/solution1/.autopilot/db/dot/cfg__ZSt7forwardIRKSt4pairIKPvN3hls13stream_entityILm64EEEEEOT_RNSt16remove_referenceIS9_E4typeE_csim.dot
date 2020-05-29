@@ -1,7 +1,0 @@
-digraph "CFG for 'std::pair\<void* const, hls::stream_entity\<64ul\> \> const& std::forward\<std::pair\<void* const, hls::stream_entity\<64ul\> \> const&\>' function" {
-	label="CFG for 'std::pair\<void* const, hls::stream_entity\<64ul\> \> const& std::forward\<std::pair\<void* const, hls::stream_entity\<64ul\> \> const&\>' function";
-
-	Node0x5954fa0 [shape=record,filename="",linenumber="",label="{.predFake}"];
-	Node0x5954fa0 -> Node0x6145ad0[ callList="" memoryops="" filename="/mnt/xilinx/Vitis_HLS/2021.2/tps/lnx64/gcc-6.2.0/lib/gcc/x86_64-pc-linux-gnu/6.2.0/../../../../include/c++/6.2.0/bits/move.h" execusionnum="0"];
-	Node0x6145ad0 [shape=record,filename="/mnt/xilinx/Vitis_HLS/2021.2/tps/lnx64/gcc-6.2.0/lib/gcc/x86_64-pc-linux-gnu/6.2.0/../../../../include/c++/6.2.0/bits/move.h",linenumber="77",label="{.succFake}"];
-}

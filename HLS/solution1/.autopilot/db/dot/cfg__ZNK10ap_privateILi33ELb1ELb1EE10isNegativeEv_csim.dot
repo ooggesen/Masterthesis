@@ -1,7 +1,0 @@
-digraph "CFG for 'ap_private\<33, true, true\>::isNegative' function" {
-	label="CFG for 'ap_private\<33, true, true\>::isNegative' function";
-
-	Node0x5e13d20 [shape=record,filename="",linenumber="",label="{.predFake}"];
-	Node0x5e13d20 -> Node0x60e0dc0[ callList="" memoryops="" filename="/mnt/xilinx/Vitis_HLS/2021.2/include/etc/ap_private.h" execusionnum="1440"];
-	Node0x60e0dc0 [shape=record,filename="/mnt/xilinx/Vitis_HLS/2021.2/include/etc/ap_private.h",linenumber="1763",label="{.succFake}"];
-}

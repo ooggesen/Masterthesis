@@ -1,7 +1,0 @@
-digraph "CFG for 'ap_private\<22, false, true\>::get_cleared_VAL' function" {
-	label="CFG for 'ap_private\<22, false, true\>::get_cleared_VAL' function";
-
-	Node0x5738650 [shape=record,filename="",linenumber="",label="{.predFake}"];
-	Node0x5738650 -> Node0x50e6780[ callList="" memoryops="" filename="/mnt/xilinx/Vitis_HLS/2021.2/include/etc/ap_private.h" execusionnum="30"];
-	Node0x50e6780 [shape=record,filename="/mnt/xilinx/Vitis_HLS/2021.2/include/etc/ap_private.h",linenumber="1463",label="{.succFake}"];
-}

@@ -1,7 +1,0 @@
-digraph "CFG for 'hls::stream\<ap_uint\<32\>, 0\>::size' function" {
-	label="CFG for 'hls::stream\<ap_uint\<32\>, 0\>::size' function";
-
-	Node0x5af04c0 [shape=record,filename="",linenumber="",label="{.predFake}"];
-	Node0x5af04c0 -> Node0x610e0b0[ callList="" memoryops="" filename="/mnt/xilinx/Vitis_HLS/2021.2/include/hls_stream_thread_unsafe.h" execusionnum="2"];
-	Node0x610e0b0 [shape=record,filename="/mnt/xilinx/Vitis_HLS/2021.2/include/hls_stream_thread_unsafe.h",linenumber="405",label="{.succFake}"];
-}

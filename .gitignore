@@ -1047,3 +1047,8 @@ dkms.conf
 #vitis_hls files
 .project
 *.xml
+.autopilot/
+.debug/
+.apc/
+.vitis_hls_log_all.xml
+solution*/

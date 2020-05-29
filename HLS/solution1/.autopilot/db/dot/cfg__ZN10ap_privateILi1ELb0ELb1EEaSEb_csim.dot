@@ -1,7 +1,0 @@
-digraph "CFG for 'ap_private\<1, false, true\>::operator=' function" {
-	label="CFG for 'ap_private\<1, false, true\>::operator=' function";
-
-	Node0x5f3e0d0 [shape=record,filename="",linenumber="",label="{.predFake}"];
-	Node0x5f3e0d0 -> Node0x63000f0[ callList="" memoryops="" filename="/mnt/xilinx/Vitis_HLS/2021.2/include/etc/ap_private.h" execusionnum="1"];
-	Node0x63000f0 [shape=record,filename="/mnt/xilinx/Vitis_HLS/2021.2/include/etc/ap_private.h",linenumber="1538",label="{.succFake}"];
-}

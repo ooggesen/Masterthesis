@@ -1,7 +1,0 @@
-digraph "CFG for 'hls::stream\<xf::security::internal::blockType, 0\>::empty' function" {
-	label="CFG for 'hls::stream\<xf::security::internal::blockType, 0\>::empty' function";
-
-	Node0x5c2e060 [shape=record,filename="",linenumber="",label="{.predFake}"];
-	Node0x5c2e060 -> Node0x6140410[ callList="" memoryops="" filename="/mnt/xilinx/Vitis_HLS/2021.2/include/hls_stream_thread_unsafe.h" execusionnum="1"];
-	Node0x6140410 [shape=record,filename="/mnt/xilinx/Vitis_HLS/2021.2/include/hls_stream_thread_unsafe.h",linenumber="351",label="{.succFake}"];
-}

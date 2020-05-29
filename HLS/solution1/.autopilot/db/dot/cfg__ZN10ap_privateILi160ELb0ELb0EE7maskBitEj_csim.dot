@@ -1,7 +1,0 @@
-digraph "CFG for 'ap_private\<160, false, false\>::maskBit' function" {
-	label="CFG for 'ap_private\<160, false, false\>::maskBit' function";
-
-	Node0x5d1e8d0 [shape=record,filename="",linenumber="",label="{.predFake}"];
-	Node0x5d1e8d0 -> Node0x616aea0[ callList="" memoryops="" filename="/mnt/xilinx/Vitis_HLS/2021.2/include/etc/ap_private.h" execusionnum="0"];
-	Node0x616aea0 [shape=record,filename="/mnt/xilinx/Vitis_HLS/2021.2/include/etc/ap_private.h",linenumber="3521",label="{.succFake}"];
-}

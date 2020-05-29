@@ -1,7 +1,0 @@
-digraph "CFG for 'ap_int_base\<22, false\>::RType\<32, true\>::mult operator*\<22, false, 32, true\>' function" {
-	label="CFG for 'ap_int_base\<22, false\>::RType\<32, true\>::mult operator*\<22, false, 32, true\>' function";
-
-	Node0x5b61700 [shape=record,filename="",linenumber="",label="{.predFake}"];
-	Node0x5b61700 -> Node0x6124130[ callList="" memoryops="" filename="/mnt/xilinx/Vitis_HLS/2021.2/include/ap_int_base.h" execusionnum="16"];
-	Node0x6124130 [shape=record,filename="/mnt/xilinx/Vitis_HLS/2021.2/include/ap_int_base.h",linenumber="1539",label="{.succFake}"];
-}

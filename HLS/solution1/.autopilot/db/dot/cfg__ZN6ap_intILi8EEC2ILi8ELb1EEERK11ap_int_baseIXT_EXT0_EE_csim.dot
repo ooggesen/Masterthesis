@@ -1,7 +1,0 @@
-digraph "CFG for 'ap_int\<8\>::ap_int\<8, true\>' function" {
-	label="CFG for 'ap_int\<8\>::ap_int\<8, true\>' function";
-
-	Node0x5e0a350 [shape=record,filename="",linenumber="",label="{.predFake}"];
-	Node0x5e0a350 -> Node0x60d8540[ callList="" memoryops="" filename="/mnt/xilinx/Vitis_HLS/2021.2/include/ap_int.h" execusionnum="720"];
-	Node0x60d8540 [shape=record,filename="/mnt/xilinx/Vitis_HLS/2021.2/include/ap_int.h",linenumber="138",label="{.succFake}"];
-}

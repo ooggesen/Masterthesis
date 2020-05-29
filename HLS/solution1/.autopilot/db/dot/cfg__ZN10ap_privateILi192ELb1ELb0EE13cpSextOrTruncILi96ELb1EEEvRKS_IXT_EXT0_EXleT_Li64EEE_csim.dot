@@ -1,7 +1,0 @@
-digraph "CFG for 'void ap_private\<192, true, false\>::cpSextOrTrunc\<96, true\>' function" {
-	label="CFG for 'void ap_private\<192, true, false\>::cpSextOrTrunc\<96, true\>' function";
-
-	Node0x5fbfb00 [shape=record,filename="",linenumber="",label="{.predFake}"];
-	Node0x5fbfb00 -> Node0x63190f0[ callList="" memoryops="" filename="/mnt/xilinx/Vitis_HLS/2021.2/include/etc/ap_private.h" execusionnum="2"];
-	Node0x63190f0 [shape=record,filename="/mnt/xilinx/Vitis_HLS/2021.2/include/etc/ap_private.h",linenumber="5518",label="{.succFake}"];
-}

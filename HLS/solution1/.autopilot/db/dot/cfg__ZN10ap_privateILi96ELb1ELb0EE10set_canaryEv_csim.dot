@@ -1,7 +1,0 @@
-digraph "CFG for 'ap_private\<96, true, false\>::set_canary' function" {
-	label="CFG for 'ap_private\<96, true, false\>::set_canary' function";
-
-	Node0x5fc81e0 [shape=record,filename="",linenumber="",label="{.predFake}"];
-	Node0x5fc81e0 -> Node0x631a860[ callList="" memoryops="" filename="/mnt/xilinx/Vitis_HLS/2021.2/include/etc/ap_private.h" execusionnum="4"];
-	Node0x631a860 [shape=record,filename="/mnt/xilinx/Vitis_HLS/2021.2/include/etc/ap_private.h",linenumber="3252",label="{.succFake}"];
-}

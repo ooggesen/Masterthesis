@@ -1,7 +1,0 @@
-digraph "CFG for '_GLOBAL__sub_I_type_conversions.cpp' function" {
-	label="CFG for '_GLOBAL__sub_I_type_conversions.cpp' function";
-
-	Node0x58afbb0 [shape=record,filename="../../../type_conversions.cpp",linenumber="0",label="{.predFake}"];
-	Node0x58afbb0 -> Node0x50910d0[ callList="" memoryops="" filename="../../../type_conversions.cpp" execusionnum="0"];
-	Node0x50910d0 [shape=record,filename="",linenumber="",label="{.succFake}"];
-}

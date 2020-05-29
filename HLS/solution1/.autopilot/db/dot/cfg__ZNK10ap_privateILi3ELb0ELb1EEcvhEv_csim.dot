@@ -1,7 +1,0 @@
-digraph "CFG for 'ap_private\<3, false, true\>::operator unsigned char' function" {
-	label="CFG for 'ap_private\<3, false, true\>::operator unsigned char' function";
-
-	Node0x5d9b790 [shape=record,filename="",linenumber="",label="{.predFake}"];
-	Node0x5d9b790 -> Node0x60cd480[ callList="" memoryops="" filename="/mnt/xilinx/Vitis_HLS/2021.2/include/etc/ap_private.h" execusionnum="5"];
-	Node0x60cd480 [shape=record,filename="/mnt/xilinx/Vitis_HLS/2021.2/include/etc/ap_private.h",linenumber="1937",label="{.succFake}"];
-}
