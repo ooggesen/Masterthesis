@@ -14,7 +14,7 @@ add_files HLS/dedup.h
 add_files HLS/main.cpp
 add_files HLS/main.h
 add_files Submodules/Vitis_libraries/security/L1/include/xf_security/sha1.hpp
-add_files -tb HLS/bram_tb.cpp
+add_files -tb HLS/bram_tb.cpp -cflags "-Wno-unknown-pragmas" -csimflags "-Wno-unknown-pragmas"
 add_files -tb HLS/dedup_tb.cpp -cflags "-Wno-unknown-pragmas" -csimflags "-Wno-unknown-pragmas"
 open_solution "solution1" -flow_target vivado
 set_part {xcvu11p-flga2577-1-e}

@@ -48,11 +48,7 @@ void read_in(bus_packet in,
 		hls::stream< ap_uint< 64 > , 2 > &sha1_len,
 		hls::stream< bool , 2 > &sha1_end_len)
 {
-#ifdef FOR_SYNTHESIS
-	if (in.end) goto write_end_stream;
-#else
 	sha1_end_len.write(false);
-#endif
 
 	sha1_len.write((unsigned long long) in.size);
 
@@ -82,7 +78,7 @@ void read_in(bus_packet in,
 }
 
 
-void convert_to_bram(bus_packet in, addr_t sha1_sum, bram_packet to_bram){
+void convert_to_bram(bus_packet in, addr_t sha1_sum, bram_packet &to_bram){
 	to_bram.addr = sha1_sum;
 	for (int i = 0 ; i < SC_ARRAY_SIZE ; i++){
 #pragma HLS UNROLL
@@ -138,6 +134,12 @@ void dedup(bus_packet in, bus_packet &out){
 	hls::stream< bool , 2 > sha1_end_len("sha1_end_len");
 	hls::stream< addr_t , 2 > sha1_digest("sha1_digest");
 	hls::stream< bool , 2 > sha1_end_digest("sha1_end_digest");
+
+	//check for end of stream
+	if (in.end) {
+		initialize_buffer();
+		return;
+	}
 
 	//flush the buffers
 	//reset_buffers(sha1_msg, sha1_len, sha1_end_len, sha1_digest, sha1_end_digest);

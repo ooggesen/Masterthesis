@@ -31,7 +31,7 @@ int bram_tb(){
 
 	cout << "Writing data:" << endl;
 
-	for (int i = 0 ; i < 20 ; i++){
+	for (int i = 0 ; i < 200 ; i++){
 		packet_w.addr = i;
 		for (int j = 0 ; j < SC_ARRAY_SIZE ; j++){
 			packet_w.data[j] = i * j;
@@ -43,7 +43,7 @@ int bram_tb(){
 
 	cout << "Reading data:" << endl;
 
-	for (int i = 0 ; i < 20 ; i++){
+	for (int i = 0 ; i < 200 ; i++){
 		packet_r.addr = i;
 
 		bram(false, true, packet_w, packet_r);
@@ -58,7 +58,7 @@ int bram_tb(){
 	if (errors == 0){
 		cout << "Tests complete without errors." << endl;
 	} else {
-		cout << "Tests completet with " << errors << " errors." << endl;
+		cout << "Tests completet with " << dec << errors << " errors." << endl;
 	}
 
 	return errors;

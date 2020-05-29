@@ -11,7 +11,6 @@
 
 //MACRO definitions
 #define MSG_BUFF_SIZE 64 //size of the message FIFO to the SHA1 kernel
-//#define FOR_SYNTHESIS //define MACRO for Synthesis only
 
 //function definitions
 

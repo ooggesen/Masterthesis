@@ -9,10 +9,15 @@
 #include <fstream>
 #include <stdlib.h>
 #include <string.h>
+using namespace std;
 
 #define NUM_TESTS 10
 
-using namespace std;
+struct test_result_pair{
+	bus_packet test;
+	bool is_duplicate;
+};
+
 void print_test_data(bus_packet test_data){
 	cout << "-----" << endl;
 
@@ -47,22 +52,36 @@ int main()
 		return 1;
 	}
 
-	cout << "Generating input data." << endl;
-	bus_packet test_data[NUM_TESTS];
+	//Generating input data
+	cout << "Generating " << NUM_TESTS << " tests for the dedup kernel." << endl;
+	test_result_pair test_data[NUM_TESTS];
 	for (int td = 0; td < NUM_TESTS; td ++){
-		bus_packet *bp = test_data + td;
+		test_result_pair *trp = test_data + td;
 
-		for (int i = 0 ; i < SC_ARRAY_SIZE ; i++){
-			bp->data[i] = rand() % (1 << 31);
+		//in 20 percent of cases create duplicate for test
+		if (rand() % 100 < 20){
+			for (int i = 0 ; i < SC_ARRAY_SIZE ; i++){
+				trp->test.data[i] = (trp - 1)->test.data[i];
+			}
+			trp->test.size = (trp - 1)->test.size;
+
+			trp->is_duplicate = true;
+		} else {
+			for (int i = 0 ; i < SC_ARRAY_SIZE ; i++){
+				trp->test.data[i] = rand() % (1 << 31);
+			}
+			trp->test.size = rand() % 512 + 256;
+
+			trp->is_duplicate = false;
 		}
 
-		bp->size = rand() % 512 + 256;
-		bp->l1_pos = 0;
-		bp->l2_pos = 0;
-		bp->is_duplicate = false;
-		bp->end = (td != SC_ARRAY_SIZE - 1);
 
-		print_test_data(test_data[td]);
+		trp->test.l1_pos = 0;
+		trp->test.l2_pos = 0;
+		trp->test.is_duplicate = false;
+		trp->test.end = (td == SC_ARRAY_SIZE - 1);
+
+		print_test_data(trp->test);
 	}
 
 	//running dedup
@@ -70,19 +89,30 @@ int main()
 
 	bus_packet responses[NUM_TESTS];
 	for (int i = 0; i < NUM_TESTS; i++){
-		cout < "|";
-		dedup(test_data[i], responses[i]);
+		cout << "|";
+		dedup(test_data[i].test, responses[i]);
 	}
 
 	cout << endl << "Dedup run finished." << endl;
 
-	//check result TODO: write checking of results
-	int errors = 0, retval;
+	//check results
+	int errors = 0;
+
+	cout << "Checking results." << endl;
+
+	for (int i = 0 ; i < NUM_TESTS ; i++){
+		if (test_data[i].is_duplicate != responses[i].is_duplicate){
+			cout << left << "Wrong prediction:" << endl;
+			cout << left << "test data: " << right << setw(2) << test_data[i].is_duplicate << endl;
+			cout << left << "responses: " << right << setw(2) << responses[i].is_duplicate << endl;
+			++errors;
+		}
+	}
 
 	if (errors == 0){
-		cout << "Test passed." << endl;
+		cout << "Tests passed." << endl;
 	}else {
-		cout << "Test failed." << endl;
+		cout << errors << " out of " << NUM_TESTS <<" tests failed." << endl;
 	}
 
 	//Destruct file streams
