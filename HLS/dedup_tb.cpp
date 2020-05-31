@@ -4,42 +4,27 @@
  *
  */
 #include "dedup.h"
+#include "test_bench.h"
 
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 using namespace std;
 
-#define NUM_TESTS 10
+#define NUM_TESTS 100
 
 struct test_result_pair{
 	bus_packet test;
 	bool is_duplicate;
 };
 
-void print_test_data(bus_packet test_data){
-	cout << "-----" << endl;
-
-	//cout << SC_ARRAY_SIZE << endl;
-	cout << "data: " << endl;
-	for (int i = 0 ; i < SC_ARRAY_SIZE ; i++){
-		cout << i + 1 << ": " << hex << test_data.data[i] << endl;
-	}
-	cout << dec <<"size: " << test_data.size <<  endl;
-	cout << "l1 pos: " << test_data.l1_pos << endl;
-	cout << "l2 pos: " << test_data.l2_pos << endl;
-	cout << "dup: " << test_data.is_duplicate << endl;
-	cout << "end: " << test_data.end << endl;
-
-	cout << "-----" << endl;
-}
-
 
 /*
  * dedup testbench
  */
-int main()
+int dedup_tb()
 {
 	cout << "**********************************" << endl;
 	cout << "       Testing dedup kernel       " << endl;
@@ -47,12 +32,15 @@ int main()
 
 	//Generating input data
 	cout << "Generating " << NUM_TESTS << " tests for the dedup kernel." << endl;
+
+	srand(time(NULL)); //set rand seed TODO: make this set by main argument as well for reproducability
+
 	test_result_pair test_data[NUM_TESTS];
 	for (int td = 0; td < NUM_TESTS; td ++){
 		test_result_pair *trp = test_data + td;
 
 		//in 20 percent of cases create duplicate for test
-		if (rand() % 100 < 20){
+		if (rand() % 100 < 20 && td != 0){
 			for (int i = 0 ; i < SC_ARRAY_SIZE ; i++){
 				trp->test.data[i] = (trp - 1)->test.data[i];
 			}
@@ -69,8 +57,8 @@ int main()
 		}
 
 		trp->test.hash = 0;
-		trp->test.l1_pos = 0;
-		trp->test.l2_pos = 0;
+		trp->test.l1_pos = 0;//no effect in the dedup kernel
+		trp->test.l2_pos = 0;//no effect in the dedup kernel
 		trp->test.is_duplicate = false;
 		trp->test.last_l2_chunk = false; //no effect in the dedup kernel
 		trp->test.end = (td == SC_ARRAY_SIZE - 1);

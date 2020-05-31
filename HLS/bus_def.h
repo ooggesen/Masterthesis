@@ -14,7 +14,7 @@
 #define W_DATA_SMALL_CHUNK 512 // TODO adapt width for whole chunk transfer; must be a multiple of 32 !!! ; width of small chunk bus line in bits
 #define W_DATA_BIG_CHUNK 1024 //TODO adapt width for whole chunk transfer ; width of big chunk bus line in bits
 #define W_ADDR 160 //width of SHA1 signature
-#define W_CHUNK_SIZE 22 //2^22 = 4.19 MB
+#define W_CHUNK_SIZE 64 //like in PARSEC
 #define W_L1_ORDER 16 //2^16 * avgerage big chunk size(2 MB) = 130 GB
 #define W_L2_ORDER 16 //2^16 * average small chunk size(512 bytes) > average big chunk size(2MB)
 //relational definitions

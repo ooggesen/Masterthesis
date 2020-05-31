@@ -82,18 +82,18 @@ void convert_to_bram(bus_packet in, bram_packet &to_bram){
 	}
 }
 
-bool check_duplicate(bram_packet to_bram){
+void check_duplicate(bram_packet to_bram, bool &is_duplicate){
 	bram_packet packet_r;
 	packet_r.addr = to_bram.addr;
 
 	bram(false, true, to_bram, packet_r);
 
 	if (is_equal(to_bram.data, packet_r.data)){
-		return true; //found duplicate
+		is_duplicate = true; //found duplicate
 	} else {
 		//found unique chunk
 		bram(true, false, to_bram, packet_r); //write to bram
-		return false;
+		is_duplicate = false;
 	}
 }
 
@@ -111,7 +111,7 @@ bool check_duplicate(bram_packet to_bram){
  * 	.in.end not yet implemented
  */
 void dedup(bus_packet in, bus_packet &out){
-#pragma HLS PIPELINE
+#pragma HLS DATAFLOW
 	//sha1 streams
 	hls::stream< ap_uint< 32 > , MSG_BUFF_SIZE > sha1_msg("sha1_msg");
 	hls::stream< ap_uint< 64 > , 2 > sha1_len("sha1_len");
@@ -130,16 +130,15 @@ void dedup(bus_packet in, bus_packet &out){
 
 	//create bus packet
 	bram_packet to_bram;
-	bool sha1__end = sha1_end_digest.read(); //FIXME: not yet used
+	//bool sha1__end = sha1_end_digest.read(); //FIXME: not yet used
+	flush_buffer< bool, 2 >(sha1_end_digest);
+
 	in.hash = sha1_digest.read();
 	convert_to_bram(in, to_bram);
 
 	//check for duplicate
-	in.is_duplicate = check_duplicate(to_bram);
+	check_duplicate(to_bram, in.is_duplicate);
 
 	//pass to next stage
 	copy(in, out);
 }
-
-
-
