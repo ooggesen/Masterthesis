@@ -7,9 +7,10 @@
 void write_header(hls::stream< ap_uint< 8 > > &out){
 	ap_uint< 32 > checkbit = CHECKBIT;
 	for (int i = 0 ; i < 4 ; i++){ //TODO assume MSB first to send
+#pragma HLS UNROLL
 		out.write(checkbit.range(31 - i*8, 24 - i*8));
 	}
-	out.write(COMPRESS_NONE); //TODO in parsec this is a byte not a 32 bit u_integer_t
+	out.write(COMPRESS_NONE);
 }
 
 void write_buffer(bus_packet to_write, stack &buffer){
@@ -22,17 +23,24 @@ void write_buffer(bus_packet to_write, stack &buffer){
 void read_buffer(l1_pos_t l1, l2_pos_t l2, stack &buffer, bus_packet &out, bool &success){
 	if (buffer.sp != 0){
 		check_buffer_for_next_chunk:
-		for (int elem = buffer.sp-1 ; elem >= 0 ; elem--){
+		for (int elem = 0 ; elem < buffer.sp ; elem--){
 			bus_packet *bp = &buffer.stack[elem];
+			//check if correct chunk
 			if (bp->l1_pos == l1 && bp->l2_pos == l2){
 				copy(*bp, out);
+
+				//realign elements in stack and update stack pointer
+				for (int i = elem ; i < buffer.sp-1 ; i++){
+					copy(buffer.stack[i+1], buffer.stack[i]);
+				}
 				buffer.sp--;
+
 				success = true;
 				return;
 			}
 		}
 	}
-	success = false;;
+	success = false;
 }
 
 void write_seperator(ap_uint< 8 > type, c_size_t size, hls::stream< ap_uint< 8 > > &out){
@@ -91,14 +99,17 @@ void reorder(hls::stream< bus_packet > &in, hls::stream< ap_uint< 8 > > &out){
 
 	//buffer for storing chunks
 	stack buffer;
+	buffer.sp = 0;
 
 	//write header
 	write_header(out);
 
 	//reorder loop
 	bus_packet current;
+	unsigned i = 0;
 	reorder_loop:
 	do {
+		i++;
 		//get next item from queue
 		current = in.read();
 
@@ -106,7 +117,7 @@ void reorder(hls::stream< bus_packet > &in, hls::stream< ap_uint< 8 > > &out){
 		bool is_next_chunk = l1_pos == current.l1_pos && l2_pos == current.l2_pos;
 
 		if (is_next_chunk){
-			//write chunk to the ouput stream
+			//write chunk to the output stream
 			update_pos(current.last_l2_chunk, l1_pos, l2_pos);
 
 			write_out(current, out);
@@ -129,4 +140,6 @@ void reorder(hls::stream< bus_packet > &in, hls::stream< ap_uint< 8 > > &out){
 			read_buffer(l1_pos, l2_pos, buffer, current, chunk_in_buffer);
 		}
 	} while(!current.end);
+
+	return;
 }

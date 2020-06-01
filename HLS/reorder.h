@@ -9,7 +9,7 @@
 #include "ap_int.h"
 
 //definitions
-#define STACK_DEPTH 10
+#define STACK_DEPTH 50 //TODO reorganisze the buffer
 
 typedef struct {
 	unsigned sp;

@@ -111,7 +111,7 @@ void check_duplicate(bram_packet to_bram, bool &is_duplicate){
  * 	.in.end not yet implemented
  */
 void dedup(bus_packet in, bus_packet &out){
-#pragma HLS DATAFLOW
+#pragma HLS PIPELINE
 	//sha1 streams
 	hls::stream< ap_uint< 32 > , MSG_BUFF_SIZE > sha1_msg("sha1_msg");
 	hls::stream< ap_uint< 64 > , 2 > sha1_len("sha1_len");
