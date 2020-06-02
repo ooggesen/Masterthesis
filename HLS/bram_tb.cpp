@@ -21,6 +21,7 @@ void print_data(bram_packet data){
 	cout << data.addr << endl;
 }
 
+
 int bram_tb(){
 	cout << "**********************************" << endl;
 	cout << "       Testing bram module       " << endl;

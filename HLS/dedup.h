@@ -14,6 +14,6 @@
 
 //function definitions
 
-void dedup(bus_packet in, bus_packet &out);
+void dedup(bus_packet &in, bus_packet &out);
 
 #endif //DEDUP_H

@@ -8,13 +8,9 @@
 #include "hls_stream.h"
 #include "ap_int.h"
 
-//definitions
-#define STACK_DEPTH 50 //TODO reorganisze the buffer
-
-typedef struct {
-	unsigned sp;
-	bus_packet stack[STACK_DEPTH];
-} stack;
+//Definitions
+#define BUFFER_SIZE_1 20
+#define BUFFER_SIZE_2 4
 
 //function declarations
 void reorder(hls::stream< bus_packet > &in, hls::stream< ap_uint< 8 > > &out);

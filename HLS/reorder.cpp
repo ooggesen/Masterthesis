@@ -4,6 +4,32 @@
 
 #include "reorder.h"
 
+struct buffer_cell {
+	bus_packet data;
+	bool valid;
+};
+
+void write_buffer(bus_packet &to_write, buffer_cell buffer[][BUFFER_SIZE_2]){
+	//TODO no safety mechanismn if cell is already written to
+	buffer_cell *bc = &buffer[to_write.l1_pos.to_int() % BUFFER_SIZE_1][to_write.l2_pos.to_int() % BUFFER_SIZE_2];
+	//write data to buffer
+	bc->valid = true;
+	copy(to_write, bc->data);
+}
+
+void read_buffer(l1_pos_t &l1, l2_pos_t &l2, buffer_cell buffer[][BUFFER_SIZE_2], bus_packet &out, bool &success){
+	buffer_cell *bc = &buffer[l1.to_int() % BUFFER_SIZE_1][l2.to_int() % BUFFER_SIZE_2];
+
+	//if entry correct return data
+	if (bc->valid && bc->data.l1_pos == l1 && bc->data.l2_pos){
+		copy(bc->data, out);
+		bc->valid = false;
+		success = true;
+	} else{
+		success = false;
+	}
+}
+
 void write_header(hls::stream< ap_uint< 8 > > &out){
 	ap_uint< 32 > checkbit = CHECKBIT;
 	for (int i = 0 ; i < 4 ; i++){ //TODO assume MSB first to send
@@ -13,37 +39,7 @@ void write_header(hls::stream< ap_uint< 8 > > &out){
 	out.write(COMPRESS_NONE);
 }
 
-void write_buffer(bus_packet to_write, stack &buffer){
-	if (buffer.sp < STACK_DEPTH){
-		copy(to_write, buffer.stack[buffer.sp]);
-		buffer.sp++;
-	}
-}
-
-void read_buffer(l1_pos_t l1, l2_pos_t l2, stack &buffer, bus_packet &out, bool &success){
-	if (buffer.sp != 0){
-		check_buffer_for_next_chunk:
-		for (int elem = 0 ; elem < buffer.sp ; elem--){
-			bus_packet *bp = &buffer.stack[elem];
-			//check if correct chunk
-			if (bp->l1_pos == l1 && bp->l2_pos == l2){
-				copy(*bp, out);
-
-				//realign elements in stack and update stack pointer
-				for (int i = elem ; i < buffer.sp-1 ; i++){
-					copy(buffer.stack[i+1], buffer.stack[i]);
-				}
-				buffer.sp--;
-
-				success = true;
-				return;
-			}
-		}
-	}
-	success = false;
-}
-
-void write_seperator(ap_uint< 8 > type, c_size_t size, hls::stream< ap_uint< 8 > > &out){
+void write_seperator(ap_uint< 8 > type, c_size_t &size, hls::stream< ap_uint< 8 > > &out){
 	out.write(type);
 	write_size_of_chunk_to_file:
 	for (int i = 0 ; i < W_CHUNK_SIZE / 8 ; i++){
@@ -52,7 +48,7 @@ void write_seperator(ap_uint< 8 > type, c_size_t size, hls::stream< ap_uint< 8 >
 	}
 }
 
-void write_out(bus_packet in, hls::stream< ap_uint< 8 > > &out){
+void write_out(bus_packet &in, hls::stream< ap_uint< 8 > > &out){
 	if (in.is_duplicate){
 		//write seperator
 		write_seperator(TYPE_FINGERPRINT, in.size, out);
@@ -78,7 +74,7 @@ void write_out(bus_packet in, hls::stream< ap_uint< 8 > > &out){
 	}
 }
 
-void update_pos(bool last_l2_chunk, l1_pos_t &l1_pos, l2_pos_t &l2_pos){
+void update_pos(bool &last_l2_chunk, l1_pos_t &l1_pos, l2_pos_t &l2_pos){
 	if (last_l2_chunk){
 		l1_pos++;
 		l2_pos = 0;
@@ -98,8 +94,7 @@ void reorder(hls::stream< bus_packet > &in, hls::stream< ap_uint< 8 > > &out){
 	l2_pos_t l2_pos = 0;
 
 	//buffer for storing chunks
-	stack buffer;
-	buffer.sp = 0;
+	static buffer_cell buffer[BUFFER_SIZE_1][BUFFER_SIZE_2];
 
 	//write header
 	write_header(out);

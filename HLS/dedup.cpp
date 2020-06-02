@@ -38,11 +38,16 @@ void reset_buffers(	hls::stream< ap_uint< 32 > , MSG_BUFF_SIZE > &sha1_msg,
 /*
  * Function for performing the read of the interface to the FIFO streams
  */
-void read_in(bus_packet in,
+void read_in(bus_packet &in,
+		bus_packet &in_buffer,
 		hls::stream< ap_uint< 32 > , MSG_BUFF_SIZE > &sha1_msg,
 		hls::stream< ap_uint< 64 > , 2 > &sha1_len,
 		hls::stream< bool , 2 > &sha1_end_len)
 {
+	//write buffer
+	copy(in, in_buffer);
+
+	//write sha streams
 	sha1_end_len.write(false);
 
 	sha1_len.write((unsigned long long) in.size);
@@ -62,7 +67,6 @@ void read_in(bus_packet in,
 				}
 
 				sha1_msg.write(current.range(31 + 32 * j, 32 * j));
-				//unsigned tmp = current.range(31 + 32 * j, 32 * j).to_int();
 			}
 		}
 	}
@@ -74,6 +78,7 @@ void read_in(bus_packet in,
 
 
 void convert_to_bram(bus_packet in, bram_packet &to_bram){
+#pragma HLS ARRAY_PARTITION variable=in.data type=complete
 	to_bram.addr = in.hash;
 	copy_to_bram_loop:
 	for (int i = 0 ; i < SC_ARRAY_SIZE ; i++){
@@ -110,8 +115,10 @@ void check_duplicate(bram_packet to_bram, bool &is_duplicate){
  * TODOs:
  * 	.in.end not yet implemented
  */
-void dedup(bus_packet in, bus_packet &out){
-#pragma HLS PIPELINE
+void dedup(bus_packet &in, bus_packet &out){
+	//buffer
+	bus_packet in_buffer;
+#pragma HLS ARRAY_PARTITION variable=in_buffer type=complete
 	//sha1 streams
 	hls::stream< ap_uint< 32 > , MSG_BUFF_SIZE > sha1_msg("sha1_msg");
 	hls::stream< ap_uint< 64 > , 2 > sha1_len("sha1_len");
@@ -123,22 +130,24 @@ void dedup(bus_packet in, bus_packet &out){
 	//reset_buffers(sha1_msg, sha1_len, sha1_end_len, sha1_digest, sha1_end_digest);
 
 	//move data to streams
-	read_in(in, sha1_msg, sha1_len, sha1_end_len);
+	read_in(in, in_buffer, sha1_msg, sha1_len, sha1_end_len);
 
 	//calculate sha1 hash
 	xf::security::sha1< 32 >(sha1_msg, sha1_len, sha1_end_len, sha1_digest, sha1_end_digest);
 
-	//create bus packet
-	bram_packet to_bram;
+	//flush the end digest buffer
 	//bool sha1__end = sha1_end_digest.read(); //FIXME: not yet used
 	flush_buffer< bool, 2 >(sha1_end_digest);
 
-	in.hash = sha1_digest.read();
-	convert_to_bram(in, to_bram);
+	//create bus packet
+	bram_packet to_bram;
+#pragma HLS ARRAY_PARTITION variable=to_bram.data type=complete
+	in_buffer.hash = sha1_digest.read();
+	convert_to_bram(in_buffer, to_bram);
 
 	//check for duplicate
-	check_duplicate(to_bram, in.is_duplicate);
+	check_duplicate(to_bram, in_buffer.is_duplicate);
 
 	//pass to next stage
-	copy(in, out);
+	copy(in_buffer, out);
 }

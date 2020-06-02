@@ -3,7 +3,7 @@
 
 #include "bus_def.h"
 
-#define MAX_BRAM_SIZE 4096 //number of packages the complete BRAM can hold
+#define MAX_BRAM_SIZE 16 //number of packages the complete BRAM can hold
 
 struct bram_data{
 	sc_data_t data[SC_ARRAY_SIZE];

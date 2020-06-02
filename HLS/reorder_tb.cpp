@@ -10,7 +10,7 @@ using namespace std;
 #include <time.h>
 #include <stdlib.h>
 
-#define NUM_TESTS 100
+#define NUM_TESTS 20
 
 struct test_result_pair{
 	bus_packet test;
@@ -20,7 +20,7 @@ struct test_result_pair{
 /*
  * reorder tb function
  */
-int main(){
+int reorder_tb(){
 	cout << "**********************************" << endl;
 	cout << "      Testing reorder kernel      " << endl;
 	cout << "**********************************" << endl;

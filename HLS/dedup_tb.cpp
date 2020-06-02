@@ -13,7 +13,7 @@
 #include <time.h>
 using namespace std;
 
-#define NUM_TESTS 100
+#define NUM_TESTS 10
 
 struct test_result_pair{
 	bus_packet test;
@@ -42,7 +42,8 @@ int dedup_tb()
 	bus_packet responses[NUM_TESTS];
 	for (int i = 0; i < NUM_TESTS; i++){
 		cout << "|";
-		dedup(test_data.read(), responses[i]);
+		bus_packet bp  = test_data.read();
+		dedup(bp, responses[i]);
 	}
 
 	cout << endl << "Dedup run finished." << endl;

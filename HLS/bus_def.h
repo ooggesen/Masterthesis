@@ -56,6 +56,7 @@ typedef struct{
 
 //helper functions
 bool is_equal(sc_data_t a[SC_ARRAY_SIZE], sc_data_t b[SC_ARRAY_SIZE]);
-void copy(bus_packet in, bus_packet &out);
+bool is_equal(bus_packet a, bus_packet b);
+void copy(bus_packet &in, bus_packet &out);
 
 #endif //BUS_DEF_H

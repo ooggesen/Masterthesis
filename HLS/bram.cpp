@@ -11,11 +11,12 @@
 void bram(bool wren, bool rden,
 		bram_packet packet_w,
 		bram_packet &packet_r){
-#pragma HLS PIPELINE
+#pragma HLS ARRAY_PARTITION variable=packet_w.data type=complete
 
+	//define the bram array
 	static bram_data buffer[MAX_BRAM_SIZE];
-	#pragma HLS ARRAY_PARTITION variable=buffer type=cyclic factor=128
-	#pragma HLS DEPENDENCE variable=buffer type=inter direction=WAR false
+#pragma HLS BIND_STORAGE variable=buffer type=ram_2p
+#pragma HLS ARRAY_PARTITION variable=buffer type=cyclic factor=128 dim=1
 
 	if (rden){
 	// linear probing: looking for entry that contains data with correct hash value to read from
@@ -26,7 +27,7 @@ void bram(bool wren, bool rden,
 	  //read data
 	  read_loop_bram:
 	  for (int i = 0 ; i < SC_ARRAY_SIZE ; i++ ){
-	#pragma HLS UNROLL
+#pragma HLS UNROLL
 		  packet_r.data[i] = buffer[addr].data[i];
 	  }
 	}
@@ -40,7 +41,7 @@ void bram(bool wren, bool rden,
 	  //write data
 	  write_loop_bram:
 	  for (int i = 0 ; i < SC_ARRAY_SIZE ; i++ ){
-	#pragma HLS UNROLL
+#pragma HLS UNROLL
 		  buffer[addr].data[i] = packet_w.data[i];
 		  buffer[addr].hash =  packet_w.addr;
 	  }

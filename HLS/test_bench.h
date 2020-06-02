@@ -12,4 +12,11 @@ void print_test_data(bus_packet test_data);
 void generate_test_data(unsigned num_tests, bool set_duplicate, hls::stream< bus_packet > &test_data, hls::stream< bus_packet > &compare_data);
 void shuffle(hls::stream< bus_packet > &sorted, hls::stream< bus_packet > &shuffeled);
 
+//test benches
+int dedup_tb();
+int reorder_tb();
+int bram_tb();
+int copy_tb();
+int buffer_tb();
+
 #endif //TEST_BENCH_H
