@@ -13,7 +13,6 @@
 #define MSG_BUFF_SIZE 64 //size of the message FIFO to the SHA1 kernel
 
 //function definitions
-
-void dedup(bus_packet &in, bus_packet &out);
+void dedup(sc_packet &in, sc_packet &out);
 
 #endif //DEDUP_H

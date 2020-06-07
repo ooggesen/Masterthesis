@@ -4,35 +4,9 @@
 
 #include "reorder.h"
 
-struct buffer_cell {
-	bus_packet data;
-	bool valid;
-};
-
-void write_buffer(bus_packet &to_write, buffer_cell buffer[][BUFFER_SIZE_2]){
-	//TODO no safety mechanismn if cell is already written to
-	buffer_cell *bc = &buffer[to_write.l1_pos.to_int() % BUFFER_SIZE_1][to_write.l2_pos.to_int() % BUFFER_SIZE_2];
-	//write data to buffer
-	bc->valid = true;
-	copy(to_write, bc->data);
-}
-
-void read_buffer(l1_pos_t &l1, l2_pos_t &l2, buffer_cell buffer[][BUFFER_SIZE_2], bus_packet &out, bool &success){
-	buffer_cell *bc = &buffer[l1.to_int() % BUFFER_SIZE_1][l2.to_int() % BUFFER_SIZE_2];
-
-	//if entry correct return data
-	if (bc->valid && bc->data.l1_pos == l1 && bc->data.l2_pos){
-		copy(bc->data, out);
-		bc->valid = false;
-		success = true;
-	} else{
-		success = false;
-	}
-}
-
 void write_header(hls::stream< ap_uint< 8 > > &out){
 	ap_uint< 32 > checkbit = CHECKBIT;
-	for (int i = 0 ; i < 4 ; i++){ //TODO assume MSB first to send
+	write_header: for (int i = 0 ; i < 4 ; i++){ //TODO assume MSB first to send
 #pragma HLS UNROLL
 		out.write(checkbit.range(31 - i*8, 24 - i*8));
 	}
@@ -41,21 +15,19 @@ void write_header(hls::stream< ap_uint< 8 > > &out){
 
 void write_seperator(ap_uint< 8 > type, c_size_t &size, hls::stream< ap_uint< 8 > > &out){
 	out.write(type);
-	write_size_of_chunk_to_file:
-	for (int i = 0 ; i < W_CHUNK_SIZE / 8 ; i++){
+	write_size_of_chunk_to_file: for (int i = 0 ; i < W_CHUNK_SIZE / 8 ; i++){
 #pragma HLS UNROLL
 		out.write(size.range(W_CHUNK_SIZE-1 - i*8, W_CHUNK_SIZE-8 - i*8));
 	}
 }
 
-void write_out(bus_packet &in, hls::stream< ap_uint< 8 > > &out){
+void write_out(sc_packet &in, hls::stream< ap_uint< 8 > > &out){
 	if (in.is_duplicate){
 		//write seperator
 		write_seperator(TYPE_FINGERPRINT, in.size, out);
 
 		//duplicate; write  hash to output
-		write_chunk_to_file:
-		for (int j = 0 ; j < W_ADDR / 8 ; j++){
+		write_hash_to_file: for (int j = 0 ; j < W_ADDR / 8 ; j++){
 	#pragma HLS UNROLL
 			out.write(in.hash.range( W_ADDR-1 - 8*j , W_ADDR-8 - 8*j ));//TODO assume MSB first to send
 		}
@@ -64,7 +36,7 @@ void write_out(bus_packet &in, hls::stream< ap_uint< 8 > > &out){
 		write_seperator(TYPE_COMPRESS, in.size, out); //TODO data is not compressed but PARSEC still writes TYPE_COMPRESS to file
 
 		//unique chunk write chunk to output
-		for (int i = 0 ; i < SC_ARRAY_SIZE ; i++){
+		write_data_to_file: for (int i = 0 ; i < SC_ARRAY_SIZE ; i++){
 	#pragma HLS UNROLL
 			for (int j = 0 ; j < W_DATA_SMALL_CHUNK / 8 ; j++){
 	#pragma HLS UNROLL
@@ -88,7 +60,7 @@ void update_pos(bool &last_l2_chunk, l1_pos_t &l1_pos, l2_pos_t &l2_pos){
  * TODO end of stream not yet implemented
  */
 // Assemble the output stream
-void reorder(hls::stream< bus_packet > &in, hls::stream< ap_uint< 8 > > &out){
+void reorder(hls::stream< sc_packet > &in, hls::stream< ap_uint< 8 > > &out){
 	//positions for the next chunk
 	l1_pos_t l1_pos = 0;
 	l2_pos_t l2_pos = 0;
@@ -100,10 +72,9 @@ void reorder(hls::stream< bus_packet > &in, hls::stream< ap_uint< 8 > > &out){
 	write_header(out);
 
 	//reorder loop
-	bus_packet current;
+	sc_packet current;
 	unsigned i = 0;
-	reorder_loop:
-	do {
+	reorder_loop: do {
 		i++;
 		//get next item from queue
 		current = in.read();
@@ -124,7 +95,7 @@ void reorder(hls::stream< bus_packet > &in, hls::stream< ap_uint< 8 > > &out){
 		//check the buffer contains the next package
 		bool chunk_in_buffer = false;
 		read_buffer(l1_pos, l2_pos, buffer, current, chunk_in_buffer);
-		while (chunk_in_buffer){
+		chunk_in_buffer: while (chunk_in_buffer){
 			//update next chunk positions
 			update_pos(current.last_l2_chunk, l1_pos, l2_pos);
 

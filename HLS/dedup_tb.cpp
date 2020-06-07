@@ -16,7 +16,7 @@ using namespace std;
 #define NUM_TESTS 10
 
 struct test_result_pair{
-	bus_packet test;
+	sc_packet test;
 	bool is_duplicate;
 };
 
@@ -33,16 +33,16 @@ int dedup_tb()
 	//Generating input data
 	cout << "Generating " << NUM_TESTS << " tests for the dedup kernel." << endl;
 
-	hls::stream< bus_packet > test_data, compare_data;
+	hls::stream< sc_packet > test_data, compare_data;
 	generate_test_data(NUM_TESTS, false,  test_data, compare_data);
 
 	//running dedup
 	cout << "Starting dedup kernel." << endl;
 
-	bus_packet responses[NUM_TESTS];
+	sc_packet responses[NUM_TESTS];
 	for (int i = 0; i < NUM_TESTS; i++){
 		cout << "|";
-		bus_packet bp  = test_data.read();
+		sc_packet bp  = test_data.read();
 		dedup(bp, responses[i]);
 	}
 
@@ -54,7 +54,7 @@ int dedup_tb()
 	cout << "Checking results." << endl;
 
 	for (int i = 0 ; i < NUM_TESTS ; i++){
-		bus_packet current  = compare_data.read();
+		sc_packet current  = compare_data.read();
 		if (current.is_duplicate != responses[i].is_duplicate){
 			cout << left << "Wrong prediction:" << endl;
 			cout << left << "test data: " << right << setw(2) << current.is_duplicate << endl;

@@ -7,11 +7,11 @@
 int main(){
 	int retval;
 
-	//retval = bram_tb();
+	retval = bram_tb();
 	//retval = copy_tb();
 	//retval = dedup_tb();
 	//retval = reorder_tb();
-	retval = buffer_tb();
+	//retval = reorder_buffer_tb();
 
 
 	return retval;

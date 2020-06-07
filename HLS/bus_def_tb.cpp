@@ -10,7 +10,7 @@ int copy_tb(){
 	cout << "     Testing  copy function       " << endl;
 	cout << "**********************************" << endl;
 
-	bus_packet source, target;
+	sc_packet source, target;
 	source.hash = 1234567890;
 	source.is_duplicate = true;
 	source.end = true;

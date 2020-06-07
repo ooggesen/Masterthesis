@@ -6,8 +6,7 @@
 
 bool is_equal(sc_data_t a[SC_ARRAY_SIZE], sc_data_t b[SC_ARRAY_SIZE]){
 #pragma HLS PIPELINE II=1
-	check_equality:
-	for (int i = 0 ; i < SC_ARRAY_SIZE ; i++ ){
+	check_equality: for (int i = 0 ; i < SC_ARRAY_SIZE ; i++ ){
 #pragma HLS UNROLL
 		if (a[i] != b[i]) return false;
 	}
@@ -15,9 +14,7 @@ bool is_equal(sc_data_t a[SC_ARRAY_SIZE], sc_data_t b[SC_ARRAY_SIZE]){
 	return true;
 }
 
-bool is_equal(bus_packet a, bus_packet b){
-#pragma HLS ARRAY_PARTITION variable=a.data type=complete
-#pragma HLS ARRAY_PARTITION variable=b.data type=complete
+bool is_equal(sc_packet &a, sc_packet &b){
 #pragma HLS PIPELINE II=1
 
 	if (a.end != b.end &&
@@ -31,19 +28,7 @@ bool is_equal(bus_packet a, bus_packet b){
 }
 
 
-void copy(bus_packet &in, bus_packet &out){
-	/*
-#pragma HLS INTERFACE mode=m_axi port=in.data
-#pragma HLS INTERFACE mode=s_axilite port=in.last_l2_chunk bundle=bools
-#pragma HLS INTERFACE mode=s_axilite port=in.is_duplicate bundle=bools
-#pragma HLS INTERFACE mode=s_axilite port=in.end bundle=bools
-#pragma HLS INTERFACE mode=s_axilite port=in.l1_pos bundle=positions
-#pragma HLS INTERFACE mode=s_axilite port=in.l2_pos bundle=positions
-#pragma HLS INTERFACE mode=s_axilite port=in.size
-#pragma HLS INTERFACE mode=s_axilite port=in.hash
-*/
-
-#pragma HLS ARRAY_PARTITION variable=in.data type=complete
+void copy(sc_packet &in, sc_packet &out){
 #pragma HLS PIPELINE II=1
 	out.end = in.end;
 	out.is_duplicate = in.is_duplicate;
@@ -53,9 +38,18 @@ void copy(bus_packet &in, bus_packet &out){
 	out.hash = in.hash;
 	out.last_l2_chunk = in.last_l2_chunk;
 
-	write_out_loop:
-	for (int i = 0 ; i < SC_ARRAY_SIZE ; i++){
+	write_out: for (int i = 0 ; i < SC_ARRAY_SIZE ; i++){
 #pragma HLS UNROLL
+		out.data[i] = in.data[i];
+	}
+}
+
+void copy(bc_packet &in, bc_packet &out){
+	out.l1_pos = in.l1_pos;
+	out.size = in.l1_pos;
+
+	write_out: for (int i = 0 ; i < BC_ARRAY_SIZE ; i++){
+	#pragma HLS UNROLL
 		out.data[i] = in.data[i];
 	}
 }

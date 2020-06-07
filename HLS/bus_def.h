@@ -8,17 +8,18 @@
 #include "ap_int.h"
 
 //chunk size definitions
-#define SMALL_CHUNK_SIZE 512 * 8 //512 bytes is average small chunk size in the PARCEL benchmark suite
-#define BIG_CHUNK_SIZE 2000000
+#define SMALL_CHUNK_SIZE (512 * 8) //average small chunk size in bits
+#define BIG_CHUNK_SIZE (2*1024*1024*8) //average big chunk size in bits
 //bus width definitions
 #define W_DATA_SMALL_CHUNK 512 // TODO adapt width for whole chunk transfer; must be a multiple of 32 !!! ; width of small chunk bus line in bits
 #define W_DATA_BIG_CHUNK 1024 //TODO adapt width for whole chunk transfer ; width of big chunk bus line in bits
-#define W_ADDR 160 //width of SHA1 signature
-#define W_CHUNK_SIZE 64 //like in PARSEC
-#define W_L1_ORDER 16 //2^16 * avgerage big chunk size(2 MB) = 130 GB
-#define W_L2_ORDER 16 //2^16 * average small chunk size(512 bytes) > average big chunk size(2MB)
+#define W_ADDR 160 //width of SHA1 signature in bits
+#define W_CHUNK_SIZE 64 //width of size integer in bits, like in PARSEC
+#define W_L1_ORDER 16 //width of l1 position integer in bits -> 2^16 * avgerage big chunk size(2 MB) = 130 GB
+#define W_L2_ORDER 16 //width of l2 position integer in bits -> 2^16 * average small chunk size(512 bytes) > average big chunk size(2MB)
 //relational definitions
-#define SC_ARRAY_SIZE 2*SMALL_CHUNK_SIZE/W_DATA_SMALL_CHUNK //size of array containing a small chunk
+#define SC_ARRAY_SIZE (SMALL_CHUNK_SIZE/W_DATA_SMALL_CHUNK + 1) //size of data array containing a small chunk
+#define BC_ARRAY_SIZE (BIG_CHUNK_SIZE/W_DATA_BIG_CHUNK + 10) //size of data array containing a big chunk
 // type definitions
 typedef ap_uint<W_DATA_SMALL_CHUNK> sc_data_t; //contains small chunks
 typedef ap_uint<W_DATA_BIG_CHUNK> bc_data_t; //contains big chunks
@@ -30,7 +31,7 @@ typedef ap_uint<W_L2_ORDER> l2_pos_t; //level 2 position of chunk
 
 //big chunk bus interface
 typedef struct{
-	bc_data_t data;
+	bc_data_t data[BC_ARRAY_SIZE];
 	c_size_t size;
 	l1_pos_t l1_pos;
 }bc_packet;
@@ -45,7 +46,7 @@ typedef struct{
 	bool last_l2_chunk;
 	bool is_duplicate;
 	bool end; //signals end of process
-}bus_packet;
+}sc_packet;
 
 //BRAM access interface
 typedef struct{
@@ -56,7 +57,8 @@ typedef struct{
 
 //helper functions
 bool is_equal(sc_data_t a[SC_ARRAY_SIZE], sc_data_t b[SC_ARRAY_SIZE]);
-bool is_equal(bus_packet a, bus_packet b);
-void copy(bus_packet &in, bus_packet &out);
+bool is_equal(sc_packet a, sc_packet b);
+void copy(sc_packet &in, sc_packet &out);
+void copy(bc_packet &in, bc_packet &out);
 
 #endif //BUS_DEF_H

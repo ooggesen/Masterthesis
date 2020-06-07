@@ -13,7 +13,7 @@ using namespace std;
  *
  * @param test_data: bus packet to print
  */
-void print_test_data(bus_packet test_data){
+void print_test_data(sc_packet test_data){
 	cout << "-----" << endl;
 
 	cout << "data in hex: " << endl;
@@ -39,66 +39,69 @@ void print_test_data(bus_packet test_data){
  * @param test_data: stream with generated test data, sorted by l1 and l2 order
  * @param compare_data: copy of test_data with correctly set duplicate flag. (Use for comparing with results)
  */
-void generate_test_data(unsigned num_tests, bool set_duplicate, hls::stream< bus_packet > &test_data, hls::stream< bus_packet > &compare_data){
+void generate_test_data(unsigned num_tests, bool set_duplicate, hls::stream< sc_packet > &test_data, hls::stream< sc_packet > &compare_data){
 	srand(time(NULL));
 
 	unsigned l1 = 0, l2 = 0;
-		bus_packet last;
-		for (int td = 0; td < num_tests; td ++){
-			bus_packet bp;
+	sc_packet last;
+	for (int td = 0; td < num_tests; td ++){
+		sc_packet bp;
 
-			//increment hash as a filler
-			bp.hash = td;
+		//increment hash as a filler
+		bp.hash = td;
 
-			//in 20 percent of cases create duplicate for test -> output the hash value
-			bool is_duplicate = false;
-			if (rand() % 101 < 20 && td != 0){
-				copy(last, bp);
-				bp.hash = td; //convenient for checking in the results
+		//in 20 percent of cases create duplicate for test -> output the hash value
+		bool is_duplicate = false;
+		if (rand() % 101 < 20 && td != 0){
+			copy(last, bp);
+			bp.hash = td; //convenient for checking in the results
 
-				is_duplicate = true;
-			} else {
-				for (int i = 0 ; i < SC_ARRAY_SIZE ; i++){
-					bp.data[i] = rand() % (1 << 31);
-				}
-				bp.size = rand() % 768 + 256;
-
-				is_duplicate = false;
+			is_duplicate = true;
+		} else {
+			for (int i = 0 ; i < SC_ARRAY_SIZE ; i++){
+				bp.data[i] = rand() % (1 << 31);
 			}
+			bp.size = rand() % 768 + 256;
 
-			// 1 big chunk is 1 to 3 small chunks
-			bp.l2_pos = l2;
-			bp.l1_pos = l1;
-			bool is_last_l2_chunk = false;
-			if (l2 >= bp.size / W_DATA_SMALL_CHUNK) {
-				l2 = 0;
-				l1++;
-				is_last_l2_chunk = true;
-			} else {
-				l2++;
-			}
-
-			bp.last_l2_chunk = is_last_l2_chunk;
-			bp.end = td == num_tests - 1;
-
-			//set duplicate flag if wanted
-			if (set_duplicate){
-				bp.is_duplicate = is_duplicate;
-			} else {
-				bp.is_duplicate = false;
-			}
-
-			//write data to corresponding stream
-			test_data.write(bp);
-
-			bp.is_duplicate = is_duplicate;
-			compare_data.write(bp);
-
-			//print out correctly set bus packet
-			print_test_data(bp);
-
-			copy(bp, last);
+			is_duplicate = false;
 		}
+
+		//update small chunk positions
+		bp.l2_pos = l2;
+		bp.l1_pos = l1;
+		bool is_last_l2_chunk = false;
+		// increment the l1 positions after 2/3 of the average big chunk size if transmitted
+		// modified by chance by chance
+		if (l2 * SMALL_CHUNK_SIZE >= BIG_CHUNK_SIZE && rand() % 101 < 30) {
+			l2 = 0;
+			l1++;
+			is_last_l2_chunk = true;
+		} else {
+		//increase l2 position else
+			l2++;
+		}
+
+		bp.last_l2_chunk = is_last_l2_chunk;
+		bp.end = td == num_tests - 1;
+
+		//set duplicate flag if wanted
+		if (set_duplicate){
+			bp.is_duplicate = is_duplicate;
+		} else {
+			bp.is_duplicate = false;
+		}
+
+		//write data to corresponding stream
+		test_data.write(bp);
+
+		bp.is_duplicate = is_duplicate;
+		compare_data.write(bp);
+
+		//print out correctly set bus packet
+		print_test_data(bp);
+
+		copy(bp, last);
+	}
 }
 
 
@@ -110,8 +113,8 @@ void generate_test_data(unsigned num_tests, bool set_duplicate, hls::stream< bus
  * @param sorted: stream with sorted input
  * @param shuffeled: stream with shuffeled contend of sorted stream
  */
-void shuffle(hls::stream< bus_packet > &sorted, hls::stream< bus_packet > &shuffeled){
-	hls::stream< bus_packet > buffer;
+void shuffle(hls::stream< sc_packet > &sorted, hls::stream< sc_packet > &shuffeled){
+	hls::stream< sc_packet > buffer;
 	while(!sorted.empty() || !buffer.empty()){
 		unsigned percent = rand() % 101;
 		if (!sorted.empty() && percent < 33){

@@ -1,22 +1,26 @@
 #ifndef TEST_BENCH_H
 #define TEST_BENCH_H
 
+//user libraries
 #include "bus_def.h"
+//vitis libraries
 #include "hls_stream.h"
+//std libraries
 #include <stdlib.h>
 #include <time.h>
 
 #include <iostream>
 
-void print_test_data(bus_packet test_data);
-void generate_test_data(unsigned num_tests, bool set_duplicate, hls::stream< bus_packet > &test_data, hls::stream< bus_packet > &compare_data);
-void shuffle(hls::stream< bus_packet > &sorted, hls::stream< bus_packet > &shuffeled);
+//helper functions
+void print_test_data(sc_packet test_data);
+void generate_test_data(unsigned num_tests, bool set_duplicate, hls::stream< sc_packet > &test_data, hls::stream< sc_packet > &compare_data);
+void shuffle(hls::stream< sc_packet > &sorted, hls::stream< sc_packet > &shuffeled);
 
 //test benches
 int dedup_tb();
 int reorder_tb();
 int bram_tb();
 int copy_tb();
-int buffer_tb();
+int reorder_buffer_tb();
 
 #endif //TEST_BENCH_H

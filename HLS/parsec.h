@@ -13,5 +13,4 @@
 #define TYPE_FINGERPRINT 0 //which type of data is printed to file
 #define TYPE_COMPRESS 1
 
-
 #endif //PARSEC_H

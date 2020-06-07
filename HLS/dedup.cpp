@@ -12,8 +12,7 @@
  */
 template <typename T, int w>
 void flush_buffer(hls::stream<T, w> &buffer){
-	flush_buffer:
-	while(!buffer.empty())buffer.read();
+	flush_buffer: while(!buffer.empty())buffer.read();
 }
 
 
@@ -38,8 +37,8 @@ void reset_buffers(	hls::stream< ap_uint< 32 > , MSG_BUFF_SIZE > &sha1_msg,
 /*
  * Function for performing the read of the interface to the FIFO streams
  */
-void read_in(bus_packet &in,
-		bus_packet &in_buffer,
+void read_in(sc_packet &in,
+		sc_packet &in_buffer,
 		hls::stream< ap_uint< 32 > , MSG_BUFF_SIZE > &sha1_msg,
 		hls::stream< ap_uint< 64 > , 2 > &sha1_len,
 		hls::stream< bool , 2 > &sha1_end_len)
@@ -52,8 +51,7 @@ void read_in(bus_packet &in,
 
 	sha1_len.write((unsigned long long) in.size);
 
-	read_data:
-	for (int i = 0; i < SC_ARRAY_SIZE; i++){
+	read_data: for (int i = 0; i < SC_ARRAY_SIZE; i++){
 		sc_data_t current = in.data[i];
 		//unsigned current_int = current.to_int();
 
@@ -77,11 +75,10 @@ void read_in(bus_packet &in,
 }
 
 
-void convert_to_bram(bus_packet in, bram_packet &to_bram){
+void convert_to_bram(sc_packet in, bram_packet &to_bram){
 #pragma HLS ARRAY_PARTITION variable=in.data type=complete
 	to_bram.addr = in.hash;
-	copy_to_bram_loop:
-	for (int i = 0 ; i < SC_ARRAY_SIZE ; i++){
+	copy_to_bram: for (int i = 0 ; i < SC_ARRAY_SIZE ; i++){
 #pragma HLS UNROLL
 		to_bram.data[i] = in.data[i];
 	}
@@ -107,7 +104,7 @@ void check_duplicate(bram_packet to_bram, bool &is_duplicate){
 /*
  * main function for dedup kernel
  *
- * @param in[N] : array of bus_packet type containing a whole small chunk
+ * @param in[N] : array of sc_packet type containing a whole small chunk
  * @param to_bram : interface to the BRAM modules
  * @param to_compress: interface to the compression stage, used if chunk is NOT a duplicate
  * @param to_reorder: interface to the reorder stage, used if chunk is a duplicate
@@ -115,9 +112,9 @@ void check_duplicate(bram_packet to_bram, bool &is_duplicate){
  * TODOs:
  * 	.in.end not yet implemented
  */
-void dedup(bus_packet &in, bus_packet &out){
+void dedup(sc_packet &in, sc_packet &out){
 	//buffer
-	bus_packet in_buffer;
+	sc_packet in_buffer;
 #pragma HLS ARRAY_PARTITION variable=in_buffer type=complete
 	//sha1 streams
 	hls::stream< ap_uint< 32 > , MSG_BUFF_SIZE > sha1_msg("sha1_msg");

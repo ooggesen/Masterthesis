@@ -5,15 +5,12 @@
 #include "reorder.h"
 #include "test_bench.h"
 
-#include <iostream>
 using namespace std;
-#include <time.h>
-#include <stdlib.h>
 
-#define NUM_TESTS 20
+#define NUM_TESTS 100
 
 struct test_result_pair{
-	bus_packet test;
+	sc_packet test;
 	addr_t hash;
 };
 
@@ -29,13 +26,13 @@ int reorder_tb(){
 	cout << "Generating " << NUM_TESTS << " tests for the reorder kernel." << endl;
 
 
-	hls::stream< bus_packet > test_data;
-	hls::stream< bus_packet > compare_data;
+	hls::stream< sc_packet > test_data;
+	hls::stream< sc_packet > compare_data;
 	generate_test_data(NUM_TESTS, true,  test_data, compare_data);
 
 	//shuffle the order of the packages to the reorder stage
 	cout << "Shuffle test data." << endl;
-	hls::stream< bus_packet > shuffeled;
+	hls::stream< sc_packet > shuffeled;
 	shuffle(test_data, shuffeled);
 
 	cout << "Finished generating test data." << endl;
@@ -67,7 +64,7 @@ int reorder_tb(){
 	for (int td = 0 ; td < NUM_TESTS ; td++){
 		cout << endl <<"Check test data nr. " << td+1 << endl << "----------" << endl;
 		//check chunk data
-		bus_packet to_compare = compare_data.read();
+		sc_packet to_compare = compare_data.read();
 
 		//if duplicate expect sha1 sum
 		if (!to_compare.end){
@@ -129,7 +126,7 @@ int reorder_tb(){
 				}
 
 				//check chunk data
-				bus_packet bp;
+				sc_packet bp;
 				for (int i = 0 ; i < SC_ARRAY_SIZE ; i++){
 					for (int j = 0 ; j < W_DATA_SMALL_CHUNK / 8 ; j++){
 						bp.data[i].range( W_DATA_SMALL_CHUNK-1 -j*8, W_DATA_SMALL_CHUNK-8 - 8*j) = output_data.read();

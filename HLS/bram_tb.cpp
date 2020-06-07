@@ -8,6 +8,8 @@
 #include "bram.h"
 using namespace std;
 
+#define NUM_TESTS 200
+
 void print_data(bram_packet data){
 	cout << "------" << endl;
 	cout << "data: " << endl;
@@ -24,7 +26,7 @@ void print_data(bram_packet data){
 
 int bram_tb(){
 	cout << "**********************************" << endl;
-	cout << "       Testing bram module       " << endl;
+	cout << "       Testing bram module        " << endl;
 	cout << "**********************************" << endl;
 
 	bram_packet packet_w, packet_r;
@@ -32,7 +34,7 @@ int bram_tb(){
 
 	cout << "Writing data:" << endl;
 
-	for (int i = 0 ; i < 200 ; i++){
+	for (int i = 0 ; i < NUM_TESTS ; i++){
 		packet_w.addr = i;
 		for (int j = 0 ; j < SC_ARRAY_SIZE ; j++){
 			packet_w.data[j] = i * j;
@@ -44,7 +46,7 @@ int bram_tb(){
 
 	cout << "Reading data:" << endl;
 
-	for (int i = 0 ; i < 200 ; i++){
+	for (int i = 0 ; i < NUM_TESTS ; i++){
 		packet_r.addr = i;
 
 		bram(false, true, packet_w, packet_r);

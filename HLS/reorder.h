@@ -4,15 +4,12 @@
 //user libraries
 #include "bus_def.h"
 #include "parsec.h"
+#include "reorder_buffer.h"
 //vitis libraries
 #include "hls_stream.h"
 #include "ap_int.h"
 
-//Definitions
-#define BUFFER_SIZE_1 20
-#define BUFFER_SIZE_2 4
-
 //function declarations
-void reorder(hls::stream< bus_packet > &in, hls::stream< ap_uint< 8 > > &out);
+void reorder(hls::stream< sc_packet > &in, hls::stream< ap_uint< 8 > > &out);
 
 #endif //REORDER_H
