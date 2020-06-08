@@ -2,7 +2,7 @@
  * testbenches for the helper functions in the bus_def.h header file
  */
 
-#include "test_bench.h"
+#include "test_bench.hpp"
 using namespace std;
 
 int copy_tb(){
@@ -23,10 +23,10 @@ int copy_tb(){
 		source.data[i] = i;
 	}
 
-	copy(source, target);
+	target = sc_packet(source);
 
 	//check result
-	if (is_equal(source, target)){
+	if (source == target){
 		cout << "Test passed." << endl;
 		return 0;
 	} else {

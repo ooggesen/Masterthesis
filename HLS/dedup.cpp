@@ -4,7 +4,7 @@
  */
 
 
-#include "dedup.h"
+#include "dedup.hpp"
 
 
 /*
@@ -44,7 +44,7 @@ void read_in(sc_packet &in,
 		hls::stream< bool , 2 > &sha1_end_len)
 {
 	//write buffer
-	copy(in, in_buffer);
+	in_buffer = sc_packet(in);
 
 	//write sha streams
 	sha1_end_len.write(false);
@@ -57,8 +57,7 @@ void read_in(sc_packet &in,
 
 		int size_remaining = in.size * 8 - i * W_DATA_SMALL_CHUNK;
 		if (size_remaining > 0){
-			write_to_sha1_buff:
-			for (int j = 0; j < W_DATA_SMALL_CHUNK / 32 ; j++){
+			write_to_sha1_buff: for (int j = 0; j < W_DATA_SMALL_CHUNK / 32 ; j++){
 				// break after the last package in stream
 				if (size_remaining - j * 32 <= 0){
 					goto write_end_stream;
@@ -71,7 +70,6 @@ void read_in(sc_packet &in,
 
 	write_end_stream:
 	sha1_end_len.write(true);
-
 }
 
 
@@ -146,5 +144,5 @@ void dedup(sc_packet &in, sc_packet &out){
 	check_duplicate(to_bram, in_buffer.is_duplicate);
 
 	//pass to next stage
-	copy(in_buffer, out);
+	out = sc_packet(in_buffer);
 }

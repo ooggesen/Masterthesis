@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-#include "rabin.h"
+#include "rabin.hpp"
 
 /* Functions to compute rabin fingerprints */
 
@@ -18,13 +18,15 @@ uint32_t bswap32(x)uint32_t x; {
 void fpreduce(ap_uint< 32 > x, ap_uint< 32 > irr, ap_uint< 32 > &out) {
     int i;
 
+
     for (i = 32; i != 0; i--) {
-        if (out >> 31) {
-            out <<= 1;
-            out ^= irr;
+        if (x >> 31) {
+            x <<= 1;
+            x ^= irr;
         } else
-            out <<= 1;
+            x <<= 1;
     }
+    out = x;
 }
 
 static void fpmkredtab(ap_uint< 32 > irr, int s, ap_uint< 32 > tab[]) {
@@ -60,6 +62,7 @@ void rabininit(int winlen, ap_uint< 32 > rabintab[], ap_uint< 32 > rabinwintab[]
     fpmkwinredtab(irrpoly, winlen, rabintab, rabinwintab);
 }
 
+
 /*
  * Segments a big chunk bus packet with byte precision into a small chunk bus packet
  *
@@ -91,7 +94,7 @@ void segment_bc_packet(bc_packet &in, int len, sc_packet &out){
 	}
 
 	//update left over big chunk data in param in
-	in.size = in.size - len;
+	in.size = in.size.to_int() - len;
 	byte_pos_bc = len % (W_DATA_BIG_CHUNK/8);
 	array_pos_bc = (int) len / (W_DATA_BIG_CHUNK/8);
 	for (int i = 0 ; i < BC_ARRAY_SIZE ; i++){
@@ -116,6 +119,10 @@ void segment_bc_packet(bc_packet &in, int len, sc_packet &out){
 
 /*
  * Calculates the rabin fingerprint and segements the data accordingly
+ *
+ * @param in    : big chunk data packet, segmented data is removed from data attribute and size infos are updated accordingly
+ * @param out   : small chunk data packet segmented with byte precision from the big chunk data
+ * @param winlen:
  */
 void rabinseg_bc_packet(bc_packet &in, sc_packet &out, int winlen, ap_uint< 32 > rabintab[], ap_uint< 32 > rabinwintab[]) {
     int i;

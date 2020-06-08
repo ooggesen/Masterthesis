@@ -4,8 +4,8 @@
 
 #include <iostream>
 
-#include "bus_def.h"
-#include "bram.h"
+#include "bus_def.hpp"
+#include "bram.hpp"
 using namespace std;
 
 #define NUM_TESTS 200

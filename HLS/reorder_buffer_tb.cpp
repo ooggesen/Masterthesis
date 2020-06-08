@@ -1,9 +1,9 @@
 /*
  * This file contains the testbench for the reorder buffer
  */
-#include "reorder.h"
-#include "reorder_buffer.h"
-#include "test_bench.h"
+#include "reorder.hpp"
+#include "reorder_buffer.hpp"
+#include "test_bench.hpp"
 
 using namespace std;
 
@@ -46,7 +46,7 @@ int reorder_buffer_tb(){
 			continue;
 		}
 
-		if (!is_equal(out, bp)){
+		if (out != bp){
 			cout << i << " Wrong data read from buffer." << endl;
 			cout << "Expected: " << endl;
 			print_test_data(bp);

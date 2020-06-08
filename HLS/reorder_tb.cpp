@@ -2,8 +2,8 @@
  * This file contains the testbench and helper functions for testing the reorder kernel of the dedup toolchain.
  */
 
-#include "reorder.h"
-#include "test_bench.h"
+#include "reorder.hpp"
+#include "test_bench.hpp"
 
 using namespace std;
 
@@ -126,19 +126,19 @@ int reorder_tb(){
 				}
 
 				//check chunk data
-				sc_packet bp;
+				sc_packet packet;
 				for (int i = 0 ; i < SC_ARRAY_SIZE ; i++){
 					for (int j = 0 ; j < W_DATA_SMALL_CHUNK / 8 ; j++){
-						bp.data[i].range( W_DATA_SMALL_CHUNK-1 -j*8, W_DATA_SMALL_CHUNK-8 - 8*j) = output_data.read();
+						packet.data[i].range( W_DATA_SMALL_CHUNK-1 -j*8, W_DATA_SMALL_CHUNK-8 - 8*j) = output_data.read();
 					}
 				}
 
 				//compare data to compare stream
 				for (int i = 0 ; i < SC_ARRAY_SIZE ; i++){
-					if (bp.data[i] !=  to_compare.data[i]){
+					if (packet.data[i] !=  to_compare.data[i]){
 						cout << left << "Wrong chunk data" << endl;
 						cout << left << "expected: " << right << hex << to_compare.data[i] << endl;
-						cout << left << "received: " << right << hex << bp.data[i] << endl;
+						cout << left << "received: " << right << hex << packet.data[i] << endl;
 
 						errors++;
 					}

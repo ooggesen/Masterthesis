@@ -2,7 +2,7 @@
  * This file contains the reorder kernel of the dedup toolchain
  */
 
-#include "reorder.h"
+#include "reorder.hpp"
 
 void write_header(hls::stream< ap_uint< 8 > > &out){
 	ap_uint< 32 > checkbit = CHECKBIT;
@@ -57,9 +57,11 @@ void update_pos(bool &last_l2_chunk, l1_pos_t &l1_pos, l2_pos_t &l2_pos){
 
 /*
  * Reorder kernel of the dedup toolchain
+ * @param in : stream of unsorted small chunk packages
+ * @param out: stream of bytes to write back
+ *
  * TODO end of stream not yet implemented
  */
-// Assemble the output stream
 void reorder(hls::stream< sc_packet > &in, hls::stream< ap_uint< 8 > > &out){
 	//positions for the next chunk
 	l1_pos_t l1_pos = 0;

@@ -3,7 +3,7 @@
  */
 
 
-#include "bram.h"
+#include "bram.hpp"
 
 /*
  * bram function implements a hash table with linear probing

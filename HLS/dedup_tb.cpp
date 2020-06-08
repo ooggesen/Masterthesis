@@ -3,8 +3,8 @@
  *
  *
  */
-#include "dedup.h"
-#include "test_bench.h"
+#include "dedup.hpp"
+#include "test_bench.hpp"
 
 #include <iostream>
 #include <fstream>
