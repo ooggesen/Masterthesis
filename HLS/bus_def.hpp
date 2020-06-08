@@ -18,7 +18,7 @@
 #define W_L1_ORDER 16 //width of l1 position integer in bits -> 2^16 * avgerage big chunk size(2 MB) = 130 GB
 #define W_L2_ORDER 16 //width of l2 position integer in bits -> 2^16 * average small chunk size(512 bytes) > average big chunk size(2MB)
 //relational definitions
-#define SC_ARRAY_SIZE (SMALL_CHUNK_SIZE/W_DATA_SMALL_CHUNK + 1) //size of data array containing a small chunk
+#define SC_ARRAY_SIZE (SMALL_CHUNK_SIZE/W_DATA_SMALL_CHUNK + 5) //size of data array containing a small chunk
 #define BC_ARRAY_SIZE (BIG_CHUNK_SIZE/W_DATA_BIG_CHUNK + 10) //size of data array containing a big chunk
 // type definitions
 typedef ap_uint<W_DATA_SMALL_CHUNK> sc_data_t; //contains small chunks
@@ -30,14 +30,17 @@ typedef ap_uint<W_L2_ORDER> l2_pos_t; //level 2 position of chunk
 
 
 //big chunk bus interface
-typedef struct{
+struct bc_packet{
 	bc_data_t data[BC_ARRAY_SIZE];
 	c_size_t size;
 	l1_pos_t l1_pos;
-}bc_packet;
+
+	bc_packet(const bc_packet &in);
+	bc_packet();
+};
 
 //small chunk bus interface
-typedef struct{
+struct sc_packet{
 	sc_data_t data[SC_ARRAY_SIZE];
 	addr_t hash;
 	c_size_t size;
@@ -46,19 +49,23 @@ typedef struct{
 	bool last_l2_chunk;
 	bool is_duplicate;
 	bool end; //signals end of process
-}sc_packet;
+
+	sc_packet(const sc_packet &in);
+	sc_packet();
+};
 
 //BRAM access interface
-typedef struct{
+struct bram_packet{
 	sc_data_t data[SC_ARRAY_SIZE];
 	addr_t addr;
-}bram_packet;
+};
 
 
 //helper functions
-bool is_equal(sc_data_t a[SC_ARRAY_SIZE], sc_data_t b[SC_ARRAY_SIZE]);
-bool is_equal(sc_packet a, sc_packet b);
-void copy(sc_packet &in, sc_packet &out);
-void copy(bc_packet &in, bc_packet &out);
+bool is_equal(const sc_data_t a[SC_ARRAY_SIZE], const sc_data_t b[SC_ARRAY_SIZE]);
+bool operator==(const bc_packet &a, const bc_packet &b);
+bool operator!=(const bc_packet &a, const bc_packet &b);
+bool operator==(const sc_packet &a, const sc_packet &b);
+bool operator!=(const sc_packet &a, const sc_packet &b);
 
 #endif //BUS_DEF_H

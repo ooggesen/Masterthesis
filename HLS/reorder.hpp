@@ -2,9 +2,9 @@
 #define REORDER_H
 
 //user libraries
-#include "bus_def.h"
-#include "parsec.h"
-#include "reorder_buffer.h"
+#include "bus_def.hpp"
+#include "parsec.hpp"
+#include "reorder_buffer.hpp"
 //vitis libraries
 #include "hls_stream.h"
 #include "ap_int.h"

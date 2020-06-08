@@ -1,7 +1,7 @@
 #ifndef BRAM_H
 #define BRAM_H
 
-#include "bus_def.h"
+#include "bus_def.hpp"
 
 #define MAX_BRAM_SIZE 1024//(5 * BIG_CHUNK_SIZE / SMALL_CHUNK_SIZE) //number of small chunk packages the complete BRAM can hold
 

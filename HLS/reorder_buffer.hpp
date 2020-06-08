@@ -1,7 +1,7 @@
 #ifndef REORDER_BUFFER_H
 #define REORDER_BUFFER_H
 
-#include "bus_def.h"
+#include "bus_def.hpp"
 
 //definitions
 #define BUFFER_SIZE_1 2 //buffer depth for big chunks

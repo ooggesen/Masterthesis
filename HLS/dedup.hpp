@@ -2,8 +2,8 @@
 #define DEDUP_H
 
 //user includes
-#include "bus_def.h"
-#include "bram.h"
+#include "bus_def.hpp"
+#include "bram.hpp"
 //includes from vitis libraries
 #include "hls_task.h"
 #include "hls_stream.h"
