@@ -14,6 +14,8 @@ struct test_result_pair{
 	addr_t hash;
 };
 
+
+
 /*
  * reorder tb function
  */
@@ -61,15 +63,18 @@ int reorder_tb(){
 	}
 
 
+	//Check the data stream
+	sc_packet last_compare = sc_packet();
 	for (int td = 0 ; td < NUM_TESTS ; td++){
 		cout << endl <<"Check test data nr. " << td+1 << endl << "----------" << endl;
 		//check chunk data
 		sc_packet to_compare = compare_data.read();
 
 		//if duplicate expect sha1 sum
-		if (!to_compare.end){
+		if (!last_compare.end){
 			if (to_compare.is_duplicate){
 				//check seperator
+				//check type
 				ap_uint< 8 > type = output_data.read();
 				if (type != TYPE_FINGERPRINT){
 					cout << "Wrong type written to file." << endl;
@@ -78,6 +83,7 @@ int reorder_tb(){
 					errors++;
 				}
 
+				//check size
 				c_size_t size;
 				for (int i = 0 ; i < W_CHUNK_SIZE / 8 ; i++){
 					size.range(W_CHUNK_SIZE-1 - i*8, W_CHUNK_SIZE-8 - i*8) = output_data.read();
@@ -106,6 +112,7 @@ int reorder_tb(){
 			//if unique chunk expect chunk as output
 
 				//check seperator
+				//check type
 				ap_uint< 8 > type = output_data.read();
 				if (type != TYPE_COMPRESS){
 					cout << "Wrong type written to file." << endl;
@@ -114,6 +121,7 @@ int reorder_tb(){
 					errors++;
 				}
 
+				//check size
 				c_size_t size;
 				for (int i = 0 ; i < W_CHUNK_SIZE / 8 ; i++){
 					size.range(W_CHUNK_SIZE-1 - i*8, W_CHUNK_SIZE-8 - i*8) = output_data.read();
@@ -144,9 +152,25 @@ int reorder_tb(){
 					}
 				}
 			}
+
+			//copy the current to the last small chunk buffer
+			last_compare = sc_packet(to_compare);
 		}
 	}
 
+	//Check if output stream is complete
+	if (!output_data.empty()){
+		cout << "Left over data in output FIFO: " << endl;
+		int counter = 0;
+		while (!output_data.empty()){
+			cout << hex << output_data.read() << endl;
+			counter++;
+		}
+		cout << endl;
+		cout << "Number of bytes which were left in FIFO: " << counter << endl;
+	}
+
+	//Final report
 	if (errors == 0){
 		cout << " All " << NUM_TESTS << " tests passed." << endl;
 	} else {
