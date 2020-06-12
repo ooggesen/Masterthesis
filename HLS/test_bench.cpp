@@ -50,7 +50,7 @@ void print_test_data(bc_packet test_data){
 }
 
 /*
- * Generates sorted big chunk test data from the rand() function of the stdlib c library
+ * Generates big chunk test data, ,sorted by l1 position from the rand() function of the stdlib c library
  *
  * @param num_tests   : number of tests to generate
  * @param test_data   : stream with generated test data, sorted by l1 and l2 order
@@ -79,7 +79,6 @@ void generate_test_data(unsigned num_tests, hls::stream< bc_packet > &test_data,
 		test_data.write(packet);
 		compare_data.write(packet);
 	}
-	return;
 }
 
 
@@ -165,7 +164,7 @@ void generate_test_data(unsigned num_tests, bool set_duplicate, hls::stream< sc_
 
 /*
  * Shuffles bus packages which are ordered by the l1 and l2 numbers
- * -> Cleans the contend of sorted and moves it so shuffeled stream
+ * -> Cleans the contend of sorted and moves it so shuffled stream
  *
  * @param sorted   : stream with sorted input
  * @param shuffeled: stream with shuffeled contend of sorted stream

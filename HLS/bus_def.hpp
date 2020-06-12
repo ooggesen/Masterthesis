@@ -9,17 +9,17 @@
 
 //chunk size definitions
 #define SMALL_CHUNK_SIZE (512 * 8) //average small chunk size in bits
-#define BIG_CHUNK_SIZE (2*1024*1024*8) //average big chunk size in bits
+#define BIG_CHUNK_SIZE 1024 * SMALL_CHUNK_SIZE //in PARSEC: (2*1024*1024*8)-> too big for FPGA; average big chunk size in bits
 //bus width definitions
-#define W_DATA_SMALL_CHUNK 512 // TODO adapt width for whole chunk transfer; must be a multiple of 32 !!! ; width of small chunk bus line in bits
-#define W_DATA_BIG_CHUNK 1024 //TODO adapt width for whole chunk transfer ; width of big chunk bus line in bits
+#define W_DATA_SMALL_CHUNK 512 //must be a multiple of 32 !!! ; width of small chunk bus line in bits
+#define W_DATA_BIG_CHUNK 1024 //width of big chunk bus line in bits
 #define W_ADDR 160 //width of SHA1 signature in bits
 #define W_CHUNK_SIZE 64 //width of size integer in bits, like in PARSEC
 #define W_L1_ORDER 16 //width of l1 position integer in bits -> 2^16 * avgerage big chunk size(2 MB) = 130 GB
 #define W_L2_ORDER 16 //width of l2 position integer in bits -> 2^16 * average small chunk size(512 bytes) > average big chunk size(2MB)
 //relational definitions
-#define SC_ARRAY_SIZE (SMALL_CHUNK_SIZE/W_DATA_SMALL_CHUNK + 5) //size of data array containing a small chunk
-#define BC_ARRAY_SIZE (BIG_CHUNK_SIZE/W_DATA_BIG_CHUNK + 10) //size of data array containing a big chunk
+#define SC_ARRAY_SIZE ((int) 40 * SMALL_CHUNK_SIZE/W_DATA_SMALL_CHUNK) //size of data array containing a small chunk
+#define BC_ARRAY_SIZE ((int) BIG_CHUNK_SIZE/W_DATA_BIG_CHUNK + 20) //size of data array containing a big chunk
 // type definitions
 typedef ap_uint<W_DATA_SMALL_CHUNK> sc_data_t; //contains small chunks
 typedef ap_uint<W_DATA_BIG_CHUNK> bc_data_t; //contains big chunks

@@ -13,9 +13,9 @@ enum {
   RabinMask = 0xfff,  // must be less than <= 0x7fff 
 };
 
-void rabininit(int winlen, ap_uint< 32 > rabintab[], ap_uint< 32 > rabinwintab[]);
+void rabininit(int winlen, unsigned rabintab[], unsigned rabinwintab[]);
 
-void rabinseg_bc_packet(bc_packet &in, sc_packet &out, int winlen, ap_uint< 32 > rabintab[], ap_uint< 32 > rabinwintab[]);
+void rabinseg_bc_packet(bc_packet &in, sc_packet &out, int winlen, unsigned rabintab[], unsigned rabinwintab[]);
 
 #endif //_RABIN_H_
 
