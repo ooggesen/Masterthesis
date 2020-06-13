@@ -34,7 +34,7 @@ int rabin_tb(){
 		int counter = 0;
 		bc_packet packet = test_data.read();
 		sc_packet out;
-		while(packet.size.to_int() > 0){
+		while(packet.size.to_long() > 0){
 			cout << "." << flush;
 
 			//run rabin fingerprint
@@ -44,9 +44,6 @@ int rabin_tb(){
 			out.l1_pos = packet.l1_pos;
 			out.l2_pos = counter++;
 
-			if (packet.size.to_int() < 1000 || out.size.to_int() == 0){
-				cout << "Detected an error." << endl;
-			}
 			//update variables
 			results.write(out);
 			out = sc_packet();
@@ -63,7 +60,7 @@ int rabin_tb(){
 	rabininit(winlen, rabintab, rabinwintab);
 	for (int t_nr = 0 ; t_nr < NUM_TESTS ; t_nr++){
 		int counter = 0;
-		bc_packet packet = test_data.read();
+		bc_packet packet = compare_data.read();
 		sc_packet out;
 		while(packet.size.to_int() > 0){
 			cout << "Running check on bc l1 pos: " << t_nr << ", sc l2 pos: " << counter << endl;

@@ -37,7 +37,7 @@ static void fpmkredtab(unsigned irr, int s, unsigned tab[]) {
     return;
 }
 
-void fpwinreduce(unsigned irr, int winlen, unsigned x, unsigned rabintab[], unsigned &winval) {
+void fpwinreduce(int winlen, unsigned x, unsigned rabintab[], unsigned &winval) {
     int i;
 
     winval = 0;
@@ -46,12 +46,11 @@ void fpwinreduce(unsigned irr, int winlen, unsigned x, unsigned rabintab[], unsi
         winval = (winval << 8) ^ rabintab[(winval >> 24)];
 }
 
-void fpmkwinredtab(unsigned irr, int winlen, unsigned rabintab[], unsigned rabinwintab[]) {
+void fpmkwinredtab(int winlen, unsigned rabintab[], unsigned rabinwintab[]) {
     int i;
 
     for (i = 0; i < 256; i++)
-        fpwinreduce(irr, winlen, i, rabintab, rabinwintab[i]);
-    return;
+        fpwinreduce(winlen, i, rabintab, rabinwintab[i]);
 }
 
 void rabininit(int winlen, unsigned rabintab[], unsigned rabinwintab[]) {
@@ -59,7 +58,7 @@ void rabininit(int winlen, unsigned rabintab[], unsigned rabinwintab[]) {
     //rabinwintab = malloc(256*sizeof rabintab[0]);
 	unsigned irrpoly = 0x45c2b6a1;
     fpmkredtab(irrpoly, 0, rabintab);
-    fpmkwinredtab(irrpoly, winlen, rabintab, rabinwintab);
+    fpmkwinredtab(winlen, rabintab, rabinwintab);
 }
 
 
@@ -72,7 +71,7 @@ void rabininit(int winlen, unsigned rabintab[], unsigned rabinwintab[]) {
  */
 void segment_bc_packet(bc_packet &in, unsigned long len, sc_packet &out){
 	//write out segmented small chunk to param out
-	out.size = len;
+	out.size = (unsigned long long) len;
 	int byte_pos_bc = 0, array_pos_bc = 0;
 	for (int i = 0 ; i < SC_ARRAY_SIZE ; i++){
 		for (int b = 0 ; b < W_DATA_SMALL_CHUNK / 8 ; b++){
@@ -94,13 +93,13 @@ void segment_bc_packet(bc_packet &in, unsigned long len, sc_packet &out){
 	}
 
 	//update left over big chunk data in param in
-	in.size = in.size - len;
+	in.size = (unsigned long long) in.size.to_long() - len;
 	byte_pos_bc = len % (W_DATA_BIG_CHUNK/8);
 	array_pos_bc = (int) len / (W_DATA_BIG_CHUNK/8);
 	for (int i = 0 ; i < BC_ARRAY_SIZE ; i++){
 		for (int b = 0 ; b < W_DATA_BIG_CHUNK / 8 ; b++){
-			if (array_pos_bc * W_DATA_BIG_CHUNK + byte_pos_bc * 8 > in.size * 8){
-				//fill with 0
+			if (array_pos_bc >= BC_ARRAY_SIZE){
+				//fill with 0 if end of file is reached
 				in.data[i].range(7 + 8 * b, 8 * b) = 0;
 			} else {
 				//move left over data to beginning of array
@@ -117,6 +116,34 @@ void segment_bc_packet(bc_packet &in, unsigned long len, sc_packet &out){
 	}
 }
 
+
+void read_in(bc_packet &in, bc_packet &buffer){
+	buffer = bc_packet(in);
+}
+
+
+
+void init_hash(unsigned &h, unsigned &x, bc_packet &bcp, unsigned rabintab[]){
+	init_hash_bc: for (int i = 0; i < NWINDOW; i++) {
+#pragma HLS UNROLL
+		x = h >> 24;
+
+		unsigned char byte = bcp.data[0].range(7 + 8*i, 8*i);
+		h = (h << 8) | byte;
+
+		h ^= rabintab[x]; //TODO understand the rabintab
+	}
+}
+
+
+
+void write_out(bc_packet &bc_buffer, sc_packet &sc_buffer, bc_packet &bc_out, sc_packet &sc_out){
+	bc_out = bc_packet(bc_buffer);
+	sc_out = sc_packet(sc_buffer);
+}
+
+
+
 /*
  * Calculates the rabin fingerprint and segements the data accordingly
  * -> does not set the l1 and l2 positions of the small chunk output
@@ -126,52 +153,54 @@ void segment_bc_packet(bc_packet &in, unsigned long len, sc_packet &out){
  * @param winlen:
  */
 void rabinseg_bc_packet(bc_packet &in, sc_packet &out, int winlen, unsigned rabintab[], unsigned rabinwintab[]) {
-    int i;
-    unsigned h;
+	bc_packet in_buffer;
+	sc_packet out_buffer;
+#pragma HLS ARRAY_PARTITION variable=in_buffer type=complete
+#pragma HLS ARRAY_PARTITION variable=out_buffer type=complete
+	read_in(in, in_buffer);
+
+	//helper variables
+    int i = NWINDOW;
+    unsigned h = 0;
     unsigned x;
 
     USED(winlen); //TODO what does this do?
     //if size small than rabin window return the whole big chunk packet as small chunk packet
-    if (in.size < NWINDOW){
-    	segment_bc_packet(in, in.size.to_long(), out);
-    	return;
+    if (in_buffer.size.to_long() < NWINDOW){
+    	segment_bc_packet(in_buffer, in_buffer.size.to_long(), out_buffer);
+    	goto write_out_tag;
     }
 
-    h = 0;
-    for (i = 0; i < NWINDOW; i++) {
-#pragma HLS UNROLL
-        x = h >> 24;
-
-        unsigned char byte = in.data[0].range(7 + 8*i, 8*i);
-        h = (h << 8) | byte;
-
-        h ^= rabintab[x]; //TODO understand the rabintab
-    }
+    init_hash(h, x, in_buffer, rabintab);
 
     if ((h & RabinMask) == 0){
-        segment_bc_packet(in, i, out);
-        return;
+        segment_bc_packet(in_buffer, i, out_buffer);
+        goto write_out_tag;
     }
 
     int pos;
-    while (i < in.size) {
+    segment_bc: while (i < in.size.to_long()) {
     	pos = ((i - NWINDOW)*8) % W_DATA_BIG_CHUNK;
-        x = in.data[(int) (i - NWINDOW)*8 / W_DATA_BIG_CHUNK].range(7 + pos, pos);
+        x = in_buffer.data[(int) (i - NWINDOW)*8 / W_DATA_BIG_CHUNK].range(7 + pos, pos);
 
-        h ^= rabinwintab[x]; //TODO same as above
+        h ^= rabinwintab[x];
         x = h >> 24;
         h <<= 8;
 
         pos = (i * 8) % W_DATA_BIG_CHUNK;
-        h |= in.data[(int) i*8 / W_DATA_BIG_CHUNK].range(7 + pos, pos);
+        h |= in_buffer.data[(int) i*8 / W_DATA_BIG_CHUNK].range(7 + pos, pos);
         i++;
 
-        h ^= rabintab[x]; //TODO same as above
+        h ^= rabintab[x];
         if ((h & RabinMask) == 0){
-        	segment_bc_packet(in, i, out);
-        	return;
+        	segment_bc_packet(in_buffer, i, out_buffer);
+        	goto write_out_tag;
         }
     }
-    segment_bc_packet(in, in.size.to_long() , out);
+    segment_bc_packet(in_buffer, in.size.to_long() , out_buffer);
+
+    //write buffer to output
+    write_out_tag:
+	write_out(in_buffer, out_buffer, in, out);
 }
 

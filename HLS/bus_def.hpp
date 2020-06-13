@@ -9,7 +9,7 @@
 
 //chunk size definitions
 #define SMALL_CHUNK_SIZE (512 * 8) //average small chunk size in bits
-#define BIG_CHUNK_SIZE 1024 * SMALL_CHUNK_SIZE //in PARSEC: (2*1024*1024*8)-> too big for FPGA; average big chunk size in bits
+#define BIG_CHUNK_SIZE (1024 * SMALL_CHUNK_SIZE) //in PARSEC: (2*1024*1024*8)-> too big for FPGA; average big chunk size in bits
 //bus width definitions
 #define W_DATA_SMALL_CHUNK 512 //must be a multiple of 32 !!! ; width of small chunk bus line in bits
 #define W_DATA_BIG_CHUNK 1024 //width of big chunk bus line in bits
@@ -34,6 +34,7 @@ struct bc_packet{
 	bc_data_t data[BC_ARRAY_SIZE];
 	c_size_t size;
 	l1_pos_t l1_pos;
+	bool end;
 
 	bc_packet(const bc_packet &in);
 	bc_packet();

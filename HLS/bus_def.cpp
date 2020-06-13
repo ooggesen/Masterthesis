@@ -85,7 +85,9 @@ sc_packet::sc_packet(const sc_packet &in){
 //big chunk packet operator initializations
 
 bool operator==(const bc_packet &a, const bc_packet &b){
-	if(a.l1_pos != b.l1_pos && a.size != b.size) return false;
+	if(a.l1_pos != b.l1_pos &&
+			a.size != b.size &&
+			a.end != b.end) return false;
 
 	compare_bc_data: for (int elem = 0 ; elem < BC_ARRAY_SIZE ; elem++){
 #pragma HLS UNROLL
@@ -112,6 +114,7 @@ bc_packet::bc_packet(){
 
 	size = 0;
 	l1_pos = 0;
+	end = false;
 }
 
 
@@ -120,7 +123,7 @@ bc_packet::bc_packet(){
  * Copy constructor of big chunk interface
  */
 bc_packet::bc_packet(const bc_packet &in){
-#pragma PIPELINE II=1
+#pragma HLS PIPELINE II=1
 
 	write_out_bc: for (int i = 0 ; i < BC_ARRAY_SIZE ; i++){
 #pragma HLS UNROLL
@@ -129,4 +132,5 @@ bc_packet::bc_packet(const bc_packet &in){
 
 	l1_pos = in.l1_pos;
 	size = in.size;
+	end = in.end;
 }
