@@ -204,3 +204,48 @@ void rabinseg_bc_packet(bc_packet &in, sc_packet &out, int winlen, unsigned rabi
 	write_out(in_buffer, out_buffer, in, out);
 }
 
+
+void rabinseg_in_stream(hls::stream< ap_uint< 8 > > &in, bool end, hls::stream< ap_uint< 8 > > &out, int winlen, unsigned rabintab[], unsigned rabinwintab[]){
+	hls::stream< ap_uint< 8 > > buffer;
+
+	int i = NWINDOW;
+	unsigned h = 0;
+	unsigned x;
+
+	init_hash_from_stream: for (int i = 0; i < NWINDOW; i++) {
+#pragma HLS UNROLL
+		if (end && in.empty()) return;
+
+		x = h >> 24;
+
+		unsigned char byte = in.read();
+		h = (h << 8) | byte;
+		out.write(byte);
+		buffer.write(byte);
+
+
+		h ^= rabintab[x]; //TODO understand the rabintab
+	}
+
+	if (h & RabinMask == 0) return;
+    segment_stream: while (i < in.size.to_long()) {
+    	if (end && in.empty()) return;
+
+        x = buffer.read();
+
+        h ^= rabinwintab[x];
+        x = h >> 24;
+        h <<= 8;
+
+        unsigned char byte = in.read();
+        h |= byte;
+        out.write(byte);
+        buffer.write(byte);
+
+        h ^= rabintab[x];
+        if ((h & RabinMask) == 0){
+        	return;
+        }
+    }
+}
+
