@@ -21,12 +21,12 @@ bool is_equal(const sc_data_t a[SC_ARRAY_SIZE], const sc_data_t b[SC_ARRAY_SIZE]
 bool operator==(const sc_packet &a, const sc_packet &b){
 #pragma HLS PIPELINE II=1
 
-	if (a.end != b.end &&
-			a.hash != b.hash &&
-			a.is_duplicate != b.is_duplicate &&
-			a.l1_pos != b.l1_pos &&
-			a.l2_pos != b.l2_pos &&
-			a.last_l2_chunk != b.last_l2_chunk &&
+	if (a.end != b.end ||
+			a.hash != b.hash ||
+			a.is_duplicate != b.is_duplicate ||
+			a.l1_pos != b.l1_pos ||
+			a.l2_pos != b.l2_pos ||
+			a.last_l2_chunk != b.last_l2_chunk ||
 			a.size != b.size) return false;
 	return is_equal(a.data, b.data);
 }
@@ -85,8 +85,8 @@ sc_packet::sc_packet(const sc_packet &in){
 //big chunk packet operator initializations
 
 bool operator==(const bc_packet &a, const bc_packet &b){
-	if(a.l1_pos != b.l1_pos &&
-			a.size != b.size &&
+	if(a.l1_pos != b.l1_pos ||
+			a.size != b.size ||
 			a.end != b.end) return false;
 
 	compare_bc_data: for (int elem = 0 ; elem < BC_ARRAY_SIZE ; elem++){
