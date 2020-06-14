@@ -25,5 +25,6 @@ int bram_tb();
 int copy_tb();
 int reorder_buffer_tb();
 int rabin_tb();
+int fragment_refine_tb();
 
 #endif //TEST_BENCH_H

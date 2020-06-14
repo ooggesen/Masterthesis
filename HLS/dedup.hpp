@@ -5,7 +5,6 @@
 #include "bus_def.hpp"
 #include "bram.hpp"
 //includes from vitis libraries
-#include "hls_task.h"
 #include "hls_stream.h"
 #include "sha1.hpp"
 

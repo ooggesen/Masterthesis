@@ -73,6 +73,10 @@ void generate_test_data(unsigned num_tests, hls::stream< bc_packet > &test_data,
 		packet.size = BIG_CHUNK_SIZE/8 - 512 + rand() % 1024;
 		packet.l1_pos = l1++;
 
+		if (td == num_tests-1){
+			packet.end = true;
+		}
+
 		//print_test_data(packet);
 
 		//pushing generated data on stream

@@ -12,7 +12,8 @@ int main(){
 	//retval = dedup_tb();
 	//retval = reorder_tb();
 	//retval = reorder_buffer_tb();
-	retval = rabin_tb();
+	//retval = rabin_tb();
+	retval = fragment_refine_tb();
 
 
 	return retval;

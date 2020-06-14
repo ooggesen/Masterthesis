@@ -58,5 +58,4 @@ void fragment_refine(hls::stream< bc_packet > &in, hls::stream< sc_packet > &out
 			out.write(packet);
 		}
 	} while(!buffer.end);
-
 }

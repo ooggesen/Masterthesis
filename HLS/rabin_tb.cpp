@@ -4,7 +4,7 @@
 #include "test_bench.hpp"
 #include "parsec/rabin.hpp"
 
-#define NUM_TESTS 1
+#define NUM_TESTS 2
 
 using namespace std;
 int rabin_tb(){
