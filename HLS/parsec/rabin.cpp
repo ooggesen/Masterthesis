@@ -214,7 +214,8 @@ void rabinseg_in_stream(hls::stream< ap_uint< 8 > > &in, bool end, hls::stream< 
 
 	init_hash_from_stream: for (int i = 0; i < NWINDOW; i++) {
 #pragma HLS UNROLL
-		if (end && in.empty()) return;
+		if (end && in.empty())
+			return;
 
 		x = h >> 24;
 
@@ -224,12 +225,15 @@ void rabinseg_in_stream(hls::stream< ap_uint< 8 > > &in, bool end, hls::stream< 
 		buffer.write(byte);
 
 
-		h ^= rabintab[x]; //TODO understand the rabintab
+		h ^= rabintab[x];
 	}
 
-	if (h & RabinMask == 0) return;
-    segment_stream: while (i < in.size.to_long()) {
-    	if (end && in.empty()) return;
+	if (h & RabinMask == 0)
+		return;
+
+    segment_stream: while (!in.empty() || !end ) {
+    	if (end && in.empty())
+    		return;
 
         x = buffer.read();
 

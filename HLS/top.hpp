@@ -11,8 +11,8 @@
 #include "reorder_buffer.hpp"
 
 //vitis hls includes
-#include "hls_stream.h"
 #include "ap_int.h"
+#include "hls_stream.h"
 
 //function declarations
 

@@ -19,7 +19,7 @@
 #define W_L2_ORDER 16 //width of l2 position integer in bits -> 2^16 * average small chunk size(512 bytes) > average big chunk size(2MB)
 //relational definitions
 #define SC_ARRAY_SIZE ((int) 40 * SMALL_CHUNK_SIZE/W_DATA_SMALL_CHUNK) //size of data array containing a small chunk
-#define BC_ARRAY_SIZE ((int) BIG_CHUNK_SIZE/W_DATA_BIG_CHUNK + 20) //size of data array containing a big chunk
+#define BC_ARRAY_SIZE ((int) (BIG_CHUNK_SIZE+40*SMALL_CHUNK_SIZE)/W_DATA_BIG_CHUNK) //size of data array containing a big chunk
 // type definitions
 typedef ap_uint<W_DATA_SMALL_CHUNK> sc_data_t; //contains small chunks
 typedef ap_uint<W_DATA_BIG_CHUNK> bc_data_t; //contains big chunks

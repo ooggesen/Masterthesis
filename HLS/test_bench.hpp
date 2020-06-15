@@ -14,6 +14,7 @@
 //helper functions
 void print_test_data(sc_packet test_data);
 void print_test_data(bc_packet test_data);
+void generate_test_data(unsigned num_tests, hls::stream< ap_uint< 8 > > &test_data, hls::stream< ap_uint< 8 > > &compare_data);
 void generate_test_data(unsigned num_tests, hls::stream< bc_packet > &test_data, hls::stream< bc_packet > &compare_data);
 void generate_test_data(unsigned num_tests, bool set_duplicate, hls::stream< sc_packet > &test_data, hls::stream< sc_packet > &compare_data);
 void shuffle(hls::stream< sc_packet > &sorted, hls::stream< sc_packet > &shuffeled);
@@ -26,5 +27,6 @@ int copy_tb();
 int reorder_buffer_tb();
 int rabin_tb();
 int fragment_refine_tb();
+int fragment_tb();
 
 #endif //TEST_BENCH_H

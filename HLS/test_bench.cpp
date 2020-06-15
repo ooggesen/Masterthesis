@@ -31,6 +31,7 @@ void print_test_data(sc_packet test_data){
 }
 
 
+
 /*
  * prints out the values of a big chunk packet type
  *
@@ -48,6 +49,30 @@ void print_test_data(bc_packet test_data){
 
 	cout << "-----" << endl;
 }
+
+
+
+/*
+ * Generates random test data in a unsigned char FIFO, based on the rand() function of the stdlib library
+ *
+ * @param num_tests   : expected number of big chunks that can be generated out of generated data -> emphasis on too much data rather then too less
+ * @param test_data   : output stream containing the generated data
+ * @param compare_data: copy of test data (Use for comparing with the results)
+ */
+void generate_test_data(unsigned num_tests, hls::stream< ap_uint< 8 > > &test_data, hls::stream< ap_uint< 8 > > &compare_data){
+	srand(time(NULL));
+
+	for (int test_nr = 0 ; test_nr < num_tests ; test_nr++){
+		for (int byte_pos = 0 ; byte_pos < 1.5*BIG_CHUNK_SIZE/8 ; byte_pos++){
+			unsigned char byte = rand() % 256;
+
+			test_data.write(byte);
+			compare_data.write(byte);
+		}
+	}
+}
+
+
 
 /*
  * Generates big chunk test data, ,sorted by l1 position from the rand() function of the stdlib c library
