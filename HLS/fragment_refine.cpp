@@ -16,7 +16,6 @@ void read_in(hls::stream< bc_packet > &in, bc_packet &buffer){
 void set_arguments(bc_packet bcp,  sc_packet &out, unsigned long long &l2_pos){
 	out.l2_pos = l2_pos++;
 	out.l1_pos = bcp.l1_pos;
-	out.end = bcp.end && bcp.size.to_long() == 0;
 	out.last_l2_chunk = bcp.size.to_long() == 0;
 	out.hash = 0; //default value, is correctly set by the dedup kernel
 	out.is_duplicate = false; //default value, is correctly set by the dedup kernel
@@ -30,7 +29,7 @@ void set_arguments(bc_packet bcp,  sc_packet &out, unsigned long long &l2_pos){
  * @param in : input stream of big chunk data
  * @param out: output stream of small chunks
  */
-void fragment_refine(hls::stream< bc_packet > &in, hls::stream< sc_packet > &out){
+void fragment_refine(hls::stream< bc_packet > &in, bool end, hls::stream< sc_packet > &out){
 	//intialize the rabin lookup tables
 	int winlen = 0;
 	unsigned rabintab[256], rabinwintab[256];
@@ -57,5 +56,5 @@ void fragment_refine(hls::stream< bc_packet > &in, hls::stream< sc_packet > &out
 
 			out.write(packet);
 		}
-	} while(!buffer.end);
+	} while(!end || !in.empty());
 }

@@ -13,7 +13,6 @@ int copy_tb(){
 	sc_packet source, target;
 	source.hash = 1234567890;
 	source.is_duplicate = true;
-	source.end = true;
 	source.l1_pos = 0;
 	source.l2_pos = 0;
 	source.last_l2_chunk = true;

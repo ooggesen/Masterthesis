@@ -34,7 +34,6 @@ struct bc_packet{
 	bc_data_t data[BC_ARRAY_SIZE];
 	c_size_t size;
 	l1_pos_t l1_pos;
-	bool end;
 
 	bc_packet(const bc_packet &in);
 	bc_packet();
@@ -49,7 +48,6 @@ struct sc_packet{
 	l2_pos_t l2_pos;
 	bool last_l2_chunk;
 	bool is_duplicate;
-	bool end; //signals end of process
 
 	sc_packet(const sc_packet &in);
 	sc_packet();

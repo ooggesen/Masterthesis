@@ -12,9 +12,9 @@
  */
 void write_header(hls::stream< ap_uint< 8 > > &out){
 	ap_uint< 32 > checkbit = CHECKBIT;
-	write_header: for (int i = 0 ; i < 4 ; i++){ //TODO assume MSB first to send
+	write_header: for (int i = 0 ; i < 4 ; i++){ //TODO assume LSB first to send
 #pragma HLS UNROLL
-		out.write(checkbit.range(31 - i*8, 24 - i*8));
+		out.write(checkbit.range(7 + i*8, i*8));
 	}
 	out.write(COMPRESS_NONE);
 }
@@ -31,7 +31,7 @@ void write_seperator(ap_uint< 8 > type, c_size_t &size, hls::stream< ap_uint< 8 
 	out.write(type);
 	write_size_of_chunk_to_file: for (int i = 0 ; i < W_CHUNK_SIZE / 8 ; i++){
 #pragma HLS UNROLL
-		out.write(size.range(W_CHUNK_SIZE-1 - i*8, W_CHUNK_SIZE-8 - i*8));
+		out.write(size.range(7 + i*8, i*8)); //TODO assume LSB first
 	}
 }
 
@@ -51,7 +51,7 @@ void write_out(sc_packet &in, hls::stream< ap_uint< 8 > > &out){
 		//duplicate chunk -> write  hash to output
 		write_hash_to_file: for (int j = 0 ; j < W_ADDR / 8 ; j++){
 	#pragma HLS UNROLL
-			out.write(in.hash.range( W_ADDR-1 - 8*j , W_ADDR-8 - 8*j ));//TODO assume MSB first to send
+			out.write(in.hash.range( 7 + 8*j , 8*j ));//TODO assume MSB first to send
 		}
 	} else {
 		//write seperator
@@ -62,7 +62,7 @@ void write_out(sc_packet &in, hls::stream< ap_uint< 8 > > &out){
 	#pragma HLS UNROLL
 			for (int j = 0 ; j < W_DATA_SMALL_CHUNK / 8 ; j++){
 	#pragma HLS UNROLL
-				out.write(in.data[i].range( W_DATA_SMALL_CHUNK-1 - 8*j , W_DATA_SMALL_CHUNK-8 - 8*j ));
+				out.write(in.data[i].range( 7 + 8*j , 8*j ));
 			}
 		}
 	}
@@ -91,7 +91,7 @@ void update_pos(bool &last_l2_chunk, l1_pos_t &l1_pos, l2_pos_t &l2_pos){
  * @param out: stream of bytes to write back
  *
  */
-void reorder(hls::stream< sc_packet > &in, hls::stream< ap_uint< 8 > > &out){
+void reorder(hls::stream< sc_packet > &in, bool end, hls::stream< ap_uint< 8 > > &out){
 	//positions for the next chunk
 	l1_pos_t l1_pos = 0;
 	l2_pos_t l2_pos = 0;
@@ -141,5 +141,5 @@ void reorder(hls::stream< sc_packet > &in, hls::stream< ap_uint< 8 > > &out){
 			//check again for next chunk in buffer
 			read_buffer(l1_pos, l2_pos, buffer, current, chunk_in_buffer);
 		}
-	} while(!current.end);
+	} while(!in.empty() || !end);
 }

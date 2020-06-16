@@ -35,7 +35,6 @@ static void write_out(hls::stream< ap_uint< 8 > > &buffer, unsigned l1, bool end
 	//write metadata
 	bcp.l1_pos = l1;
 	bcp.size = size;
-	bcp.end = end;
 
 	//write to out stream
 	out.write(bcp);

@@ -41,7 +41,7 @@ int reorder_tb(){
 	cout << "Running the reorder kernel." << endl;
 
 	hls::stream< ap_uint< 8 > > output_data;
-	reorder(shuffeled, output_data);
+	reorder(shuffeled, true, output_data);
 
 	cout << "Checking results." << endl;
 	int errors = 0;
@@ -64,97 +64,91 @@ int reorder_tb(){
 
 
 	//Check the data stream
-	sc_packet last_compare = sc_packet();
 	for (int td = 0 ; td < NUM_TESTS ; td++){
 		cout << endl <<"Check test data nr. " << td+1 << endl << "----------" << endl;
 		//check chunk data
 		sc_packet to_compare = compare_data.read();
 
 		//if duplicate expect sha1 sum
-		if (!last_compare.end){
-			if (to_compare.is_duplicate){
-				//check seperator
-				//check type
-				ap_uint< 8 > type = output_data.read();
-				if (type != TYPE_FINGERPRINT){
-					cout << "Wrong type written to file." << endl;
-					cout << "expected: " << TYPE_FINGERPRINT << endl;
-					cout << "received: " << type << endl;
-					errors++;
-				}
+		if (to_compare.is_duplicate){
+			//check seperator
+			//check type
+			ap_uint< 8 > type = output_data.read();
+			if (type != TYPE_FINGERPRINT){
+				cout << "Wrong type written to file." << endl;
+				cout << "expected: " << TYPE_FINGERPRINT << endl;
+				cout << "received: " << type << endl;
+				errors++;
+			}
 
-				//check size
-				c_size_t size;
-				for (int i = 0 ; i < W_CHUNK_SIZE / 8 ; i++){
-					size.range(W_CHUNK_SIZE-1 - i*8, W_CHUNK_SIZE-8 - i*8) = output_data.read();
-				}
-				if(size != to_compare.size){
-					cout << "Wrong size written to file." << endl;
-					cout << "expected: " << to_compare.size << endl;
-					cout << "received: " << size << endl;
-					errors++;
-				}
+			//check size
+			c_size_t size;
+			for (int i = 0 ; i < W_CHUNK_SIZE / 8 ; i++){
+				size.range(7 + i*8, i*8) = output_data.read();
+			}
+			if(size != to_compare.size){
+				cout << "Wrong size written to file." << endl;
+				cout << "expected: " << to_compare.size << endl;
+				cout << "received: " << size << endl;
+				errors++;
+			}
 
-				//check hash
-				addr_t hash;
-				for (int j = 0 ; j < W_ADDR / 8 ; j++){
-					hash.range(W_ADDR-1 - 8*j, W_ADDR-8 - 8*j) = output_data.read();
-				}
+			//check hash
+			addr_t hash;
+			for (int j = 0 ; j < W_ADDR / 8 ; j++){
+				hash.range(7 + 8*j, 8*j) = output_data.read();
+			}
 
-				if (hash != td){
-					cout << left << "Wrong hash" << endl;
-					cout << left << "expected: " << right << hex << setw(W_ADDR/16) << td << endl;
-					cout << left << "received: " << right << hex << setw(W_ADDR/16) << hash << endl;
+			if (hash != td){
+				cout << left << "Wrong hash" << endl;
+				cout << left << "expected: " << right << hex << setw(W_ADDR/16) << td << endl;
+				cout << left << "received: " << right << hex << setw(W_ADDR/16) << hash << endl;
 
-					errors++;
-				}
-			} else {
-			//if unique chunk expect chunk as output
+				errors++;
+			}
+		} else {
+		//if unique chunk expect chunk as output
 
-				//check seperator
-				//check type
-				ap_uint< 8 > type = output_data.read();
-				if (type != TYPE_COMPRESS){
-					cout << "Wrong type written to file." << endl;
-					cout << "expected: " << TYPE_COMPRESS << endl;
-					cout << "received: " << type << endl;
-					errors++;
-				}
+			//check seperator
+			//check type
+			ap_uint< 8 > type = output_data.read();
+			if (type != TYPE_COMPRESS){
+				cout << "Wrong type written to file." << endl;
+				cout << "expected: " << TYPE_COMPRESS << endl;
+				cout << "received: " << type << endl;
+				errors++;
+			}
 
-				//check size
-				c_size_t size;
-				for (int i = 0 ; i < W_CHUNK_SIZE / 8 ; i++){
-					size.range(W_CHUNK_SIZE-1 - i*8, W_CHUNK_SIZE-8 - i*8) = output_data.read();
-				}
-				if(size != to_compare.size){
-					cout << "Wrong size written to file." << endl;
-					cout << "expected: " << to_compare.size << endl;
-					cout << "received: " << size << endl;
-					errors++;
-				}
+			//check size
+			c_size_t size;
+			for (int i = 0 ; i < W_CHUNK_SIZE / 8 ; i++){
+				size.range(7 + i*8, i*8) = output_data.read();
+			}
+			if(size != to_compare.size){
+				cout << "Wrong size written to file." << endl;
+				cout << "expected: " << to_compare.size << endl;
+				cout << "received: " << size << endl;
+				errors++;
+			}
 
-				//check chunk data
-				sc_packet packet;
-				for (int i = 0 ; i < SC_ARRAY_SIZE ; i++){
-					for (int j = 0 ; j < W_DATA_SMALL_CHUNK / 8 ; j++){
-						packet.data[i].range( W_DATA_SMALL_CHUNK-1 -j*8, W_DATA_SMALL_CHUNK-8 - 8*j) = output_data.read();
-					}
-				}
-
-				//compare data to compare stream
-				for (int i = 0 ; i < SC_ARRAY_SIZE ; i++){
-					if (packet.data[i] !=  to_compare.data[i]){
-						cout << left << "Wrong chunk data" << endl;
-						cout << left << "expected: " << right << hex << to_compare.data[i] << endl;
-						cout << left << "received: " << right << hex << packet.data[i] << endl;
-
-						errors++;
-					}
+			//check chunk data
+			sc_packet packet;
+			for (int i = 0 ; i < SC_ARRAY_SIZE ; i++){
+				for (int j = 0 ; j < W_DATA_SMALL_CHUNK / 8 ; j++){
+					packet.data[i].range( 7 + j*8, 8*j ) = output_data.read();
 				}
 			}
 
-			//copy the current to the last small chunk buffer
-			last_compare = sc_packet(to_compare);
+			//compare data to compare stream
+			for (int i = 0 ; i < SC_ARRAY_SIZE ; i++){
+				if (packet.data[i] !=  to_compare.data[i]){
+					cout << left << "Wrong chunk data" << endl;
+					cout << left << "expected: " << right << hex << to_compare.data[i] << endl;
+					cout << left << "received: " << right << hex << packet.data[i] << endl;
+
+					errors++;
+				}
+			}
 		}
 	}
 

@@ -150,7 +150,6 @@ void write_out(bc_packet &bc_buffer, sc_packet &sc_buffer, bc_packet &bc_out, sc
  *
  * @param in    : big chunk data packet, segmented data is removed from data attribute and size infos are updated accordingly
  * @param out   : small chunk data packet segmented with byte precision from the big chunk data
- * @param winlen:
  */
 void rabinseg_bc_packet(bc_packet &in, sc_packet &out, int winlen, unsigned rabintab[], unsigned rabinwintab[]) {
 	bc_packet in_buffer;
@@ -205,6 +204,14 @@ void rabinseg_bc_packet(bc_packet &in, sc_packet &out, int winlen, unsigned rabi
 }
 
 
+
+/*
+ * Segments a unisigned byte FIFO into coarse grained chunks
+ *
+ * @param in : Input FIFO which contains continous data to be segmented
+ * @param end: signals end of process -> if FIFO in is empty and end flag is set the process returns
+ * @param out: empty FIFO which will hold exactly the data for one coarse grained chunk
+ */
 void rabinseg_in_stream(hls::stream< ap_uint< 8 > > &in, bool end, hls::stream< ap_uint< 8 > > &out, int winlen, unsigned rabintab[], unsigned rabinwintab[]){
 	hls::stream< ap_uint< 8 > > buffer;
 

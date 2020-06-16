@@ -25,7 +25,6 @@ void print_test_data(sc_packet test_data){
 	cout << dec << "l1 pos: " << test_data.l1_pos << endl;
 	cout << "l2 pos: " << test_data.l2_pos << endl;
 	cout << "dup: " << test_data.is_duplicate << endl;
-	cout << "end: " << test_data.end << endl;
 
 	cout << "-----" << endl;
 }
@@ -98,10 +97,6 @@ void generate_test_data(unsigned num_tests, hls::stream< bc_packet > &test_data,
 		packet.size = BIG_CHUNK_SIZE/8 - 512 + rand() % 1024;
 		packet.l1_pos = l1++;
 
-		if (td == num_tests-1){
-			packet.end = true;
-		}
-
 		//print_test_data(packet);
 
 		//pushing generated data on stream
@@ -167,7 +162,6 @@ void generate_test_data(unsigned num_tests, bool set_duplicate, hls::stream< sc_
 		}
 
 		packet.last_l2_chunk = is_last_l2_chunk;
-		packet.end = td == num_tests - 1;
 
 		//set duplicate flag if wanted
 		if (set_duplicate){

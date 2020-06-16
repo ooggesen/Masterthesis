@@ -8,6 +8,6 @@
 #include "hls_stream.h"
 
 //function declarations
-void fragment_refine(hls::stream< bc_packet > &in, hls::stream< sc_packet > &out);
+void fragment_refine(hls::stream< bc_packet > &in, bool end, hls::stream< sc_packet > &out);
 
 #endif //FRAGMENT_REFINE_H

@@ -10,6 +10,6 @@
 #include "ap_int.h"
 
 //function declarations
-void reorder(hls::stream< sc_packet > &in, hls::stream< ap_uint< 8 > > &out);
+void reorder(hls::stream< sc_packet > &in, bool end, hls::stream< ap_uint< 8 > > &out);
 
 #endif //REORDER_H

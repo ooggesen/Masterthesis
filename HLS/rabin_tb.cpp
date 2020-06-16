@@ -13,20 +13,21 @@ int rabin_tb(){
 	cout << "**********************************" << endl;
 
 	//Generating input data
-	cout << "Generating " << NUM_TESTS << " tests for the rabin fingerprinting algorithm." << endl;
+	cout << "Generating " << NUM_TESTS << " tests for the rabin fingerprinting algorithm." << endl << endl;
 
 	//generate big chunk test data
 	hls::stream< bc_packet > test_data, compare_data;
 	generate_test_data(NUM_TESTS, test_data, compare_data);
 
 	//initialize arrays for rabin fingerprint
-	cout << "Initializing the rabintab and rabinwintab arrays." <<  endl;
+	cout << "Initializing the rabintab and rabinwintab arrays." <<  endl << endl;
 	int winlen = 0;
 	unsigned rabintab[256], rabinwintab[256];
 	rabininit(winlen, rabintab, rabinwintab);
 
 	//run rabin seg on big chunk data
-	cout << "Running rabin fingerprint on big chunk data." << endl;
+	int errors = 0;
+	cout << "Running rabin fingerprint on big chunk data." << endl << endl;
 	hls::stream< sc_packet > results;
 	for (int t_nr = 0 ; t_nr < NUM_TESTS ; t_nr++){
 		cout << "Big chunk nr.: " << t_nr << endl;
@@ -40,23 +41,24 @@ int rabin_tb(){
 			//run rabin fingerprint
 			rabinseg_bc_packet(packet, out, winlen, rabintab, rabinwintab);
 
-			//set metadata of small chunk
-			out.l1_pos = packet.l1_pos;
-			out.l2_pos = counter++;
+			if(out.size.to_long() == 0){
+				cout << "Segmentation fail: Empty package." << endl;
+				errors++;
+			}
 
 			//update variables
 			results.write(out);
 			out = sc_packet();
+			counter++;
 		}
 
-		cout << endl << counter << "small chunk generated from this big chunk." << endl;
+		cout << endl << dec << counter << " small chunks generated from this big chunk." << endl;
 	}
 
 	//Checking the results
-	cout << endl << "Checking results." << endl;
+	cout << endl << "Checking results." << endl << endl;
 
 	//Since rabinseg should segment the data always at the same locations, perform a second run with rabinseg and compare the differences
-	int errors = 0;
 	rabininit(winlen, rabintab, rabinwintab);
 	for (int t_nr = 0 ; t_nr < NUM_TESTS ; t_nr++){
 		int counter = 0;
@@ -70,13 +72,20 @@ int rabin_tb(){
 
 			sc_packet compare = results.read();
 			if (out != compare){
-				cout << "Differeng segemtation on the second run." << endl;
-				print_test_data(compare);
+				cout << "Differeng segmtation on the second run." << endl;
+				//print_test_data(compare);
 				errors++;
 			}
 
 			counter++;
 		}
 	}
+
+	if (errors == 0){
+		cout << "Tests passed." << endl << endl;
+	} else {
+		cout << "Tests failed." << endl << endl;
+	}
+
 	return errors;
 }

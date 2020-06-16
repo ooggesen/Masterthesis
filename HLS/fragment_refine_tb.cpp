@@ -24,7 +24,7 @@ int fragment_refine_tb(){
 	cout << "Running the fragment refine kernel." << endl;
 
 	hls::stream< sc_packet > out_stream;
-	fragment_refine(test_data, out_stream);
+	fragment_refine(test_data, true, out_stream);
 
 	cout << "Test run finished." << endl << endl;
 
@@ -47,10 +47,6 @@ int fragment_refine_tb(){
 			if(current_sc.l1_pos != l1 ||
 					current_sc.l2_pos != l2){
 				cout << "Wrong positional arguments." << endl;
-				errors++;
-			}
-			if (current_sc.end && (!current_bc.end || !current_sc.last_l2_chunk)){
-				cout << "Bad placement of end of stream flag." << endl;
 				errors++;
 			}
 

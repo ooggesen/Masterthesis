@@ -48,11 +48,12 @@ int fragment_tb(){
 			}
 		}
 
-		if (out_stream.empty() && !current_bc.end){
-			cout << "End flag not correctly set." << endl;
-			errors++;
-		}
 		counter++;
+	}
+
+	if (!compare_data.empty()){
+		cout << "Data lost along pipeline." << endl;
+		errors++;
 	}
 
 	if (errors == 0){
