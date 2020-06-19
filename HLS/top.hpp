@@ -1,6 +1,11 @@
 #ifndef TOP_HPP
 #define TOP_HPP
 
+//Number of Threads
+#define NP 2
+#define NP_REFINE 2
+#define NP_DEDUP 2
+
 //vitis hls includes
 #include "ap_int.h"
 #include "hls_stream.h"
@@ -15,7 +20,7 @@
 #include "reorder_buffer.hpp"
 
 //function declarations
-void top(hls::stream< ap_uint< 8 > > &in, bool end, hls::stream< sc_packet > &out); //intermediate top function-> until fragment refine or dedup
+void top(hls::stream< ap_uint< 8 > > &in, bool end, hls::stream< ap_uint< 8 > > &out);
 
 
 #endif //TOP_HPP

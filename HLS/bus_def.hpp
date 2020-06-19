@@ -2,14 +2,14 @@
  * This file contains the definitions of the bus interface of the dedup pipeline stages
  */
 
-#ifndef BUS_DEF_H
-#define BUS_DEF_H
+#ifndef BUS_DEF_HPP
+#define BUS_DEF_HPP
 
 #include "ap_int.h"
 
 //chunk size definitions
 #define SMALL_CHUNK_SIZE (512 * 8) //average small chunk size in bits
-#define BIG_CHUNK_SIZE (1024 * SMALL_CHUNK_SIZE) //in PARSEC: (2*1024*1024*8)-> too big for FPGA; average big chunk size in bits
+#define BIG_CHUNK_SIZE (128 * SMALL_CHUNK_SIZE) //(1024 * SMALL_CHUNK_SIZE) //in PARSEC: (2*1024*1024*8)-> too big for FPGA; average big chunk size in bits
 //bus width definitions
 #define W_DATA_SMALL_CHUNK 512 //must be a multiple of 32 !!! ; width of small chunk bus line in bits
 #define W_DATA_BIG_CHUNK 1024 //width of big chunk bus line in bits
@@ -67,4 +67,4 @@ bool operator!=(const bc_packet &a, const bc_packet &b);
 bool operator==(const sc_packet &a, const sc_packet &b);
 bool operator!=(const sc_packet &a, const sc_packet &b);
 
-#endif //BUS_DEF_H
+#endif //BUS_DEF_HPP

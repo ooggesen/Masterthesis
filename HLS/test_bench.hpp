@@ -1,8 +1,9 @@
-#ifndef TEST_BENCH_H
-#define TEST_BENCH_H
+#ifndef TEST_BENCH_HPP
+#define TEST_BENCH_HPP
 
 //user libraries
 #include "bus_def.hpp"
+#include "reorder_buffer.hpp"
 //vitis libraries
 #include "hls_stream.h"
 //std libraries
@@ -30,4 +31,4 @@ int fragment_refine_tb();
 int fragment_tb();
 int top_refine_tb();
 
-#endif //TEST_BENCH_H
+#endif //TEST_BENCH_HPP

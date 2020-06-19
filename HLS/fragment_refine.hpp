@@ -1,5 +1,5 @@
-#ifndef FRAGMENT_REFINE_H
-#define FRAGMENT_REFINE_H
+#ifndef FRAGMENT_REFINE_HPP
+#define FRAGMENT_REFINE_HPP
 
 //user includes
 #include "bus_def.hpp"
@@ -10,4 +10,4 @@
 //function declarations
 void fragment_refine(hls::stream< bc_packet > &in, bool end, hls::stream< sc_packet > &out);
 
-#endif //FRAGMENT_REFINE_H
+#endif //FRAGMENT_REFINE_HPPP

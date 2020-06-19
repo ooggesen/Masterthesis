@@ -1,5 +1,5 @@
-#ifndef DEDUP_H
-#define DEDUP_H
+#ifndef DEDUP_HPP
+#define DEDUP_HPP
 
 //user includes
 #include "bus_def.hpp"
@@ -14,4 +14,4 @@
 //function definitions
 void dedup(sc_packet &in, sc_packet &out);
 
-#endif //DEDUP_H
+#endif //DEDUP_HPP
