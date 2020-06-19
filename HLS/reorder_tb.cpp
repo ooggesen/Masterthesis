@@ -49,7 +49,7 @@ int reorder_tb(){
 	//check header
 	ap_uint< 32 > checkbit;
 	for (int i = 0 ; i < 4 ; i++){ //TODO assume MSB first to send
-		checkbit.range(31 - i*8, 24 - i*8) = output_data.read();
+		checkbit.range(7 + i*8, i*8) = output_data.read();
 	}
 	if (checkbit != CHECKBIT){
 		cout << "Wrong checkbit." << endl;
@@ -133,20 +133,30 @@ int reorder_tb(){
 
 			//check chunk data
 			sc_packet packet;
+			packet.size = size;
 			for (int i = 0 ; i < SC_ARRAY_SIZE ; i++){
 				for (int j = 0 ; j < W_DATA_SMALL_CHUNK / 8 ; j++){
-					packet.data[i].range( 7 + j*8, 8*j ) = output_data.read();
+					if (packet.size.to_long() <= i*W_DATA_SMALL_CHUNK/8 + j){
+						packet.data[i].range( 7 + j*8, 8*j) = 0;
+					} else{
+						packet.data[i].range( 7 + j*8, 8*j ) = output_data.read();
+					}
 				}
 			}
 
 			//compare data to compare stream
 			for (int i = 0 ; i < SC_ARRAY_SIZE ; i++){
-				if (packet.data[i] !=  to_compare.data[i]){
-					cout << left << "Wrong chunk data" << endl;
-					cout << left << "expected: " << right << hex << to_compare.data[i] << endl;
-					cout << left << "received: " << right << hex << packet.data[i] << endl;
+				for (int j = 0 ; j < W_DATA_SMALL_CHUNK / 8 ; j++){
+					if (packet.size.to_long() <= i*W_DATA_SMALL_CHUNK/8 + j)
+						break;
+					//check data
+					if (packet.data[i].range(7 + 8*j, 8*j) !=  to_compare.data[i].range(7 + 8*j, 8*j)){
+						cout << left << "Wrong chunk data" << endl;
+						cout << left << "expected: " << right << hex << to_compare.data[i] << endl;
+						cout << left << "received: " << right << hex << packet.data[i] << endl;
 
-					errors++;
+						errors++;
+					}
 				}
 			}
 		}
