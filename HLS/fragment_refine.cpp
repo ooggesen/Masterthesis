@@ -45,7 +45,7 @@ void fragment_refine(hls::stream< bc_packet > &in, bool end, hls::stream< sc_pac
 
 		//segment the big chunk packet into a stream of small chunk packets
 		unsigned long long l2_pos = 0;
-		while(buffer.size.to_long() > 0){
+		refine_loop: while(buffer.size.to_long() > 0){
 			sc_packet packet;
 #pragma HLS ARRAY_PARTITION variable=packet type=complete
 			//segment a small chunk

@@ -4,9 +4,7 @@
 
 #include "top.hpp"
 
-#define NP 2
-#define NP_REFINE 2
-#define NP_DEDUP 2
+
 
 template <typename T>
 static void split(hls::stream< T > &in, bool end, hls::stream< T > out[]){
@@ -37,18 +35,17 @@ static void read_in(hls::stream< ap_uint< 8 > > &in, bool end, hls::stream< ap_u
 	}
 }
 
-static void write_out(hls::stream< sc_packet > &in, bool end, hls::stream< sc_packet > &out){
-	sc_packet packet;
+static void write_out(hls::stream< ap_uint< 8 > > &in, bool end, hls::stream< ap_uint< 8 > > &out){
 	do{
-		packet = in.read();
-		out.write(packet);
+		out.write(in.read());
 	}while(!end || !in.empty());
 }
 
 
 
 
-void top(hls::stream< ap_uint< 8 > > &in, bool end, hls::stream< sc_packet > &out){//hls::stream< ap_uint< 8 > > &out){
+void top(hls::stream< ap_uint< 8 > > &in, bool end, hls::stream< ap_uint< 8 > > &out){
+#pragma HLS DATAFLOW
 	//definitions
 	//buffer
 	hls::stream< ap_uint< 8 > , (BIG_CHUNK_SIZE + 40 * SMALL_CHUNK_SIZE)/8> in_buffer;
@@ -56,7 +53,7 @@ void top(hls::stream< ap_uint< 8 > > &in, bool end, hls::stream< sc_packet > &ou
 	hls::stream< bc_packet, 2 > post_fragment_buffer;
 	hls::stream< sc_packet, NP_REFINE * 2 > post_refine_buffer;
 	//splitter
-	hls::stream< bc_packet , 1 > pre_refine_split[NP_REFINE];
+	hls::stream< bc_packet , 2 > pre_refine_split[NP_REFINE];
 	hls::stream< sc_packet, 2 > pre_dedup_split[NP_DEDUP];
 	//merger
 	hls::stream< sc_packet, 2 > post_refine_merge[NP_REFINE];
@@ -67,15 +64,23 @@ void top(hls::stream< ap_uint< 8 > > &in, bool end, hls::stream< sc_packet > &ou
 	read_in(in, end, in_buffer);
 
 	//segment into coarse grained chunks, serial
-	fragment(in_buffer, end && in.empty(), post_fragment_buffer);
+	bool fragment_end = end && in.empty();
+	fragment(in_buffer, fragment_end, post_fragment_buffer);
 
 	//segment into fine grained chunks, parallel
-	split< bc_packet >(post_fragment_buffer, end && in_buffer.empty(), pre_refine_split);
-	for (int n = 0; n < NP ; n++){
-		fragment_refine(pre_refine_split[n], end && post_fragment_buffer.empty(), post_refine_merge[n]);
+	bool refine_end = fragment_end && in_buffer.empty();
+	split< bc_packet >(post_fragment_buffer, refine_end, pre_refine_split);
+	for (int n = 0; n < NP_REFINE ; n++){
+#pragma HLS UNROLL
+		fragment_refine(pre_refine_split[n], refine_end, post_refine_merge[n]);
 	}
-	merge< sc_packet >(post_refine_merge, end && post_fragment_buffer.empty(), post_refine_buffer);
+	merge< sc_packet >(post_refine_merge, refine_end, post_refine_buffer);
+
+	//reorder the sc_packets for output
+	bool reorder_end = refine_end && post_fragment_buffer.empty();
+	reorder(post_refine_buffer, reorder_end, out_buffer);
 
 	//write out
-	write_out(post_refine_buffer, end && post_fragment_buffer.empty(), out);
+	bool write_out_end = reorder_end && post_refine_buffer.empty();
+	write_out(out_buffer, write_out_end, out);
 }

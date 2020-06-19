@@ -62,7 +62,7 @@ void generate_test_data(unsigned num_tests, hls::stream< ap_uint< 8 > > &test_da
 	srand(time(NULL));
 
 	for (int test_nr = 0 ; test_nr < num_tests ; test_nr++){
-		for (int byte_pos = 0 ; byte_pos < 1.5*BIG_CHUNK_SIZE/8 ; byte_pos++){
+		for (int byte_pos = 0 ; byte_pos < 1.1*BIG_CHUNK_SIZE/8 ; byte_pos++){
 			unsigned char byte = rand() % 256;
 
 			test_data.write(byte);
@@ -194,14 +194,17 @@ void generate_test_data(unsigned num_tests, bool set_duplicate, hls::stream< sc_
  */
 void shuffle(hls::stream< sc_packet > &sorted, hls::stream< sc_packet > &shuffeled){
 	hls::stream< sc_packet > buffer;
+	int in_buffer = 0;
 	while(!sorted.empty() || !buffer.empty()){
 		unsigned percent = rand() % 101;
 		if (!sorted.empty() && percent < 33){
 			shuffeled.write(sorted.read());
-		} else if (!buffer.empty() && (percent < 66 || sorted.empty())){
+		} else if (in_buffer >= BUFFER_SIZE_1 || in_buffer >= BUFFER_SIZE_2 || (!buffer.empty() && (percent < 66 || sorted.empty()))){
 			shuffeled.write(buffer.read());
+			in_buffer--;
 		} else if (!sorted.empty()){
 			buffer.write(sorted.read());
+			in_buffer++;
 		}
 	}
 }

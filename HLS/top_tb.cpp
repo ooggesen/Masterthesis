@@ -7,10 +7,15 @@
 #include "test_bench.hpp"
 #include "top.hpp"
 
-#define NUM_TESTS 2
+#define NUM_TESTS 4
 using namespace std;
 
 
+/*
+ * This testbench tests a top module without the dedup kernel
+ * -> adapt the top function accordingly
+ * -> remove print header and print seperator functions from the reorder kernel
+ */
 int top_refine_tb(){
 	cout << "*********************************************************" << endl;
 	cout << "   Testing whole module until fragment refine kernel     " << endl;
@@ -25,25 +30,21 @@ int top_refine_tb(){
 	//Running
 	cout << "Running the dut." << endl << endl;
 
-	hls::stream< sc_packet > out_stream;
+	hls::stream< ap_uint< 8 > > out_stream;
 	top(test_data, true, out_stream);
 
 	//Checking results
 	int counter = 0, errors = 0;
 	while(!out_stream.empty()){
-		cout << "Checking the " << counter << "th small chunk.-----" << endl;
+		//cout << "Checking the " << counter << "th small chunk.-----" << endl;
 
-		sc_packet current_sc = out_stream.read();
-		//print_test_data(current_bc);
+		ap_uint< 8 > compare_byte = compare_data.read();
+		ap_uint< 8 > out_byte = out_stream.read();
 
-		if (current_sc.size == 0){
-			cout << "Segmented an empty small chunk." << endl;
+		if (out_byte != compare_byte){
+			cout << "Wrong data output." << endl;
+			cout << "Byte pos: " << counter << " Expected: " << hex << compare_byte << ",but received " << out_byte << endl;
 			errors++;
-		}
-
-		//can not check output since data is shuffeled by parallel fragment refine kernels
-		for (int  i = 0 ; i < current_sc.size.to_long() ; i++){
-			ap_uint< 8 > compare_byte  = compare_data.read();
 		}
 		counter++;
 	}

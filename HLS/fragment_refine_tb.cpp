@@ -35,10 +35,14 @@ int fragment_refine_tb(){
 	unsigned long long total_l1_size = 0;
 	for (int td = 0 ; td < NUM_TESTS ; td++){
 		cout << "checking big chunk nr.: " << td << endl << endl;
+		//buffer for packets
 		bc_packet current_bc = compare_data.read();
 		sc_packet current_sc;
+		//buffer for metadata
 		total_l1_size = 0;
 		l2 = 0;
+		//buffer for position in big chunk
+		int bc_pos = 0;
 		do{
 			cout << "checking small chunk nr.: " << l2 << "-----" << endl;
 			current_sc = out_stream.read();
@@ -52,6 +56,19 @@ int fragment_refine_tb(){
 
 			total_l1_size += current_sc.size.to_long();
 			l2++;
+
+			//Checking data
+			for (int i = 0 ; i < current_sc.size.to_long() ; i++){
+				ap_uint< 8 > sc_byte = current_sc.data[(int)i / (W_DATA_SMALL_CHUNK/8)].range(7 + ((8*i) % W_DATA_SMALL_CHUNK), (8*i) % W_DATA_SMALL_CHUNK);
+				ap_uint< 8 > bc_byte = current_bc.data[(int)bc_pos / (W_DATA_BIG_CHUNK/8)].range(7 + ((bc_pos*8) % W_DATA_BIG_CHUNK), (8*bc_pos) % W_DATA_BIG_CHUNK);
+
+				if (sc_byte != bc_byte){
+					cout << "Wrong data in fragmented small chunk." << endl;
+					cout << "Expected: " << bc_byte << ", received: " << sc_byte << endl;
+					errors++;
+				}
+				bc_pos++;
+			}
 		}while(!current_sc.last_l2_chunk);
 
 		//Checking integrity of big chunk after fragmentation

@@ -6,7 +6,7 @@
 #include "test_bench.hpp"
 #include "fragment.hpp"
 
-#define NUM_TESTS 1
+#define NUM_TESTS 3
 
 using namespace std;
 int fragment_tb(){
@@ -28,19 +28,26 @@ int fragment_tb(){
 
 	//Checking
 	cout << "Checking the results." << endl << endl;
-	int counter = 0, errors = 0;
+	int errors = 0;
+	int l1 = 0;
 	while(!out_stream.empty()){
-		cout << "Checking the " << counter << "th big chunk.-----" << endl;
+		cout << "Checking the " << l1 << "th big chunk.-----" << endl;
 
 		bc_packet current_bc = out_stream.read();
 		//print_test_data(current_bc);
 
+		//Check meta data
 		if (current_bc.size == 0){
 			cout << "Segmented an empty big chunk." << endl;
 			errors++;
 		}
 
+		if (current_bc.l1_pos.to_int() != l1){
+			cout << "Wrong positional argument." << endl;
+			errors++;
+		}
 
+		//Check data
 		for (int  i = 0 ; i < current_bc.size ; i++){
 			if (current_bc.data[(int) (8 * i) / W_DATA_BIG_CHUNK].range(7 + (8*i % W_DATA_BIG_CHUNK), 8*i % W_DATA_BIG_CHUNK) != compare_data.read()){
 				cout << "Wrong data detected." << endl;
@@ -48,7 +55,7 @@ int fragment_tb(){
 			}
 		}
 
-		counter++;
+		l1++;
 	}
 
 	if (!compare_data.empty()){
