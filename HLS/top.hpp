@@ -14,7 +14,7 @@
 #include "bus_def.hpp"
 #include "fragment.hpp"
 #include "fragment_refine.hpp"
-#include "rabin.hpp"
+#include "parsec/rabin.hpp"
 #include "dedup.hpp"
 #include "reorder.hpp"
 #include "reorder_buffer.hpp"

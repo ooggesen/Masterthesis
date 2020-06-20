@@ -17,9 +17,9 @@ enum {
 };
 
 //function declarations
-void rabininit(int winlen, unsigned rabintab[], unsigned rabinwintab[]);
-void rabinseg_bc_packet(bc_packet &in, sc_packet &out, int winlen, unsigned rabintab[], unsigned rabinwintab[]);
-void rabinseg_in_stream(hls::stream< ap_uint< 8 > > &in, bool end, hls::stream< ap_uint< 8 > > &out, int winlen, unsigned rabintab[], unsigned rabinwintab[]);
+void rabininit(unsigned rabintab[], unsigned rabinwintab[]);
+void rabinseg_bc_packet(bc_packet &in, sc_packet &out, unsigned rabintab[], unsigned rabinwintab[]);
+void rabinseg_in_stream(hls::stream< ap_uint< 8 > > &in, bool end, hls::stream< ap_uint< 8 > > &out, unsigned rabintab[], unsigned rabinwintab[]);
 
 #endif //RABIN_HPP
 

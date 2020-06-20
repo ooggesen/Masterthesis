@@ -48,7 +48,7 @@ int reorder_tb(){
 
 	//check header
 	ap_uint< 32 > checkbit;
-	for (int i = 0 ; i < 4 ; i++){ //TODO assume MSB first to send
+	for (int i = 0 ; i < 4 ; i++){ //TODO assume LSB first to send
 		checkbit.range(7 + i*8, i*8) = output_data.read();
 	}
 	if (checkbit != CHECKBIT){
@@ -86,7 +86,7 @@ int reorder_tb(){
 			for (int i = 0 ; i < W_CHUNK_SIZE / 8 ; i++){
 				size.range(7 + i*8, i*8) = output_data.read();
 			}
-			if(size != to_compare.size){
+			if(size != 20){
 				cout << "Wrong size written to file." << endl;
 				cout << "expected: " << to_compare.size << endl;
 				cout << "received: " << size << endl;

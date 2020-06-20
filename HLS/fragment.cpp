@@ -16,7 +16,7 @@ static void fill_buffer(hls::stream< ap_uint< 8 > > &in, bool end, hls::stream< 
 	}
 }
 
-static void write_out(hls::stream< ap_uint< 8 > > &buffer, unsigned l1, bool end, hls::stream< bc_packet > &out){
+static void write_out(hls::stream< ap_uint< 8 > > &buffer, unsigned l1, hls::stream< bc_packet > &out){
 	unsigned long long size = 0;
 
 	//write data
@@ -42,9 +42,8 @@ static void write_out(hls::stream< ap_uint< 8 > > &buffer, unsigned l1, bool end
 
 void fragment(hls::stream< ap_uint< 8 > > &in, bool end,  hls::stream< bc_packet > &out){
 	//intialize the rabin lookup tables
-	int winlen = 0;
 	unsigned rabintab[256], rabinwintab[256];
-	rabininit(winlen, rabintab, rabinwintab);
+	rabininit(rabintab, rabinwintab);
 
 	//run segmentation until end
 	unsigned  l1 = 0;
@@ -54,10 +53,10 @@ void fragment(hls::stream< ap_uint< 8 > > &in, bool end,  hls::stream< bc_packet
 		fill_buffer(in, end, buffer);
 
 		//segment the input data
-		rabinseg_in_stream(in, end, buffer, winlen, rabintab, rabinwintab);
+		rabinseg_in_stream(in, end, buffer,rabintab, rabinwintab);
 
 		//convert to big chunk packet
-		write_out(buffer, l1, end && in.empty() , out);
+		write_out(buffer, l1, out);
 		l1++;
 	}
 }

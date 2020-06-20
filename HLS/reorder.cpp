@@ -27,7 +27,7 @@ void write_header(hls::stream< ap_uint< 8 > > &out){
  * @param size: size of the chunk that follows
  * @param out : pointer to the output stream
  */
-void write_seperator(ap_uint< 8 > type, c_size_t &size, hls::stream< ap_uint< 8 > > &out){
+void write_seperator(ap_uint< 8 > type, c_size_t size, hls::stream< ap_uint< 8 > > &out){
 	out.write(type);
 	write_size_of_chunk_to_file: for (int i = 0 ; i < W_CHUNK_SIZE / 8 ; i++){
 #pragma HLS UNROLL
@@ -46,7 +46,7 @@ void write_seperator(ap_uint< 8 > type, c_size_t &size, hls::stream< ap_uint< 8 
 void write_out(sc_packet &in, hls::stream< ap_uint< 8 > > &out){
 	if (in.is_duplicate){
 		//write seperator
-		//write_seperator(TYPE_FINGERPRINT, in.size, out);
+		write_seperator(TYPE_FINGERPRINT, 20, out);
 
 		//duplicate chunk -> write  hash to output
 		write_hash_to_file: for (int j = 0 ; j < W_ADDR / 8 ; j++){
@@ -55,7 +55,7 @@ void write_out(sc_packet &in, hls::stream< ap_uint< 8 > > &out){
 		}
 	} else {
 		//write seperator
-		//write_seperator(TYPE_COMPRESS, in.size, out); //FIXME data is not compressed but PARSEC still writes TYPE_COMPRESS to file
+		write_seperator(TYPE_COMPRESS, in.size, out); //FIXME data is not compressed but PARSEC still writes TYPE_COMPRESS to file
 
 		//unique chunk -> write chunk to output
 		write_data_to_file: for (int i = 0 ; i < SC_ARRAY_SIZE ; i++){ //FIXME is unrolling possible?
@@ -100,7 +100,7 @@ void reorder(hls::stream< sc_packet > &in, bool end, hls::stream< ap_uint< 8 > >
 	static buffer_cell buffer[BUFFER_SIZE_1][BUFFER_SIZE_2];
 
 	//write header
-	//write_header(out);
+	write_header(out);
 
 	//reorder loop
 	sc_packet current;

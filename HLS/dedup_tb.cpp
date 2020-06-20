@@ -13,7 +13,7 @@
 #include <time.h>
 using namespace std;
 
-#define NUM_TESTS 10
+#define NUM_TESTS 100
 
 struct test_result_pair{
 	sc_packet test;
@@ -39,12 +39,8 @@ int dedup_tb()
 	//running dedup
 	cout << "Starting dedup kernel." << endl;
 
-	sc_packet responses[NUM_TESTS];
-	for (int i = 0; i < NUM_TESTS; i++){
-		cout << "|";
-		sc_packet bp  = test_data.read();
-		dedup(bp, responses[i]);
-	}
+	hls::stream< sc_packet > out_stream;
+	dedup(test_data, true, out_stream);
 
 	cout << endl << "Dedup run finished." << endl;
 
@@ -54,11 +50,12 @@ int dedup_tb()
 	cout << "Checking results." << endl;
 
 	for (int i = 0 ; i < NUM_TESTS ; i++){
-		sc_packet current  = compare_data.read();
-		if (current.is_duplicate != responses[i].is_duplicate){
+		sc_packet compare = compare_data.read();
+		sc_packet current = out_stream.read();
+		if (current.is_duplicate != compare.is_duplicate){
 			cout << left << "Wrong prediction:" << endl;
-			cout << left << "test data: " << right << setw(2) << current.is_duplicate << endl;
-			cout << left << "responses: " << right << setw(2) << responses[i].is_duplicate << endl;
+			cout << left << "test data: "  << right << setw(2) << compare.is_duplicate << endl;
+			cout << left << "out_stream: " << right << setw(2) << current.is_duplicate << endl;
 			++errors;
 		}
 	}

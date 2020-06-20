@@ -30,7 +30,8 @@ int main(){
 //	std::cout << std::flush;
 
 	//TOP TESTBENCHES
-	retval += top_refine_tb();
+//	retval += top_refine_tb();
+	retval += top_tb();
 
 
 	return retval;

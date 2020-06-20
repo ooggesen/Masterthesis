@@ -10,7 +10,8 @@ template <typename T>
 static void split(hls::stream< T > &in, bool end, int np, hls::stream< T > out[]){
 	int n = 0;
 	splitter: while(!in.empty() || !end){
-		out[n++].write(in.read());
+		if (!in.empty())
+			out[n++].write(in.read());
 		n = n % np;
 	}
 }
@@ -20,7 +21,7 @@ static void merge(hls::stream< T > in[], bool end, int np, hls::stream< T > &out
 	bool empty = false;
 	merger: while(!end || !empty){
 		empty = true;
-		for (int n = 0 ; n < np ; n++){
+		round_robin: for (int n = 0 ; n < np ; n++){
 			if (!in[n].empty()){
 				out.write(in[n].read());
 				empty = false;
@@ -53,6 +54,7 @@ void top(hls::stream< ap_uint< 8 > > &in, bool end, hls::stream< ap_uint< 8 > > 
 	hls::stream< bc_packet, 2 > post_fragment_buffer;
 	hls::stream< sc_packet, 2 > pre_reorder_buffer;
 	hls::stream< sc_packet, 2 > post_refine_buffer[NP];
+	hls::stream< sc_packet, 2 > post_dedup_buffer[NP];
 	//splitter
 	hls::stream< bc_packet , 2 > pre_refine_split[NP][NP_REFINE];
 	hls::stream< sc_packet, 2 > pre_dedup_split[NP][NP_DEDUP];
@@ -71,25 +73,35 @@ void top(hls::stream< ap_uint< 8 > > &in, bool end, hls::stream< ap_uint< 8 > > 
 	fragment(in_buffer, fragment_end, post_fragment_buffer);
 
 	//split to parallel pipelines
-	split< bc_packet > (post_fragment_buffer, fragment_end, NP, post_fragment_split);
+	split< bc_packet >(post_fragment_buffer, fragment_end, NP, post_fragment_split);
 
 	//NP parallel pipelines
-	bool refine_end, dedup_end;
-	for (int i = 0 ; i < NP ; i++){
+	bool refine_end, dedup_end[NP];
+	pipelines_parallel: for (int i = 0 ; i < NP ; i++){
+#pragma HLS DATAFLOW
 #pragma HLS UNROLL
 
 		//segment into fine grained chunks, NP_REFINE parallel
 		refine_end = fragment_end && in_buffer.empty();
 		split< bc_packet >(post_fragment_split[i], refine_end, NP_REFINE, pre_refine_split[i]);
-		for (int n = 0; n < NP_REFINE ; n++){
+		refine_parallel: for (int n = 0; n < NP_REFINE ; n++){
 #pragma HLS UNROLL
 			fragment_refine(pre_refine_split[i][n], refine_end, post_refine_merge[i][n]);
 		}
 		merge< sc_packet >(post_refine_merge[i], refine_end, NP_REFINE, post_refine_buffer[i]);
+
+		//deduplicate data stream
+		dedup_end[i] = refine_end && post_fragment_split[i].empty();
+		split< sc_packet >(post_refine_buffer[i], dedup_end[i], NP_DEDUP, pre_dedup_split[i]);
+		dedup_parallel: for (int n = 0 ; n < NP_DEDUP ; n++){
+#pragma HLS UNROLL
+			dedup(pre_dedup_split[i][n], dedup_end[i], post_dedup_merge[i][n]);
+		}
+		merge< sc_packet > (post_dedup_merge[i], dedup_end[i], NP_DEDUP, post_dedup_buffer[i]);
 	}
 
 	//merge from parallel pipelines
-	merge< sc_packet >(post_refine_buffer, refine_end, NP, pre_reorder_buffer);
+	merge< sc_packet >(post_dedup_buffer, refine_end, NP, pre_reorder_buffer);
 
 	//reorder the sc_packets for output
 	bool reorder_end = refine_end && post_fragment_buffer.empty();

@@ -30,5 +30,6 @@ int rabin_tb();
 int fragment_refine_tb();
 int fragment_tb();
 int top_refine_tb();
+int top_tb();
 
 #endif //TEST_BENCH_HPP

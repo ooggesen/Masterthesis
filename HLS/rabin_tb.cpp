@@ -21,9 +21,8 @@ int rabin_tb(){
 
 	//initialize arrays for rabin fingerprint
 	cout << "Initializing the rabintab and rabinwintab arrays." <<  endl << endl;
-	int winlen = 0;
 	unsigned rabintab[256], rabinwintab[256];
-	rabininit(winlen, rabintab, rabinwintab);
+	rabininit(rabintab, rabinwintab);
 
 	//run rabin seg on big chunk data
 	int errors = 0;
@@ -39,7 +38,7 @@ int rabin_tb(){
 			cout << "." << flush;
 
 			//run rabin fingerprint
-			rabinseg_bc_packet(packet, out, winlen, rabintab, rabinwintab);
+			rabinseg_bc_packet(packet, out, rabintab, rabinwintab);
 
 			if(out.size.to_long() == 0){
 				cout << "Segmentation fail: Empty package." << endl;
@@ -59,7 +58,7 @@ int rabin_tb(){
 	cout << endl << "Checking results." << endl << endl;
 
 	//Since rabinseg should segment the data always at the same locations, perform a second run with rabinseg and compare the differences
-	rabininit(winlen, rabintab, rabinwintab);
+	rabininit(rabintab, rabinwintab);
 	for (int t_nr = 0 ; t_nr < NUM_TESTS ; t_nr++){
 		int counter = 0;
 		bc_packet packet = compare_data.read();
@@ -68,7 +67,7 @@ int rabin_tb(){
 			cout << "Running check on bc l1 pos: " << t_nr << ", sc l2 pos: " << counter << endl;
 
 
-			rabinseg_bc_packet(packet, out, winlen, rabintab, rabinwintab);
+			rabinseg_bc_packet(packet, out, rabintab, rabinwintab);
 
 			sc_packet compare = results.read();
 			if (out != compare){

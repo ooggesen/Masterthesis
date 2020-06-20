@@ -10,7 +10,8 @@
  * read in pipeline stage
  */
 void read_in(hls::stream< bc_packet > &in, bc_packet &buffer){
-	buffer = bc_packet(in.read());
+	if (!in.empty())
+		buffer = bc_packet(in.read());
 }
 
 void set_arguments(bc_packet bcp,  sc_packet &out, unsigned long long &l2_pos){
@@ -33,13 +34,13 @@ void fragment_refine(hls::stream< bc_packet > &in, bool end, hls::stream< sc_pac
 	//intialize the rabin lookup tables
 	int winlen = 0;
 	unsigned rabintab[256], rabinwintab[256];
-	rabininit(winlen, rabintab, rabinwintab);
+	rabininit(rabintab, rabinwintab);
 
 	//buffer for processed big chunk
 	bc_packet buffer;
 #pragma HLS ARRAY_PARTITION variable=buffer type=complete
 
-	do{
+	while(!end || !in.empty()){
 		//read data in
 		read_in(in, buffer);
 
@@ -49,12 +50,12 @@ void fragment_refine(hls::stream< bc_packet > &in, bool end, hls::stream< sc_pac
 			sc_packet packet;
 #pragma HLS ARRAY_PARTITION variable=packet type=complete
 			//segment a small chunk
-			rabinseg_bc_packet(buffer, packet, winlen, rabintab, rabinwintab);
+			rabinseg_bc_packet(buffer, packet, rabintab, rabinwintab);
 
 			//write its arguments
 			set_arguments(buffer, packet, l2_pos);
 
 			out.write(packet);
 		}
-	} while(!end || !in.empty());
+	}
 }

@@ -37,28 +37,26 @@ static void fpmkredtab(unsigned irr, int s, unsigned tab[]) {
     return;
 }
 
-void fpwinreduce(int winlen, unsigned x, unsigned rabintab[], unsigned &winval) {
+void fpwinreduce(unsigned x, unsigned rabintab[], unsigned &winval) {
     int i;
 
     winval = 0;
     winval = ((winval << 8) | x) ^ rabintab[(winval >> 24)];
-    for (i = 1; i < winlen; i++)
-        winval = (winval << 8) ^ rabintab[(winval >> 24)];
 }
 
-void fpmkwinredtab(int winlen, unsigned rabintab[], unsigned rabinwintab[]) {
+void fpmkwinredtab(unsigned rabintab[], unsigned rabinwintab[]) {
     int i;
 
     for (i = 0; i < 256; i++)
-        fpwinreduce(winlen, i, rabintab, rabinwintab[i]);
+        fpwinreduce(i, rabintab, rabinwintab[i]);
 }
 
-void rabininit(int winlen, unsigned rabintab[], unsigned rabinwintab[]) {
+void rabininit(unsigned rabintab[], unsigned rabinwintab[]) {
     //rabintab = malloc(256*sizeof rabintab[0]);
     //rabinwintab = malloc(256*sizeof rabintab[0]);
 	unsigned irrpoly = 0x45c2b6a1;
     fpmkredtab(irrpoly, 0, rabintab);
-    fpmkwinredtab(winlen, rabintab, rabinwintab);
+    fpmkwinredtab(rabintab, rabinwintab);
 }
 
 
@@ -151,7 +149,7 @@ void write_out(bc_packet &bc_buffer, sc_packet &sc_buffer, bc_packet &bc_out, sc
  * @param in    : big chunk data packet, segmented data is removed from data attribute and size infos are updated accordingly
  * @param out   : small chunk data packet segmented with byte precision from the big chunk data
  */
-void rabinseg_bc_packet(bc_packet &in, sc_packet &out, int winlen, unsigned rabintab[], unsigned rabinwintab[]) {
+void rabinseg_bc_packet(bc_packet &in, sc_packet &out, unsigned rabintab[], unsigned rabinwintab[]) {
 	bc_packet in_buffer;
 	sc_packet out_buffer;
 #pragma HLS ARRAY_PARTITION variable=in_buffer type=complete
@@ -163,7 +161,6 @@ void rabinseg_bc_packet(bc_packet &in, sc_packet &out, int winlen, unsigned rabi
     unsigned h = 0;
     unsigned x;
 
-    USED(winlen); //TODO what does this do?
     //if size small than rabin window return the whole big chunk packet as small chunk packet
     if (in_buffer.size.to_long() < NWINDOW){
     	segment_bc_packet(in_buffer, in_buffer.size.to_long(), out_buffer);
@@ -212,7 +209,7 @@ void rabinseg_bc_packet(bc_packet &in, sc_packet &out, int winlen, unsigned rabi
  * @param end: signals end of process -> if FIFO in is empty and end flag is set the process returns
  * @param out: empty FIFO which will hold exactly the data for one coarse grained chunk
  */
-void rabinseg_in_stream(hls::stream< ap_uint< 8 > > &in, bool end, hls::stream< ap_uint< 8 > > &out, int winlen, unsigned rabintab[], unsigned rabinwintab[]){
+void rabinseg_in_stream(hls::stream< ap_uint< 8 > > &in, bool end, hls::stream< ap_uint< 8 > > &out, unsigned rabintab[], unsigned rabinwintab[]){
 	hls::stream< ap_uint< 8 > > buffer;
 
 	int i = NWINDOW;
@@ -235,10 +232,10 @@ void rabinseg_in_stream(hls::stream< ap_uint< 8 > > &in, bool end, hls::stream< 
 		h ^= rabintab[x];
 	}
 
-	if (h & RabinMask == 0)
+	if ((h & RabinMask) == 0)
 		return;
 
-    segment_stream: while (!in.empty() || !end ) {
+    segment_stream: while (!in.empty() || !end) {
     	if (end && in.empty())
     		return;
 

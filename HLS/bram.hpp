@@ -1,5 +1,5 @@
-#ifndef BRAM_H
-#define BRAM_H
+#ifndef BRAM_HPP
+#define BRAM_HPP
 
 #include "bus_def.hpp"
 
@@ -13,4 +13,4 @@ struct bram_data{
 void bram(bool wren, bool rden,
 		bram_packet packet_w,
 		bram_packet &packet_r);
-#endif //BRAM_H
+#endif //BRAM_HPP

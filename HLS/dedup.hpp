@@ -12,6 +12,6 @@
 #define MSG_BUFF_SIZE 64 //size of the message FIFO to the SHA1 kernel
 
 //function definitions
-void dedup(sc_packet &in, sc_packet &out);
+void dedup(hls::stream< sc_packet > &in, bool end, hls::stream< sc_packet > &out);
 
 #endif //DEDUP_HPP
