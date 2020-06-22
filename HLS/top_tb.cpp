@@ -7,7 +7,7 @@
 #include "test_bench.hpp"
 #include "top.hpp"
 
-#define NUM_TESTS 4
+#define NUM_TESTS 2
 using namespace std;
 
 static int check_header(hls::stream< ap_uint< 8 > > &out_stream){

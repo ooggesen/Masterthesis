@@ -591,28 +591,28 @@ void sha1(
     // 512-bit processing block stream
     hls::stream<internal::blockType> blk_strm("blk_strm");
 #pragma HLS stream variable = blk_strm depth = 4
-#pragma HLS resource variable = blk_strm core = FIFO_LUTRAM
+#pragma HLS bind_storage variable=blk_strm type=FIFO impl=LUTRAM
 
     // number of blocks stream
     hls::stream<ap_uint<64> > nblk_strm1("nblk_strm1");
 #pragma HLS stream variable = nblk_strm1 depth = 4
-#pragma HLS resource variable = nblk_strm1 core = FIFO_LUTRAM
+#pragma HLS bind_storage variable=nblk_strm1 type=FIFO impl=LUTRAM
     hls::stream<ap_uint<64> > nblk_strm2("nblk_strm2");
 #pragma HLS stream variable = nblk_strm2 depth = 4
-#pragma HLS resource variable = nblk_strm2 core = FIFO_LUTRAM
+#pragma HLS bind_storage variable=nblk_strm2 type=FIFO impl=LUTRAM
 
     // end flag of number of blocks stream
     hls::stream<bool> end_nblk_strm1("end_nblk_strm1");
 #pragma HLS stream variable = end_nblk_strm1 depth = 4
-#pragma HLS resource variable = end_nblk_strm1 core = FIFO_LUTRAM
+#pragma HLS bind_storage variable=end_nblk_strm1 type=FIFO impl=LUTRAM
     hls::stream<bool> end_nblk_strm2("end_nblk_strm2");
 #pragma HLS stream variable = end_nblk_strm2 depth = 4
-#pragma HLS resource variable = end_nblk_strm2 core = FIFO_LUTRAM
+#pragma HLS bind_storage variable=end_nblk_strm2 type=FIFO impl=LUTRAM
 
     // message schedule stream
     hls::stream<ap_uint<w> > w_strm("w_strm");
 #pragma HLS stream variable = w_strm depth = 320
-#pragma HLS resource variable = w_strm core = FIFO_BRAM
+#pragma HLS bind_storage variable=w_strm type=FIFO impl=BRAM
 
     // padding and appending message words into blocks
     internal::preProcessing(msg_strm, len_strm, end_len_strm, blk_strm, nblk_strm1, end_nblk_strm1);

@@ -122,8 +122,11 @@ static void write_out(sc_packet &packet, hls::stream< sc_packet > &out){
  * 	.in.end not yet implemented
  */
 void dedup(hls::stream< sc_packet > &in, bool end, hls::stream< sc_packet > &out){
+#pragma HLS DISAGGREGATE variable=in
+#pragma HLS DISAGGREGATE variable=out
 	//buffer
 	hls::stream< sc_packet , 4> in_buffer("in_buffer");
+#pragma HLS DISAGGREGATE variable=in_buffer
 	//sha1 streams
 	hls::stream< ap_uint< 32 > , MSG_BUFF_SIZE > sha1_msg("sha1_msg");
 	hls::stream< ap_uint< 64 > , 2 > sha1_len("sha1_len");
