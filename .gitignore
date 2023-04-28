@@ -1052,3 +1052,7 @@ dkms.conf
 .apc/
 .vitis_hls_log_all.xml
 solution*/
+
+#Custom files
+*.ddp #deduplicated files
+*.zip #input directories for deduplication
