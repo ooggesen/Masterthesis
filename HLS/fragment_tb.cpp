@@ -17,14 +17,14 @@ int fragment_tb(){
 	//Generating input data
 	cout << "Generating enough data for at least " << NUM_TESTS << " big chunk segments for the coarse grained fragment kernel." << endl << endl;
 
-	hls::stream< ap_uint< 8 > > test_data, compare_data;
+	hls::stream< ap_uint< 8 > > test_data("test_data"), compare_data("compare_data");
 	generate_test_data(NUM_TESTS, test_data, compare_data);
 
 	//Running
 	cout << "Running the fragment kernel." << endl << endl;
 
-	hls::stream< bc_packet > out_meta;
-	hls::stream< ap_uint< 8 > > out_data;
+	hls::stream< bc_packet > out_meta("out_meta");
+	hls::stream< c_data_t > out_data("out_data");
 	fragment(test_data, true, out_meta, out_data);
 
 	//Checking
@@ -49,8 +49,17 @@ int fragment_tb(){
 		}
 
 		//Check data
-		for (int  i = 0 ; i < current_bc.size ; i++){
-			if (out_data.read() != compare_data.read()){
+		for (int  i = 0 ; i < hls::ceil((double) current_bc.size.to_long()*8 / W_DATA) ; i++){
+			c_data_t c_out_buffer = out_data.read();
+			c_data_t c_compare_buffer;
+			for (int j = 0 ; j < W_DATA/8 ; j++){
+				if (current_bc.size.to_long() > i*W_DATA/8 + j){
+					c_compare_buffer.range(7 + j*8, j*8) = compare_data.read();
+				} else {
+					c_compare_buffer.range(7 + j*8, j*8) = 0;
+				}
+			}
+			if (c_out_buffer != c_compare_buffer){
 				cout << "Wrong data detected." << endl;
 				errors++;
 			}

@@ -110,7 +110,7 @@ void top(hls::stream< ap_uint< 8 > > &in, bool end, hls::stream< ap_uint< 8 > > 
 	hls::stream< ap_uint< 8 > , (BIG_CHUNK_SIZE+40*SMALL_CHUNK_SIZE)/8> in_buffer("in_buffer");
 	hls::stream< ap_uint< 8 > , (BIG_CHUNK_SIZE+40*SMALL_CHUNK_SIZE)/8> out_buffer("out_buffer");//TODO check if depth of buffers suffices
 	hls::stream< bc_packet, NP > 							post_fragment_meta_buffer("post_fragment_meta_buffer");
-	hls::stream< ap_uint< 8 > , NP*SMALL_CHUNK_SIZE*40/8> 	post_fragment_data_buffer("post_fragment_data_buffer");
+	hls::stream< c_data_t , NP * SC_STREAM_SIZE> 			post_fragment_data_buffer("post_fragment_data_buffer");
 	hls::stream< sc_packet, NP > 							pre_reorder_meta_buffer("pre_reorder_meta_buffer");
 	hls::stream< c_data_t , NP * SC_STREAM_SIZE> 			pre_reorder_data_buffer("pre_reorder_data_buffer");
 	hls::stream< sc_packet, 1 > 							post_refine_meta_buffer[NP];
@@ -119,11 +119,11 @@ void top(hls::stream< ap_uint< 8 > > &in, bool end, hls::stream< ap_uint< 8 > > 
 	hls::stream< c_data_t, SC_STREAM_SIZE > 				post_dedup_data_buffer[NP];
 	//splitter
 	hls::stream< bc_packet , 1 > 							pre_refine_meta_split[NP][NP_REFINE];
-	hls::stream< ap_uint< 8 >, SMALL_CHUNK_SIZE*40/8> 		pre_refine_data_split[NP][NP_REFINE];
+	hls::stream< c_data_t, SMALL_CHUNK_SIZE*40/8> 			pre_refine_data_split[NP][NP_REFINE];
 	hls::stream< sc_packet, 1 > 							pre_dedup_meta_split[NP][NP_DEDUP];
 	hls::stream< c_data_t, SC_STREAM_SIZE > 				pre_dedup_data_split[NP][NP_DEDUP];
 	hls::stream< bc_packet, 1 > 							post_fragment_meta_split[NP];
-	hls::stream< ap_uint< 8 > , BIG_CHUNK_SIZE/8 > 			post_fragment_data_split[NP];
+	hls::stream< c_data_t , BIG_CHUNK_SIZE/8 > 				post_fragment_data_split[NP];
 	//merger
 	hls::stream< sc_packet, 1 > 							post_refine_meta_merge[NP][NP_REFINE];
 	hls::stream< c_data_t, SC_STREAM_SIZE > 				post_refine_data_merge[NP][NP_REFINE];
@@ -144,7 +144,7 @@ void top(hls::stream< ap_uint< 8 > > &in, bool end, hls::stream< ap_uint< 8 > > 
 	fragment(in_buffer, fragment_end, post_fragment_meta_buffer, post_fragment_data_buffer);
 
 	//split to parallel pipelines
-	split< bc_packet , ap_uint< 8 > >(post_fragment_meta_buffer,
+	split< bc_packet , c_data_t >(post_fragment_meta_buffer,
 			post_fragment_data_buffer, fragment_end, NP, post_fragment_meta_split, post_fragment_data_split);
 
 	//NP parallel pipelines
@@ -153,7 +153,7 @@ void top(hls::stream< ap_uint< 8 > > &in, bool end, hls::stream< ap_uint< 8 > > 
 
 		//segment into fine grained chunks, NP_REFINE parallel
 		update_refine_end(fragment_end, in_buffer, refine_end);
-		split< bc_packet , ap_uint<8> >(post_fragment_meta_split[i],
+		split< bc_packet , c_data_t >(post_fragment_meta_split[i],
 				post_fragment_data_split[i], refine_end, NP_REFINE, pre_refine_meta_split[i], pre_refine_data_split[i]);
 		refine_parallel: for (int n = 0; n < NP_REFINE ; n++){
 #pragma HLS UNROLL

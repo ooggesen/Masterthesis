@@ -29,10 +29,17 @@ static void write_out(hls::stream< ap_uint< 8 > > &buffer,
 		unsigned &l1,
 		c_size_t size,
 		hls::stream< bc_packet > &meta,
-		hls::stream< ap_uint< 8 > > &data){
+		hls::stream< c_data_t > &data){
 	//write data
-	stream_to_big_chunk: for (c_size_t i = 0 ; i < size ; i++){
-		data.write(buffer.read());
+	stream_to_big_chunk: for (int i = 0 ; i < hls::ceil((double) size.to_long()*8 / W_DATA) ; i++){
+		c_data_t c_buffer;
+		for (int j = 0 ; j < W_DATA/8 ; j++){
+			if (size.to_long() > i*W_DATA/8 + j)
+				c_buffer.range(7 + 8*j, 8*j) = buffer.read();
+			else
+				c_buffer.range(7 + 8*j, 8*j) = 0;
+		}
+		data.write(c_buffer);
 	}
 
 	//write metadata
@@ -44,14 +51,14 @@ static void write_out(hls::stream< ap_uint< 8 > > &buffer,
 	meta.write(bcp);
 }
 
-void fragment(hls::stream< ap_uint< 8 > > &in, bool end,  hls::stream< bc_packet > &meta, hls::stream< ap_uint< 8 > > &data ){
+void fragment(hls::stream< ap_uint< 8 > > &in, bool end,  hls::stream< bc_packet > &meta, hls::stream< c_data_t > &data ){
 	//intialize the rabin lookup tables
 	unsigned rabintab[256], rabinwintab[256];
 	rabininit(rabintab, rabinwintab);
 
 	//run segmentation until end
 	unsigned  l1 = 0;
-	hls::stream< ap_uint< 8 > , BC_STREAM_SIZE > buffer("buffer"); //contains big chunk data
+	hls::stream< ap_uint< 8 > , BC_STREAM_SIZE * W_DATA/8 > buffer("buffer"); //contains big chunk data
 	fragment_stream: while(!end || !in.empty()){
 #pragma HLS PIPELINE
 		//fill the buffer with a minimum of data for a big chunk packet

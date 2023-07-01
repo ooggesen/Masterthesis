@@ -10,7 +10,7 @@
 
 //function declarations
 void fragment_refine(hls::stream< bc_packet > &meta_in,
-		hls::stream< ap_uint< 8 > > &data_in,
+		hls::stream< c_data_t > &data_in,
 		bool end,
 		hls::stream< sc_packet > &meta_out,
 		hls::stream< c_data_t > &data_out);

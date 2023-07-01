@@ -7,8 +7,9 @@
 //vitis hls includes
 #include "hls_stream.h"
 #include "ap_int.h"
+#include "hls_math.h"
 
 //function declarations
-void fragment(hls::stream< ap_uint< 8 > > &in, bool end,  hls::stream< bc_packet > &meta, hls::stream< ap_uint< 8 > > &data );
+void fragment(hls::stream< ap_uint< 8 > > &in, bool end,  hls::stream< bc_packet > &meta, hls::stream< c_data_t > &data );
 
 #endif //FRAGMENT_HPP

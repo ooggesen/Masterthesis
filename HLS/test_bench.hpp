@@ -21,9 +21,9 @@ void generate_test_data(unsigned num_tests,
 		hls::stream< ap_uint< 8 > > &compare_data);
 void generate_test_data(unsigned num_tests,
 		hls::stream< bc_packet > &test_meta,
-		hls::stream< ap_uint< 8 > > &test_data,
+		hls::stream< c_data_t > &test_data,
 		hls::stream< bc_packet > &compare_meta,
-		hls::stream< ap_uint< 8 > > &compare_data);
+		hls::stream< c_data_t > &compare_data);
 void generate_test_data(unsigned num_tests,
 		bool set_duplicate,
 		hls::stream< sc_packet > &test_meta,

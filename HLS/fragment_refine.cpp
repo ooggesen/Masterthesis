@@ -9,12 +9,19 @@
 /*
  * read in pipeline stage
  */
-void read_in(hls::stream< bc_packet > &meta_in, hls::stream< ap_uint< 8 > > &data_in, bc_packet &meta_buffer, hls::stream< ap_uint< 8 > > &data_buffer){
+void read_in(hls::stream< bc_packet > &meta_in, hls::stream< c_data_t > &data_in, bc_packet &meta_out, hls::stream< ap_uint< 8 > > &data_out){
 	if (!meta_in.empty()){
-		meta_buffer = meta_in.read();
+		bc_packet packet = meta_in.read();
+		meta_out = bc_packet(packet);
 
-		read_bc_data: for (c_size_t i = 0 ; i < meta_buffer.size ; i++){
-			data_buffer.write(data_in.read());
+		read_bc_data: for (int i = 0 ; i < hls::ceil((double) packet.size.to_long()*8 / W_DATA) ; i++){
+			c_data_t data_in_buffer = data_in.read();
+			for (int j = 0 ; j < W_DATA/8 ; j++){
+#pragma HLS UNROLL
+				if (packet.size.to_long() > i*W_DATA/8 + j){
+					data_out.write(data_in_buffer.range(7 + 8*j, 8*j));
+				}
+			}
 		}
 	}
 }
@@ -64,7 +71,7 @@ void convert_to_sc(bc_packet &meta_in,
  * @param out: output stream of small chunks
  */
 void fragment_refine(hls::stream< bc_packet > &meta_in,
-		hls::stream< ap_uint< 8 > > &data_in,
+		hls::stream< c_data_t > &data_in,
 		bool end,
 		hls::stream< sc_packet > &meta_out,
 		hls::stream< c_data_t > &data_out){
@@ -74,8 +81,8 @@ void fragment_refine(hls::stream< bc_packet > &meta_in,
 
 	//buffer for processed big chunk
 	bc_packet meta_buffer;
-	hls::stream< ap_uint< 8 > , BC_STREAM_SIZE > bc_data_buffer("bc_data_buffer");
-	hls::stream< ap_uint< 8 > , SC_STREAM_SIZE > sc_data_buffer("sc_data_buffer");
+	hls::stream< ap_uint< 8 > , BC_STREAM_SIZE*W_DATA/8 > bc_data_buffer("bc_data_buffer");
+	hls::stream< ap_uint< 8 > , SC_STREAM_SIZE*W_DATA/8 > sc_data_buffer("sc_data_buffer");
 
 	while(!end || !meta_in.empty()){
 #pragma HLS PIPELINE

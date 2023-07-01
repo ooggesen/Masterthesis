@@ -67,9 +67,9 @@ void generate_test_data(unsigned num_tests, hls::stream< ap_uint< 8 > > &test_da
 
 void generate_test_data(unsigned num_tests,
 		hls::stream< bc_packet > &test_meta,
-		hls::stream< ap_uint< 8 > > &test_data,
+		hls::stream< c_data_t > &test_data,
 		hls::stream< bc_packet > &compare_meta,
-		hls::stream< ap_uint< 8 > > &compare_data){
+		hls::stream< c_data_t > &compare_data){
 	srand(time(NULL));
 
 	unsigned l1 = 0;
@@ -85,11 +85,19 @@ void generate_test_data(unsigned num_tests,
 		compare_meta.write(packet);
 
 		//generating data and writing data
-		for (c_size_t elem = 0 ; elem < packet.size ; elem++){
-			ap_uint< 8 > byte = rand() % 256;
+		for (int elem = 0 ; elem < hls::ceil((double) packet.size.to_long()*8 / W_DATA) ; elem++){
+			c_data_t data_buffer;
+			for (int byte_pos = 0 ; byte_pos < W_DATA/8 ; byte_pos++){
+				if (packet.size.to_long() > elem*W_DATA/8 + byte_pos){
+					ap_uint< 8 > random_byte = rand() % (1 << 7);
+					data_buffer.range(7 + 8*byte_pos , 8*byte_pos) = random_byte;
+				} else {
+					data_buffer.range(7 + 8*byte_pos , 8*byte_pos) = 0;
+				}
+			}
 
-			compare_data.write(byte);
-			test_data.write(byte);
+			compare_data.write(data_buffer);
+			test_data.write(data_buffer);
 		}
 	}
 }

@@ -17,15 +17,15 @@ int fragment_refine_tb(){
 	//Generating input data
 	cout << "Generating " << NUM_TESTS << " tests for the fragment refine kernel." << endl << endl;
 
-	hls::stream< bc_packet > test_meta, compare_meta;
-	hls::stream< ap_uint < 8 > > test_data, compare_data;
+	hls::stream< bc_packet > test_meta("test_meta"), compare_meta("compare_meta");
+	hls::stream< c_data_t > test_data("test_data"), compare_data("compare_data");
 	generate_test_data(NUM_TESTS, test_meta, test_data, compare_meta, compare_data);
 
 	//running
 	cout << "Running the fragment refine kernel." << endl;
 
-	hls::stream< sc_packet > out_meta;
-	hls::stream< c_data_t > out_data;
+	hls::stream< sc_packet > out_meta("out_meta");
+	hls::stream< c_data_t > out_data("out_data");
 	fragment_refine(test_meta, test_data, true, out_meta, out_data);
 
 	cout << "Test run finished." << endl << endl;
@@ -40,9 +40,12 @@ int fragment_refine_tb(){
 		//buffer for packets
 		bc_packet current_bc = compare_meta.read();
 		sc_packet current_sc;
+		c_data_t bc_buffer = compare_data.read();
+		c_data_t sc_buffer;
 		//buffer for metadata
 		total_l1_size = 0;
 		l2 = 0;
+		int bc_pos = 0;
 		//buffer for position in big chunk
 		do{
 			cout << "checking small chunk nr.: " << l2 << "-----" << endl;
@@ -59,18 +62,23 @@ int fragment_refine_tb(){
 			l2++;
 
 			//Checking data
-			for (c_size_t i = 0 ; i < hls::ceil((double) current_sc.size.to_long()*8 / W_DATA) ; i++){
-				c_data_t sc_byte = out_data.read();
+			for (int i = 0 ; i < hls::ceil((double) current_sc.size.to_long()*8 / W_DATA) ; i++){
+				sc_buffer = out_data.read();
 				for (int j = 0 ; j < W_DATA/8 ; j++){
-					if (current_sc.size * 8 > i*W_DATA + j*8){
-						ap_uint< 8 > bc_byte = compare_data.read();
-						if (sc_byte.range(7 + 8*j, 8*j) != bc_byte){
+					if (current_sc.size.to_long()> i*W_DATA/8 + j){
+						//check small chunk data
+						if (sc_buffer.range(7 + 8*j, 8*j) != bc_buffer.range(7 + 8*bc_pos, 8*bc_pos)){
 							cout << "Wrong data in fragmented small chunk." << endl;
-							cout << "Expected: " << bc_byte << ", received: " << sc_byte.range(7 + 8*j, 8*j) << endl;
+							//cout << "Expected: " << bc_buffer.range(7 + 8*bc_pos, 8*bc_pos) << ", received: " << sc_buffer.range(7 + 8*j, 8*j) << endl;
 							errors++;
 						}
+						//update position in bc data
+						if (++bc_pos > W_DATA/8){
+							bc_pos = 0;
+							bc_buffer = compare_data.read();
+						}
 					} else {
-						if (sc_byte.range(7 + 8*j, 8*j) != 0){
+						if (sc_buffer.range(7 + 8*j, 8*j) != 0){
 							cout << "Wrong data stuffing in small chunk." << endl;
 						}
 					}
