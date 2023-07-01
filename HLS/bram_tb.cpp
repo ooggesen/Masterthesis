@@ -14,7 +14,7 @@ void print_data(bram_packet data){
 	cout << "------" << endl;
 	cout << "data: " << endl;
 
-	for (int i = 0 ; i < SC_ARRAY_SIZE ; i++){
+	for (int i = 0 ; i < SC_STREAM_SIZE ; i++){
 		cout << hex << data.data[i];
 	}
 	cout << endl;
@@ -36,11 +36,11 @@ int bram_tb(){
 
 	for (int i = 0 ; i < NUM_TESTS ; i++){
 		packet_w.addr = i;
-		for (int j = 0 ; j < SC_ARRAY_SIZE ; j++){
+		for (int j = 0 ; j < SC_STREAM_SIZE ; j++){
 			packet_w.data[j] = i * j;
 		}
 
-		print_data(packet_w);
+		//print_data(packet_w);
 		bram(true, false, packet_w, packet_r);
 	}
 
@@ -51,9 +51,9 @@ int bram_tb(){
 
 		bram(false, true, packet_w, packet_r);
 
-		print_data(packet_r);
+		//print_data(packet_r);
 
-		for (int j = 0 ; j < SC_ARRAY_SIZE ; j++){
+		for (int j = 0 ; j < SC_STREAM_SIZE ; j++){
 			if (packet_r.data[j] != i * j) errors += 1;
 		}
 	}

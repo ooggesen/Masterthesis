@@ -2,13 +2,14 @@
 #define TOP_HPP
 
 //Number of Threads
-#define NP 2
+#define NP 1
 #define NP_REFINE 2
 #define NP_DEDUP 2
 
 //vitis hls includes
 #include "ap_int.h"
 #include "hls_stream.h"
+#include "hls_math.h"
 
 //user includes
 #include "bus_def.hpp"

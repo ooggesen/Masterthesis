@@ -18,14 +18,28 @@ int reorder_buffer_tb(){
 	static buffer_cell buffer[BUFFER_SIZE_1][BUFFER_SIZE_2];
 
 	//Generate test data
-	hls::stream< sc_packet > input, compare;
-	generate_test_data(BUFFER_SIZE_2, true, input, compare);
+	hls::stream< sc_packet > test_meta("test_meta"), compare_meta("compare_meta");
+	hls::stream< c_data_t > test_data("test_data"), compare_data("compare_data");
+	generate_test_data(BUFFER_SIZE_2, true, test_meta, test_data, compare_meta, compare_data);
 
 	//Save data to buffer
 	cout << "Save generated data to buffer." << endl;
 	for (int i = 0 ; i < BUFFER_SIZE_2 ; i++){
-		sc_packet bp = input.read();
-		write_buffer(bp, buffer);
+		sc_packet bp = test_meta.read();
+		c_data_t data[SC_STREAM_SIZE];
+
+		//copy data to buffer
+		c_size_t j = 0;
+		for ( ; j < hls::ceil((double) bp.size.to_long()*8 / W_DATA) ; j++){
+			data[j] = test_data.read();
+		}
+
+		for ( ; j < SC_STREAM_SIZE ; j++){
+			data[j] = 0;
+		}
+
+		//write buffer
+		write_buffer(bp, data, buffer);
 	}
 	cout << endl;
 
@@ -34,26 +48,41 @@ int reorder_buffer_tb(){
 	int errors = 0;
 	for (int i = 0 ; i < BUFFER_SIZE_2 ; i++){
 		cout << "Test data nr. " << i << endl;
-		sc_packet out,  bp = compare.read();
+		sc_packet out,  compare = compare_meta.read();
 		bool success = false;
-		read_buffer(bp.l1_pos, bp.l2_pos, buffer, out, success);
+		c_data_t data_buffer[SC_STREAM_SIZE];
+		read_buffer(compare.l1_pos, compare.l2_pos, buffer, out, data_buffer, success);
 
 		//Check errors
 		if (!success){
 			cout << i << " Could not find saved data in buffer." << endl;
-			print_test_data(bp);
+			print_test_data(compare);
 			errors++;
-			continue;
 		}
 
-		if (out != bp){
+		if (out != compare){
 			cout << i << " Wrong data read from buffer." << endl;
 			cout << "Expected: " << endl;
-			print_test_data(bp);
+			print_test_data(compare);
 			cout << "Received from buffer:" << endl;
 			print_test_data(out);
 			errors++;
-			continue;
+		}
+
+		c_size_t j = 0;
+		for ( ; j < hls::ceil((double) out.size.to_long()*8 /W_DATA) ; j++){
+			c_data_t compare = compare_data.read();
+			if (compare != data_buffer[j]){
+				cout << "Wrong data read from buffer." << endl;
+				errors++;
+			}
+		}
+
+		for ( ; j < SC_STREAM_SIZE ; j++){
+			if (data_buffer[j] != 0){
+				cout << "Wrong bit stuffing."  << endl;
+				errors++;
+			}
 		}
 	}
 

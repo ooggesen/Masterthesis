@@ -9,6 +9,6 @@
 #include "ap_int.h"
 
 //function declarations
-void fragment(hls::stream< ap_uint< 8 > > &in, bool end,  hls::stream< bc_packet > &out);
+void fragment(hls::stream< ap_uint< 8 > > &in, bool end,  hls::stream< bc_packet > &meta, hls::stream< ap_uint< 8 > > &data );
 
 #endif //FRAGMENT_HPP

@@ -5,58 +5,64 @@
 #include "fragment.hpp"
 
 
-#define IN_BUFFER_SIZE ((BIG_CHUNK_SIZE + 40 * SMALL_CHUNK_SIZE)/8) //Expected maximum size for a big chunk
+
+#define MIN_BC_SIZE (BIG_CHUNK_SIZE - 10*SMALL_CHUNK_SIZE)
 
 
 
-static void fill_buffer(hls::stream< ap_uint< 8 > > &in, bool end, hls::stream< ap_uint< 8 > > &buffer){
-	fill_buffer_loop: for (int i = 0 ;  i < (BIG_CHUNK_SIZE - 10*SMALL_CHUNK_SIZE)/8 ; i++){
-		if (end && in.empty()) return;
+static void fill_buffer(hls::stream< ap_uint< 8 > > &in,
+		bool end,
+		c_size_t &read,
+		hls::stream< ap_uint< 8 > > &buffer){
+	c_size_t read_counter = 0;
+	fill_buffer_loop: for (int i = 0 ;  i < MIN_BC_SIZE/8 ; i++){
+		if (end && in.empty()){
+			break;
+		}
 		buffer.write(in.read());
+		read_counter++;
 	}
+	read = read_counter;
 }
 
-static void write_out(hls::stream< ap_uint< 8 > > &buffer, unsigned l1, hls::stream< bc_packet > &out){
-	unsigned long long size = 0;
-
+static void write_out(hls::stream< ap_uint< 8 > > &buffer,
+		unsigned &l1,
+		c_size_t size,
+		hls::stream< bc_packet > &meta,
+		hls::stream< ap_uint< 8 > > &data){
 	//write data
-	bc_packet bcp;
-	stream_to_big_chunk: for (int arr_pos = 0 ; arr_pos < BC_ARRAY_SIZE ; arr_pos++){
-		for (int byte_pos = 0 ; byte_pos < W_DATA_BIG_CHUNK/8 ; byte_pos++){
-			if (!buffer.empty()){
-				bcp.data[arr_pos].range(7 + 8 * byte_pos, 8 * byte_pos) = buffer.read(); //TODO does this fit with the write out? MSB first LSB first?
-				size++;
-			} else {
-				bcp.data[arr_pos].range(7 + 8 * byte_pos, 8 * byte_pos) = 0; //fill with 0
-			}
-		}
+	stream_to_big_chunk: for (c_size_t i = 0 ; i < size ; i++){
+		data.write(buffer.read());
 	}
 
 	//write metadata
-	bcp.l1_pos = l1;
+	bc_packet bcp;
+	bcp.l1_pos = l1++;
 	bcp.size = size;
 
 	//write to out stream
-	out.write(bcp);
+	meta.write(bcp);
 }
 
-void fragment(hls::stream< ap_uint< 8 > > &in, bool end,  hls::stream< bc_packet > &out){
+void fragment(hls::stream< ap_uint< 8 > > &in, bool end,  hls::stream< bc_packet > &meta, hls::stream< ap_uint< 8 > > &data ){
 	//intialize the rabin lookup tables
 	unsigned rabintab[256], rabinwintab[256];
 	rabininit(rabintab, rabinwintab);
 
 	//run segmentation until end
 	unsigned  l1 = 0;
-	hls::stream< ap_uint< 8 > , IN_BUFFER_SIZE > buffer; //contains big chunk data
+	hls::stream< ap_uint< 8 > , BC_STREAM_SIZE > buffer("buffer"); //contains big chunk data
 	fragment_stream: while(!end || !in.empty()){
+#pragma HLS PIPELINE
 		//fill the buffer with a minimum of data for a big chunk packet
-		fill_buffer(in, end, buffer);
+		c_size_t bc_size;
+		fill_buffer(in, end, bc_size, buffer);
 
 		//segment the input data
-		rabinseg_in_stream(in, end, buffer,rabintab, rabinwintab);
+		c_size_t sc_size;
+		rabinseg_in_stream(in, end, buffer, sc_size, rabintab, rabinwintab);
 
 		//convert to big chunk packet
-		write_out(buffer, l1, out);
-		l1++;
+		write_out(buffer, l1, sc_size+bc_size, meta, data);
 	}
 }

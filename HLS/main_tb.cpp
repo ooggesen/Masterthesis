@@ -3,7 +3,6 @@
  *
  * Usage:
  * 	uncomment the testbenches you want to run,
- * 	but only uncomment one testbench under the category top testbenches.
  */
 
 #include "test_bench.hpp"
@@ -11,27 +10,34 @@
 int main(){
 	int retval = 0;
 
-	//INDIVIDUAL TESTBENCHES
-//	retval += bram_tb();
-//	std::cout << std::flush;
-//	retval += copy_tb();
-//	std::cout << std::flush;
-//	retval += dedup_tb();
-//	std::cout << std::flush;
-//	retval += reorder_tb();
-//	std::cout << std::flush;
-//	retval += reorder_buffer_tb();
-//	std::cout << std::flush;
-//	retval += rabin_tb();
-//	std::cout << std::flush;
-//	retval += fragment_refine_tb();
-//	std::cout << std::flush;
-//	retval += fragment_tb();
-//	std::cout << std::flush;
 
-	//TOP TESTBENCHES
-//	retval += top_refine_tb();
+//HELPER FUNCTION TESTBENCHES
+//	retval += shuffle_tb();
+//	std::cout << std::endl;
+//	retval += generate_test_data_tb();
+//	std::cout << std::endl;
+//	retval += bram_tb();
+//	std::cout << std::endl;
+//	retval += copy_tb();
+//	std::cout << std::endl;
+//	retval += reorder_buffer_tb();
+//	std::cout << std::endl;
+
+
+//KERNEL TESTBENCHES
+//	retval += fragment_tb();
+//	std::cout << std::endl;
+//	retval += fragment_refine_tb();
+//	std::cout << std::endl;
+//	retval += dedup_tb();
+//	std::cout << std::endl;
+//	retval += reorder_tb();
+//	std::cout << std::endl;
+
+
+//TOP TESTBENCH
 	retval += top_tb();
+	std::cout << std::endl;
 
 
 	return retval;

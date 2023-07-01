@@ -17,14 +17,16 @@ int fragment_refine_tb(){
 	//Generating input data
 	cout << "Generating " << NUM_TESTS << " tests for the fragment refine kernel." << endl << endl;
 
-	hls::stream< bc_packet > test_data, compare_data;
-	generate_test_data(NUM_TESTS, test_data, compare_data);
+	hls::stream< bc_packet > test_meta, compare_meta;
+	hls::stream< ap_uint < 8 > > test_data, compare_data;
+	generate_test_data(NUM_TESTS, test_meta, test_data, compare_meta, compare_data);
 
 	//running
 	cout << "Running the fragment refine kernel." << endl;
 
-	hls::stream< sc_packet > out_stream;
-	fragment_refine(test_data, true, out_stream);
+	hls::stream< sc_packet > out_meta;
+	hls::stream< c_data_t > out_data;
+	fragment_refine(test_meta, test_data, true, out_meta, out_data);
 
 	cout << "Test run finished." << endl << endl;
 
@@ -33,19 +35,18 @@ int fragment_refine_tb(){
 	int errors = 0;
 	unsigned long long l1 = 0, l2 = 0;
 	unsigned long long total_l1_size = 0;
-	for (int td = 0 ; td < NUM_TESTS ; td++){
-		cout << "checking big chunk nr.: " << td << endl << endl;
+	while (!out_meta.empty()){
+		cout << "checking big chunk nr.: " << l1 << endl << endl;
 		//buffer for packets
-		bc_packet current_bc = compare_data.read();
+		bc_packet current_bc = compare_meta.read();
 		sc_packet current_sc;
 		//buffer for metadata
 		total_l1_size = 0;
 		l2 = 0;
 		//buffer for position in big chunk
-		int bc_pos = 0;
 		do{
 			cout << "checking small chunk nr.: " << l2 << "-----" << endl;
-			current_sc = out_stream.read();
+			current_sc = out_meta.read();
 
 			//Checking metadata
 			if(current_sc.l1_pos != l1 ||
@@ -58,16 +59,22 @@ int fragment_refine_tb(){
 			l2++;
 
 			//Checking data
-			for (int i = 0 ; i < current_sc.size.to_long() ; i++){
-				ap_uint< 8 > sc_byte = current_sc.data[(int)i / (W_DATA_SMALL_CHUNK/8)].range(7 + ((8*i) % W_DATA_SMALL_CHUNK), (8*i) % W_DATA_SMALL_CHUNK);
-				ap_uint< 8 > bc_byte = current_bc.data[(int)bc_pos / (W_DATA_BIG_CHUNK/8)].range(7 + ((bc_pos*8) % W_DATA_BIG_CHUNK), (8*bc_pos) % W_DATA_BIG_CHUNK);
-
-				if (sc_byte != bc_byte){
-					cout << "Wrong data in fragmented small chunk." << endl;
-					cout << "Expected: " << bc_byte << ", received: " << sc_byte << endl;
-					errors++;
+			for (c_size_t i = 0 ; i < hls::ceil((double) current_sc.size.to_long()*8 / W_DATA) ; i++){
+				c_data_t sc_byte = out_data.read();
+				for (int j = 0 ; j < W_DATA/8 ; j++){
+					if (current_sc.size * 8 > i*W_DATA + j*8){
+						ap_uint< 8 > bc_byte = compare_data.read();
+						if (sc_byte.range(7 + 8*j, 8*j) != bc_byte){
+							cout << "Wrong data in fragmented small chunk." << endl;
+							cout << "Expected: " << bc_byte << ", received: " << sc_byte.range(7 + 8*j, 8*j) << endl;
+							errors++;
+						}
+					} else {
+						if (sc_byte.range(7 + 8*j, 8*j) != 0){
+							cout << "Wrong data stuffing in small chunk." << endl;
+						}
+					}
 				}
-				bc_pos++;
 			}
 		}while(!current_sc.last_l2_chunk);
 
@@ -79,6 +86,15 @@ int fragment_refine_tb(){
 
 		l1++;
 		cout << endl;
+	}
+
+
+	if (!compare_data.empty()){
+		cout << "Data lost at end of file. Data: " << endl;
+		while (!compare_data.empty()){
+			cout << compare_data.read() << endl;
+		}
+		errors++;
 	}
 
 	if (errors > 0){

@@ -16,10 +16,6 @@ using namespace std;
 void print_test_data(sc_packet test_data){
 	cout << "-----" << endl;
 
-	cout << "data in hex: " << endl;
-	for (int i = 0 ; i < SC_ARRAY_SIZE ; i++){
-		cout << i + 1 << ": " << hex << test_data.data[i] << endl;
-	}
 	cout << dec <<"size: " << test_data.size <<  endl;
 	cout << "hash in hex: " << hex << test_data.hash << endl;
 	cout << dec << "l1 pos: " << test_data.l1_pos << endl;
@@ -39,10 +35,6 @@ void print_test_data(sc_packet test_data){
 void print_test_data(bc_packet test_data){
 	cout << "-----" << endl;
 
-	cout << "data in hex: " << endl;
-	for (int i = 0 ; i < BC_ARRAY_SIZE ; i++){
-		cout << i + 1 << ": " << hex << test_data.data[i] << endl;
-	}
 	cout << dec <<"size: " << test_data.size <<  endl;
 	cout << dec << "l1 pos: " << test_data.l1_pos << endl;
 
@@ -73,49 +65,44 @@ void generate_test_data(unsigned num_tests, hls::stream< ap_uint< 8 > > &test_da
 
 
 
-/*
- * Generates big chunk test data, ,sorted by l1 position from the rand() function of the stdlib c library
- *
- * @param num_tests   : number of tests to generate
- * @param test_data   : stream with generated test data, sorted by l1 and l2 order
- * @param compare_data: copy of test_data (Use for comparing with results)
- */
-void generate_test_data(unsigned num_tests, hls::stream< bc_packet > &test_data, hls::stream< bc_packet > &compare_data){
+void generate_test_data(unsigned num_tests,
+		hls::stream< bc_packet > &test_meta,
+		hls::stream< ap_uint< 8 > > &test_data,
+		hls::stream< bc_packet > &compare_meta,
+		hls::stream< ap_uint< 8 > > &compare_data){
 	srand(time(NULL));
 
 	unsigned l1 = 0;
 	for (int td = 0 ; td < num_tests ; td++){
 		bc_packet packet;
-
-		//generating data
-		for (int elem = 0 ; elem < BC_ARRAY_SIZE ; elem++){
-			for (int seg = 0 ; seg < W_DATA_BIG_CHUNK / 32 ; seg++){
-				packet.data[elem].range(31 + 32 * seg, 32 * seg) = rand() % (1 << 31);
-			}
-		}
-
-		packet.size = BIG_CHUNK_SIZE/8 - 512 + rand() % 1024;
+		packet.size = (BIG_CHUNK_SIZE - 10*SMALL_CHUNK_SIZE + rand() % (40 * SMALL_CHUNK_SIZE))/8;
 		packet.l1_pos = l1++;
 
 		//print_test_data(packet);
 
-		//pushing generated data on stream
-		test_data.write(packet);
-		compare_data.write(packet);
+		//pushing generated meta on stream
+		test_meta.write(packet);
+		compare_meta.write(packet);
+
+		//generating data and writing data
+		for (c_size_t elem = 0 ; elem < packet.size ; elem++){
+			ap_uint< 8 > byte = rand() % 256;
+
+			compare_data.write(byte);
+			test_data.write(byte);
+		}
 	}
 }
 
 
 
-/*
- * Generates sorted small chunk test data from the rand() function of the stdlib c library
- *
- * @param num_tests:     Number of tests to generate
- * @param set_duplicate: if true, the duplicate flag is set accordingly, otherwise duplicate is set to false
- * @param test_data:     stream with generated test data, sorted by l1 and l2 order
- * @param compare_data:  copy of test_data with correctly set duplicate flag. (Use for comparing with results)
- */
-void generate_test_data(unsigned num_tests, bool set_duplicate, hls::stream< sc_packet > &test_data, hls::stream< sc_packet > &compare_data){
+void generate_test_data(unsigned num_tests,
+		bool set_duplicate,
+		hls::stream< sc_packet > &test_meta,
+		hls::stream< c_data_t > &test_data,
+		hls::stream< sc_packet > &compare_meta,
+		hls::stream< c_data_t > &compare_data){
+	c_data_t data_buffer[SC_STREAM_SIZE];
 	srand(time(NULL));
 
 	unsigned l1 = 0, l2 = 0;
@@ -134,30 +121,45 @@ void generate_test_data(unsigned num_tests, bool set_duplicate, hls::stream< sc_
 			packet.hash = td; //convenient for checking in the results
 
 			is_duplicate = true;
-		} else {
-			//generating data
-			for (int elem = 0 ; elem < SC_ARRAY_SIZE ; elem++){
-				for (int seg = 0 ; seg < W_DATA_SMALL_CHUNK / 32 ; seg++){
-					packet.data[elem].range(31 + 32 * seg, 32 * seg) = rand() % (1 << 31);
-				}
+
+			for (int elem  = 0 ; elem < hls::ceil((double) packet.size.to_long()*8 / W_DATA) ; elem++){
+				c_data_t current_data = data_buffer[elem];
+
+				test_data.write(current_data);
+				compare_data.write(current_data);
 			}
-			packet.size = rand() % 24 + SMALL_CHUNK_SIZE/8 - 12; //small variances in size
+		} else {
+			packet.size = (rand() % 24) + SMALL_CHUNK_SIZE/8 - 12; //small variances in size
 
 			is_duplicate = false;
+
+			//generating data
+			for (int elem = 0 ; elem < hls::ceil((double) packet.size.to_long()*8 / W_DATA)  ; elem++){
+				for (int seg = 0 ; seg < W_DATA/8 ; seg++){
+					//write to buffer
+					if (packet.size.to_long() > elem*W_DATA/8 + seg){
+						ap_uint< 32 > random_data = rand() % (1 << 7);
+						data_buffer[elem].range(7 + 8*seg, 8*seg) = random_data;
+					} else
+						data_buffer[elem].range(7 + 8*seg, 8*seg) = 0;
+				}
+				//write out
+				test_data.write(data_buffer[elem]);
+				compare_data.write(data_buffer[elem]);
+			}
 		}
 
 		//update small chunk positions
 		packet.l2_pos = l2;
 		packet.l1_pos = l1;
 		bool is_last_l2_chunk = false;
-		// increment the l1 positions after 2/3 of the average big chunk size if transmitted
+		// increment the l1 positions after an average big chunk if transmitted
 		// modified by chance
 		if (l2 * SMALL_CHUNK_SIZE >= BIG_CHUNK_SIZE && rand() % 101 < 30) {
 			l2 = 0;
 			l1++;
 			is_last_l2_chunk = true;
 		} else {
-		//increase l2 position else
 			l2++;
 		}
 
@@ -171,10 +173,10 @@ void generate_test_data(unsigned num_tests, bool set_duplicate, hls::stream< sc_
 		}
 
 		//write data to corresponding stream
-		test_data.write(packet);
+		test_meta.write(packet);
 
 		packet.is_duplicate = is_duplicate;
-		compare_data.write(packet);
+		compare_meta.write(packet);
 
 		//print out correctly set bus packet
 		//print_test_data(packet);
@@ -185,26 +187,43 @@ void generate_test_data(unsigned num_tests, bool set_duplicate, hls::stream< sc_
 
 
 
-/*
- * Shuffles bus packages which are ordered by the l1 and l2 numbers
- * -> Cleans the contend of sorted and moves it so shuffled stream
- *
- * @param sorted   : stream with sorted input
- * @param shuffeled: stream with shuffeled contend of sorted stream
- */
-void shuffle(hls::stream< sc_packet > &sorted, hls::stream< sc_packet > &shuffeled){
-	hls::stream< sc_packet > buffer;
+void shuffle(hls::stream< sc_packet > &sorted_meta,
+		hls::stream< c_data_t > &sorted_data,
+		hls::stream< sc_packet > &shuffeled_meta,
+		hls::stream< c_data_t > &shuffeled_data){
+	hls::stream< sc_packet > meta_buffer("meta_buffer");
+	hls::stream< c_data_t > data_buffer("data_buffer");
 	int in_buffer = 0;
-	while(!sorted.empty() || !buffer.empty()){
+	while(!sorted_meta.empty() || !meta_buffer.empty()){
 		unsigned percent = rand() % 101;
-		if (!sorted.empty() && percent < 33){
-			shuffeled.write(sorted.read());
-		} else if (in_buffer >= BUFFER_SIZE_1 || in_buffer >= BUFFER_SIZE_2 || (!buffer.empty() && (percent < 66 || sorted.empty()))){
-			shuffeled.write(buffer.read());
+		if (!sorted_meta.empty() && percent < 33){
+			//write directly from input to output
+			sc_packet packet = sorted_meta.read();
+			shuffeled_meta.write(packet);
+			for (int i = 0  ; i < hls::ceil((double) packet.size.to_long()*8 / W_DATA) ; i++){
+				shuffeled_data.write(sorted_data.read());
+			}
+		} else if (in_buffer >= BUFFER_SIZE_1 ||
+				in_buffer >= BUFFER_SIZE_2 ||
+				(!meta_buffer.empty() && (percent < 66 || sorted_meta.empty()))){
+			//write from buffer to output
+			sc_packet packet = meta_buffer.read();
+			shuffeled_meta.write(packet);
+
+			for (int i = 0 ; i < hls::ceil((double) packet.size.to_long()*8 / W_DATA) ; i ++){
+				shuffeled_data.write(data_buffer.read());
+			}
 			in_buffer--;
-		} else if (!sorted.empty()){
-			buffer.write(sorted.read());
+		} else if (!sorted_meta.empty()){
+			//write from input to buffer
+			sc_packet packet = sorted_meta.read();
+			meta_buffer.write(packet);
+
+			for (int i = 0 ; i < hls::ceil((double) packet.size.to_long()*8 / W_DATA) ; i ++){
+				data_buffer.write(sorted_data.read());
+			}
 			in_buffer++;
 		}
 	}
+	return;
 }

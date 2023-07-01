@@ -27,7 +27,7 @@ void bram(bool wren, bool rden,
 		  ++addr;
 
 	  //read data
-	  read_loop_bram: for (int i = 0 ; i < SC_ARRAY_SIZE ; i++ ){
+	  read_loop_bram: for (int i = 0 ; i < SC_STREAM_SIZE ; i++ ){
 #pragma HLS UNROLL
 		  packet_r.data[i] = buffer[addr].data[i];
 	  }
@@ -40,7 +40,7 @@ void bram(bool wren, bool rden,
 			  ++addr;
 
 	  //write data
-	  write_loop_bram: for (int i = 0 ; i < SC_ARRAY_SIZE ; i++ ){
+	  write_loop_bram: for (int i = 0 ; i < SC_STREAM_SIZE ; i++ ){
 #pragma HLS UNROLL
 		  buffer[addr].data[i] = packet_w.data[i];
 		  buffer[addr].hash =  packet_w.addr;

@@ -23,17 +23,18 @@ int fragment_tb(){
 	//Running
 	cout << "Running the fragment kernel." << endl << endl;
 
-	hls::stream< bc_packet > out_stream;
-	fragment(test_data, true, out_stream);
+	hls::stream< bc_packet > out_meta;
+	hls::stream< ap_uint< 8 > > out_data;
+	fragment(test_data, true, out_meta, out_data);
 
 	//Checking
 	cout << "Checking the results." << endl << endl;
 	int errors = 0;
 	int l1 = 0;
-	while(!out_stream.empty()){
+	while(!out_meta.empty()){
 		cout << "Checking the " << l1 << "th big chunk.-----" << endl;
 
-		bc_packet current_bc = out_stream.read();
+		bc_packet current_bc = out_meta.read();
 		//print_test_data(current_bc);
 
 		//Check meta data
@@ -49,7 +50,7 @@ int fragment_tb(){
 
 		//Check data
 		for (int  i = 0 ; i < current_bc.size ; i++){
-			if (current_bc.data[(int) (8 * i) / W_DATA_BIG_CHUNK].range(7 + (8*i % W_DATA_BIG_CHUNK), 8*i % W_DATA_BIG_CHUNK) != compare_data.read()){
+			if (out_data.read() != compare_data.read()){
 				cout << "Wrong data detected." << endl;
 				errors++;
 			}

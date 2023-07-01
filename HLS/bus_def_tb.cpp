@@ -18,10 +18,6 @@ int copy_tb(){
 	source.last_l2_chunk = true;
 	source.size = 512;
 
-	for (int i = 0 ; i < SC_ARRAY_SIZE ; i++){
-		source.data[i] = i;
-	}
-
 	target = sc_packet(source);
 
 	//check result

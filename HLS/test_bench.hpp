@@ -6,6 +6,7 @@
 #include "reorder_buffer.hpp"
 //vitis libraries
 #include "hls_stream.h"
+#include "hls_math.h"
 //std libraries
 #include <stdlib.h>
 #include <time.h>
@@ -15,10 +16,24 @@
 //helper functions
 void print_test_data(sc_packet test_data);
 void print_test_data(bc_packet test_data);
-void generate_test_data(unsigned num_tests, hls::stream< ap_uint< 8 > > &test_data, hls::stream< ap_uint< 8 > > &compare_data);
-void generate_test_data(unsigned num_tests, hls::stream< bc_packet > &test_data, hls::stream< bc_packet > &compare_data);
-void generate_test_data(unsigned num_tests, bool set_duplicate, hls::stream< sc_packet > &test_data, hls::stream< sc_packet > &compare_data);
-void shuffle(hls::stream< sc_packet > &sorted, hls::stream< sc_packet > &shuffeled);
+void generate_test_data(unsigned num_tests,
+		hls::stream< ap_uint< 8 > > &test_data,
+		hls::stream< ap_uint< 8 > > &compare_data);
+void generate_test_data(unsigned num_tests,
+		hls::stream< bc_packet > &test_meta,
+		hls::stream< ap_uint< 8 > > &test_data,
+		hls::stream< bc_packet > &compare_meta,
+		hls::stream< ap_uint< 8 > > &compare_data);
+void generate_test_data(unsigned num_tests,
+		bool set_duplicate,
+		hls::stream< sc_packet > &test_meta,
+		hls::stream< c_data_t > &test_data,
+		hls::stream< sc_packet > &compare_meta,
+		hls::stream< c_data_t > &compare_data);
+void shuffle(hls::stream< sc_packet > &sorted_meta,
+		hls::stream< c_data_t > &sorted_data,
+		hls::stream< sc_packet > &shuffeled_meta,
+		hls::stream< c_data_t > &shuffeled_data);
 
 //test benches
 int dedup_tb();
@@ -26,10 +41,10 @@ int reorder_tb();
 int bram_tb();
 int copy_tb();
 int reorder_buffer_tb();
-int rabin_tb();
 int fragment_refine_tb();
 int fragment_tb();
-int top_refine_tb();
 int top_tb();
+int generate_test_data_tb();
+int shuffle_tb();
 
 #endif //TEST_BENCH_HPP
