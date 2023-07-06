@@ -39,7 +39,6 @@ static void reset_buffers(	hls::stream< ap_uint< 32 > , MSG_BUFF_SIZE > &sha1_ms
  */
 static void read_in(hls::stream< sc_packet > &meta_in,
 		hls::stream< c_data_t > &data_in,
-		bool end,
 		hls::stream< sc_packet > &meta_buffer,
 		hls::stream< c_data_t > &data_buffer,
 		hls::stream< ap_uint< 32 > , MSG_BUFF_SIZE > &sha1_msg,
@@ -107,13 +106,13 @@ static void check_duplicate(bram_packet to_bram,
 
 	sc_packet meta = dedup_meta_buffer.read();
 
-	bram(false, true, to_bram, packet_r);
+	bram(false, true, to_bram, packet_r, meta.size);
 
-	if (is_equal(to_bram.data, packet_r.data)){
+	if (is_equal(to_bram.data, packet_r.data, meta.size)){
 		meta.is_duplicate = true; //found duplicate
 	} else {
 		//found unique chunk
-		bram(true, false, to_bram, packet_r); //write to bram
+		bram(true, false, to_bram, packet_r, meta.size); //write to bram
 		meta.is_duplicate = false;
 	}
 
@@ -170,7 +169,7 @@ void dedup(hls::stream< sc_packet > &meta_in,
 		//reset_buffers(sha1_msg, sha1_len, sha1_end_len, sha1_digest, sha1_end_digest);
 
 		//move data to streams
-		read_in(meta_in, data_in, end, bram_meta_buffer, bram_data_buffer, sha1_msg, sha1_len, sha1_end_len);
+		read_in(meta_in, data_in, bram_meta_buffer, bram_data_buffer, sha1_msg, sha1_len, sha1_end_len);
 
 		//calculate sha1 hash
 		xf::security::sha1< 32 >(sha1_msg, sha1_len, sha1_end_len, sha1_digest, sha1_end_digest);

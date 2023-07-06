@@ -46,5 +46,6 @@ int fragment_tb();
 int top_tb();
 int generate_test_data_tb();
 int shuffle_tb();
+int is_equal_tb();
 
 #endif //TEST_BENCH_HPP

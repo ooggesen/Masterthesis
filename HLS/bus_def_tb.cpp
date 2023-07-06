@@ -29,3 +29,37 @@ int copy_tb(){
 		return 1;
 	}
 }
+
+int is_equal_tb(){
+	cout << "**************************************" << endl;
+	cout << "     Testing  is_equal function       " << endl;
+	cout << "**************************************" << endl;
+
+	c_data_t data[SC_STREAM_SIZE];
+	for (int j = 0 ; j < SC_STREAM_SIZE ; j++){
+		data[j] = j * j;
+	}
+
+	int errors = 0;
+	//build a random size
+	c_size_t random_size = rand() % (SC_STREAM_SIZE * W_DATA / 8);
+
+	if (!is_equal(data, data, random_size)){
+		cout << "Not equal when should be equal" << endl;
+		errors++;
+	}
+
+	c_data_t empty_data[SC_STREAM_SIZE];
+	if (is_equal(data, empty_data, random_size)){
+		cout << "Equal when should be not equal." << endl;
+		errors++;
+	}
+
+	if (errors == 0){
+		cout << "Tests complete without errors." << endl;
+	} else {
+		cout << "Tests complete with " << dec << errors << " errors." << endl;
+	}
+
+	return errors;
+}

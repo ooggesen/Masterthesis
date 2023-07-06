@@ -6,6 +6,7 @@
 #define BUS_DEF_HPP
 
 #include "ap_int.h"
+#include "hls_math.h"
 
 //chunk size definitions
 #define SMALL_CHUNK_SIZE (512 * 8) //average small chunk size in bits
@@ -57,7 +58,7 @@ struct bram_packet{
 
 
 //helper functions
-bool is_equal(const c_data_t a[SC_STREAM_SIZE], const c_data_t b[SC_STREAM_SIZE]);
+bool is_equal(const c_data_t a[SC_STREAM_SIZE], const c_data_t b[SC_STREAM_SIZE], c_size_t &size);
 bool operator==(const bc_packet &a, const bc_packet &b);
 bool operator!=(const bc_packet &a, const bc_packet &b);
 bool operator==(const sc_packet &a, const sc_packet &b);
