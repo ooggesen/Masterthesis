@@ -104,6 +104,7 @@ captures/
 
 # IntelliJ
 *.iml
+.idea/
 .idea/workspace.xml
 .idea/tasks.xml
 .idea/gradle.xml
@@ -1054,5 +1055,5 @@ dkms.conf
 solution*/
 
 #Custom files
-*.ddp #deduplicated files
-*.zip #input directories for deduplication
+*.ddp 
+*.zip 
