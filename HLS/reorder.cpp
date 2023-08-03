@@ -200,6 +200,13 @@ void reorder(hls::stream< sc_packet > &meta_in,
 	buffer_cell buffer[BUFFER_SIZE_1][BUFFER_SIZE_2];
 #pragma HLS BIND_STORAGE variable=buffer type=ram_2p
 
+	//initialize buffer
+	for (int i = 0 ; i < BUFFER_SIZE_1 ; i++ ){
+		for (int j  = 0 ; j < BUFFER_SIZE_2 ; j++ ){
+			buffer[i][j].valid = false;
+		}
+	}
+
 	//reorder loop
 	bool end = false;
 	int buffer_counter = 0;
