@@ -7,7 +7,7 @@
  * Can only be instantiated once, since access to BRAM can not be shared in current implementation.
  *
  * @author Ole Oggesen
- * @bugs No known bugs.
+ * @bugs No bugs known
  */
 
 
@@ -36,7 +36,7 @@ static void read_in(
 	read_data: for (c_size_t i = 0; i < (int) MAX_SMALL_CHUNK_SIZE/W_DATA + 1; i++){
 #pragma HLS LOOP_FLATTEN off
 		long size_remaining = meta.size.to_long() - i.to_long()*W_DATA/8;
-		if (size_remaining <= 0)
+		if (size_remaining <= (long) 0)
 			break;
 
 		c_data_t current = data_in.read();
@@ -130,7 +130,7 @@ static void write_out(hls::stream< sc_packet > &meta_in,
 	}
 	end_out.write(false);
 
-	//set the end flg for the while loop
+	//set the end flag for the while loop
 	end = end_in.read();
 }
 
@@ -155,6 +155,10 @@ void dedup(hls::stream< sc_packet > &meta_in,
 	hls::stream< bool , 2 > sha1_end_len("sha1_end_len");
 	hls::stream< addr_t , 2 > sha1_digest("sha1_digest");
 	hls::stream< bool , 2 > sha1_end_digest("sha1_end_digest");
+
+	//intit buffer
+	bram_packet read;
+	bram(true, true, read, read, 0);
 
 	bool end = end_in.read();
 
