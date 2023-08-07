@@ -115,6 +115,8 @@ static void segment_bc_packet(
 
 		segment_file: while(file_length > 0){
 #pragma HLS LOOP_FLATTEN off
+			end_out.write(false);
+
 			c_size_t bc_size;
 			fill_buffer(in, file_length, bc_size, out);
 
@@ -122,8 +124,6 @@ static void segment_bc_packet(
 			rabinseg_in_stream(in, file_length, out, sc_size, rabintab, rabinwintab);
 
 			size_out.write(sc_size + bc_size);
-
-			end_out.write(false);
 		}
 
 		end = end_in.read();
@@ -177,13 +177,12 @@ void fragment(hls::stream< ap_uint< 64 > > &in,
 		hls::stream< bc_packet > &meta_out,
 		hls::stream< c_data_t > &out,
 		hls::stream< bool > &end_out){
-#pragma HLS INTERFACE mode=ap_ctrl_none port=return
 #pragma HLS DATAFLOW
-	hls::stream< ap_uint< 8 > , 128 > segment_data("segment_data");
+	hls::stream< ap_uint< 8 > , MAX_BIG_CHUNK_SIZE/8 > segment_data("segment_data");
 	hls::stream< c_size_t , 2 > segment_size("segment_size");
 	hls::stream< bool , 2 > segment_end("segment_end");
 
-	hls::stream< ap_uint< 8 > , MAX_BIG_CHUNK_SIZE > write_data("write_data");
+	hls::stream< ap_uint< 8 > , MAX_BIG_CHUNK_SIZE/8 > write_data("write_data");
 	hls::stream< c_size_t , 2 > write_size("write_size");
 	hls::stream< bool , 2 > write_end("write_end");
 

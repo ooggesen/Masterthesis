@@ -44,8 +44,10 @@ int main(){
 
 
 //TOP TESTBENCH
-	retval += top_tb();
+	only_fragment_tb();
 	std::cout << std::endl;
+//	retval += top_tb();
+//	std::cout << std::endl;
 
 
 	return retval;

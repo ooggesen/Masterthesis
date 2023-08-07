@@ -13,6 +13,8 @@
 /**
  * @brief Round robin splitter
  *
+ *	type D must be of ap_(u)int type and return its length in bits with the call of the length function
+ *
  * @param np 	Number of outputs
  */
 template <typename M, typename D>
@@ -67,7 +69,7 @@ static void merge(hls::stream< M > meta_in[],
 	bool end = false;
 	bool end_np[NP_MERGE];
 
-	init_end_buffer: for (int i = 0 ; i < NP_MERGE ; i++){
+	init_end_buffer: for (int i = 0 ; i < np ; i++){
 		end_np[i] = false;
 	}
 
@@ -75,10 +77,12 @@ static void merge(hls::stream< M > meta_in[],
 #pragma HLS LOOP_FLATTEN  off
 		end = true;
 		round_robin: for (int n = 0 ; n < np ; n++){
+#pragma HLS LOOP_FLATTEN off
 			if (!end_np[n]){
 				end = false;
 
 				if (!end_in[n].empty()){
+					//check end condition
 					if (end_in[n].read()){
 						end_np[n] = true;
 						continue;
@@ -90,7 +94,7 @@ static void merge(hls::stream< M > meta_in[],
 					meta_out.write(meta_data);
 
 					D buffer; //dummy buffer for length info
-					for (int i = 0 ; i < hls::ceil((double) meta_data.size.to_long()*8 / buffer.length()) ; i++){
+					merge_data: for (int i = 0 ; i < hls::ceil((double) meta_data.size.to_long()*8 / buffer.length()) ; i++){
 #pragma HLS PIPELINE II=6
 						data_out.write(data_in[n].read());
 					}
@@ -178,6 +182,7 @@ void top(hls::stream< ap_uint< 64 > > &in,
 		hls::stream< ap_uint< 64 > > &out,
 		hls::stream< c_size_t > &size_out,
 		hls::stream< bool > &end_out){
+//#pragma HLS INTERFACE mode=ap_ctrl_chain port=return
 	//definitions
 	//buffer
 	hls::stream< ap_uint< 64 > , MAX_BIG_CHUNK_SIZE/64> 	in_buffer("in_buffer");
@@ -189,11 +194,11 @@ void top(hls::stream< ap_uint< 64 > > &in,
 	hls::stream< bool , 2 > 								end_out_buffer("end_out_buffer");
 
 	hls::stream< bc_packet, 2 > 							post_fragment_meta_buffer("post_fragment_meta_buffer");
-	hls::stream< c_data_t , SC_STREAM_SIZE> 				post_fragment_data_buffer("post_fragment_data_buffer");
+	hls::stream< c_data_t , BC_STREAM_SIZE> 				post_fragment_data_buffer("post_fragment_data_buffer");
 	hls::stream< bool , 2 > 								post_fragment_end_buffer("post_fragment_end_buffer");
 
 	hls::stream< sc_packet, 2 > 							pre_reorder_meta_buffer("pre_reorder_meta_buffer");
-	hls::stream< c_data_t , SC_STREAM_SIZE> 				pre_reorder_data_buffer("pre_reorder_data_buffer");
+	hls::stream< c_data_t , BC_STREAM_SIZE> 				pre_reorder_data_buffer("pre_reorder_data_buffer");
 	hls::stream< bool , 2 > 								pre_reorder_end_buffer("pre_reorder_end_buffer");
 
 	hls::stream< sc_packet, 2 > 							post_refine_meta_buffer("post_refine_meta_buffer");
@@ -206,7 +211,7 @@ void top(hls::stream< ap_uint< 64 > > &in,
 
 	//splitter
 	hls::stream< bc_packet , 2 > 							pre_refine_meta_split[NP_REFINE];
-	hls::stream< c_data_t , SC_STREAM_SIZE > 				pre_refine_data_split[NP_REFINE];
+	hls::stream< c_data_t , BC_STREAM_SIZE > 				pre_refine_data_split[NP_REFINE];
 	hls::stream< bool, 2 > 									pre_refine_end_split[NP_REFINE];
 
 	//merger
@@ -232,12 +237,13 @@ void top(hls::stream< ap_uint< 64 > > &in,
 				post_refine_meta_merge[n], post_refine_data_merge[n], post_refine_end_merge[n]);
 	}
 	merge< sc_packet , c_data_t >(post_refine_meta_merge, post_refine_data_merge, post_refine_end_merge, NP_REFINE,
-			post_refine_meta_buffer, post_refine_data_buffer, post_refine_end_buffer);
-
-	dedup(post_refine_meta_buffer, post_refine_data_buffer, post_refine_end_buffer,
+			//post_refine_meta_buffer, post_refine_data_buffer, post_refine_end_buffer);
 			pre_reorder_meta_buffer, pre_reorder_data_buffer, pre_reorder_end_buffer);
 
-	//reorder the sc_packets for output
+//	dedup(post_refine_meta_buffer, post_refine_data_buffer, post_refine_end_buffer,
+//			pre_reorder_meta_buffer, pre_reorder_data_buffer, pre_reorder_end_buffer);
+//
+//	//reorder the sc_packets for output
 	reorder(pre_reorder_meta_buffer, pre_reorder_data_buffer, pre_reorder_end_buffer, size_out_buffer, out_buffer, end_out_buffer);
 
 	//write out

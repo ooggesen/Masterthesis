@@ -10,7 +10,7 @@
 #include "test_bench.hpp"
 #include "fragment.hpp"
 
-#define NUM_TESTS 3
+#define NUM_TESTS 5
 
 using namespace std;
 int fragment_tb(){

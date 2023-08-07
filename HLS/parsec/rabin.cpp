@@ -10,6 +10,11 @@
  * path:
  * 	pkgs/kernels/dedup/src/rabin.c
  *
+ * This algorithm added a maximum chunk size to the algorithm.
+ *
+ * TODOs:
+ * 	implement a minimum chunk size
+ *
  * @author Ole Oggesen
  * @bug No known bugs
  */
@@ -79,12 +84,13 @@ void rabinseg_in_stream(hls::stream< ap_uint< 8 > > &in,
 	unsigned h = 0;
 	unsigned x;
 
-	init_hash: for (int i = 0; i < NWINDOW; i++) {
+	init_buffer: for (int i = 0; i < NWINDOW; i++) {
 #pragma HLS PIPELINE II=1
+		if (bc_size_buffer == 0) //end of big chunk
+			break;
+
 		x = h >> 24;
 
-		if (bc_size_buffer == 0)
-			goto write_out_size;
 		ap_uint< 8 > byte = in.read();
 		size_buffer++;
 		bc_size_buffer--;
@@ -99,14 +105,12 @@ void rabinseg_in_stream(hls::stream< ap_uint< 8 > > &in,
 
     segment_stream: for (int i = 0 ; i < MAX_SMALL_CHUNK_SIZE/8 ; i++ ) {
 #pragma HLS PIPELINE II=2
-    	if ((h & RabinMask) == 0)
-    		goto write_out_size;
+    	if ((h & RabinMask) == 0 || bc_size_buffer == 0)
+    		break;
 
         x = buffer.read();
         h ^= rabinwintab[x];
 
-    	if (bc_size_buffer == 0)
-    		goto write_out_size;
         ap_uint< 8 > byte = in.read();
         out.write(byte);
         buffer.write(byte);
@@ -120,13 +124,14 @@ void rabinseg_in_stream(hls::stream< ap_uint< 8 > > &in,
         h ^= rabintab[x];
     }
 
-    write_out_size:
 	//flush the buffer
 	for (int i = 0 ; i < NWINDOW ; i++){
 		if (buffer.empty())
 			break;
 		buffer.read();
 	}
+
+	//write out
 	size = size_buffer;
 	bc_size = bc_size_buffer;
 }

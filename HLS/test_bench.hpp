@@ -89,6 +89,18 @@ void shuffle(hls::stream< sc_packet > &sorted_meta,
 
 //TESTBENCHES
 
+/*
+ * @brief This testbench tests the whole top module with all components.
+ *
+ * This testbench is seperated into two parts. First the top module is tested with purely random data, which with the current random seed does not
+ * contain any duplicate chunks.
+ * The second test, tests with purely duplicate data. There should only be 3 different unique chunks. The small chunks which are contained in a big chunk,
+ * the small chunk at the end of a complete big chunk.
+ * And the small chunk which concludes the test, since the data is not divisible by the big chunk size.
+ */
+int top_tb();
+
+int only_fragment_tb();
 int dedup_tb();
 int reorder_tb();
 int bram_tb();
@@ -96,7 +108,6 @@ int copy_tb();
 int reorder_buffer_tb();
 int fragment_refine_tb();
 int fragment_tb();
-int top_tb();
 int generate_test_data_tb();
 int shuffle_tb();
 int is_equal_tb();

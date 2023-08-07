@@ -156,7 +156,7 @@ void dedup(hls::stream< sc_packet > &meta_in,
 	hls::stream< addr_t , 2 > sha1_digest("sha1_digest");
 	hls::stream< bool , 2 > sha1_end_digest("sha1_end_digest");
 
-	//intit buffer
+	//initialize buffer
 	bram_packet read;
 	bram(true, true, read, read, 0);
 

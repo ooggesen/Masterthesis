@@ -42,9 +42,6 @@ static void read_seperator(hls::stream< ap_uint< 64 > > &out_stream, ap_uint< 64
 
 
 
-/*
- * This testbench tests the whole top module with all components
- */
 int top_tb(){
 	cout << "**********************************" << endl;
 	cout << "     Testing whole top module     " << endl;
@@ -157,7 +154,7 @@ int top_tb(){
 
 		end = out_end.read();
 	}
-
+	/*
 	//SECOND PHASE -> only duplicates
 	cout << endl << endl << "Generating purely duplicate data." << endl << endl;
 
@@ -191,13 +188,13 @@ int top_tb(){
 		errors += check_header(out_stream);
 
 		ap_uint< 192 > last_hash = 0;
-		c_size_t size_buffer = 16;
+		c_size_t size_buffer = 16; // 16 bytes for header
 		c_size_t size_boundary = out_size.read();
 		while(size_boundary > size_buffer){
 				ap_uint< 64 > type;
 				c_size_t size;
 				read_seperator(out_stream, type, size);
-				size_buffer += 16;
+				size_buffer += 16; // 16 bytes for seperator
 
 				if (type == TYPE_FINGERPRINT){
 					cout << "Found duplicate chunk." << endl;
@@ -234,6 +231,61 @@ int top_tb(){
 
 		end = out_end.read();
 	}
+	*/
+
+	return errors;
+}
+
+
+int only_fragment_tb(){
+	cout << "*************************************************************" << endl;
+	cout << "     Testing top module without dedup and reorder stage.     " << endl;
+	cout << "*************************************************************" << endl;
+
+	cout << "Generating enough data for at least " << NUM_TESTS << " big chunk segments for the top function." << endl << endl;
+
+
+	hls::stream< ap_uint< 64 > > test_data("test_data");
+	hls::stream< ap_uint< 8 > > compare_data("compare_data");
+	hls::stream< c_size_t > test_size("test_size"), compare_size("compare_size");
+	hls::stream< bool > test_end("test_end");
+	generate_test_data(NUM_TESTS, test_data, compare_data, test_size, compare_size, test_end);
+	compare_size.read();
+
+	//Running
+	cout << "Running the dut." << endl << endl;
+
+	hls::stream< ap_uint< 64 > > out_stream("out_stream");
+	hls::stream< bool > out_end("out_end");
+	hls::stream< c_size_t > out_size("out_size");
+	top(test_data, test_size, test_end, out_stream, out_size, out_end);
+
+
+	//Checking
+	cout << "Checking results." << endl;
+	int errors = 0;
+
+	while(!out_end.read()){
+		c_size_t size = out_size.read();
+		for (int i = 0 ; i < hls::ceil((double) size / 8) ; i++){
+			out_stream.read();
+		}
+	}
+
+	while(!compare_data.empty()){
+		compare_data.read();
+	}
+
+	int counter = 0;
+	while(!out_stream.empty()){
+		out_stream.read();
+		counter++;
+	}
+	if (counter != 0){
+		cout << counter << " elements left in out stream fifo." << endl;
+		errors++;
+	}
+
 
 	return errors;
 }

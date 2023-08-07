@@ -89,3 +89,10 @@ bc_packet::bc_packet(const bc_packet &in){
 	l1_pos = in.l1_pos;
 	size = in.size;
 }
+
+
+//bram packet operators
+
+bram_packet::bram_packet(){
+	addr = 0;
+}

@@ -81,6 +81,8 @@ static void segment_sc_packet(
 		l2_pos_t l2 = 0;
 		segment_bc: while(bc_length > 0){
 #pragma HLS LOOP_FLATTEN off
+			end_out.write(false);
+
 			c_size_t sc_size;
 			rabinseg_in_stream(in, bc_length, out, sc_size, rabintab, rabinwintab);
 
@@ -94,8 +96,6 @@ static void segment_sc_packet(
 			sc_meta.is_duplicate = false;
 
 			meta_out.write(sc_meta);
-
-			end_out.write(false);
 		}
 
 		end = end_in.read();
@@ -152,15 +152,14 @@ void fragment_refine(hls::stream< bc_packet > &meta_in,
 		hls::stream< sc_packet > &meta_out,
 		hls::stream< c_data_t > &data_out,
 		hls::stream< bool > &end_out){
-#pragma HLS INTERFACE mode=ap_ctrl_none port=return
 #pragma HLS DATAFLOW
 
 	hls::stream< bc_packet, 2 > segment_meta("segment_meta");
-	hls::stream< ap_uint< 8 > , W_DATA/8*2 > segment_data("segment_data");
+	hls::stream< ap_uint< 8 > , MAX_BIG_CHUNK_SIZE/8 > segment_data("segment_data");
 	hls::stream< bool, 2 > segment_end("segment_end");
 
 	hls::stream< sc_packet, 2 > write_meta("write_meta");
-	hls::stream< ap_uint< 8 > , MAX_SMALL_CHUNK_SIZE/8 > write_data("write_data");
+	hls::stream< ap_uint< 8 > , MAX_SMALL_CHUNK_SIZE/8*2 > write_data("write_data");
 	hls::stream< bool , 2 > write_end("write_end");
 
 	convert_to_byte_stream(meta_in, data_in, end_in, segment_meta, segment_data, segment_end);
