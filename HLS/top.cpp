@@ -10,101 +10,6 @@
 #include "top.hpp"
 
 
-/**
- * @brief Round robin splitter
- *
- *	type D must be of ap_(u)int type and return its length in bits with the call of the length function
- *
- * @param np 	Number of outputs
- */
-template <typename M, typename D>
-static void split(hls::stream< M > &meta_in,
-		hls::stream< D > &data_in,
-		hls::stream< bool > &end_in,
-		int np,
-		hls::stream< M > meta_out[],
-		hls::stream< D > data_out[],
-		hls::stream< bool > end_out[]){
-	int n = 0;
-	bool end = end_in.read();
-	splitter: while(!end){
-#pragma HLS LOOP_FLATTEN off
-		end_out[n].write(false);
-
-		M meta_data = meta_in.read();
-		meta_out[n].write(meta_data);
-
-		D buffer;
-		for (int i = 0 ; i < hls::ceil((double)meta_data.size.to_long()*8 / buffer.length()) ; i++){
-#pragma HLS PIPELINE II=6
-			data_out[n].write(data_in.read());
-		}
-		n = ++n % np;
-
-		end = end_in.read();
-	}
-
-	send_end_flag: for (int i = 0 ; i < np ; i++){
-		end_out[i].write(true);
-	}
-}
-
-
-
-/**
- * @brief Round robin merger.
- *
- * Not blocking of input does not contain data.
- *
- * @param np Number of inputs
- */
-template <typename M, typename D>
-static void merge(hls::stream< M > meta_in[],
-		hls::stream< D > data_in[],
-		hls::stream< bool > end_in[],
-		int np,
-		hls::stream< M > &meta_out,
-		hls::stream< D > &data_out,
-		hls::stream< bool > &end_out){
-	bool end = false;
-	bool end_np[NP_MERGE];
-
-	init_end_buffer: for (int i = 0 ; i < np ; i++){
-		end_np[i] = false;
-	}
-
-	merger: while(!end){
-#pragma HLS LOOP_FLATTEN  off
-		end = true;
-		round_robin: for (int n = 0 ; n < np ; n++){
-#pragma HLS LOOP_FLATTEN off
-			if (!end_np[n]){
-				end = false;
-
-				if (!end_in[n].empty()){
-					//check end condition
-					if (end_in[n].read()){
-						end_np[n] = true;
-						continue;
-					}
-
-					end_out.write(false);
-
-					M meta_data = meta_in[n].read();
-					meta_out.write(meta_data);
-
-					D buffer; //dummy buffer for length info
-					merge_data: for (int i = 0 ; i < hls::ceil((double) meta_data.size.to_long()*8 / buffer.length()) ; i++){
-#pragma HLS PIPELINE II=6
-						data_out.write(data_in[n].read());
-					}
-				}
-			}
-		}
-	}
-	end_out.write(true);
-}
-
 
 /**
  * @brief read in stage, needed for dataflow circuit
@@ -237,15 +142,17 @@ void top(hls::stream< ap_uint< 64 > > &in,
 				post_refine_meta_merge[n], post_refine_data_merge[n], post_refine_end_merge[n]);
 	}
 	merge< sc_packet , c_data_t >(post_refine_meta_merge, post_refine_data_merge, post_refine_end_merge, NP_REFINE,
-			//post_refine_meta_buffer, post_refine_data_buffer, post_refine_end_buffer);
+			post_refine_meta_buffer, post_refine_data_buffer, post_refine_end_buffer);
+
+	dedup(post_refine_meta_buffer, post_refine_data_buffer, post_refine_end_buffer,
 			pre_reorder_meta_buffer, pre_reorder_data_buffer, pre_reorder_end_buffer);
 
-//	dedup(post_refine_meta_buffer, post_refine_data_buffer, post_refine_end_buffer,
-//			pre_reorder_meta_buffer, pre_reorder_data_buffer, pre_reorder_end_buffer);
-//
-//	//reorder the sc_packets for output
+	//reorder the sc_packets for output
 	reorder(pre_reorder_meta_buffer, pre_reorder_data_buffer, pre_reorder_end_buffer, size_out_buffer, out_buffer, end_out_buffer);
 
 	//write out
 	write_out(size_out_buffer, out_buffer, end_out_buffer, size_out, out, end_out);
 }
+
+
+

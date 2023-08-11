@@ -111,5 +111,7 @@ int fragment_tb();
 int generate_test_data_tb();
 int shuffle_tb();
 int is_equal_tb();
+int split_tb();
+int scheduler_tb();
 
 #endif //TEST_BENCH_HPP

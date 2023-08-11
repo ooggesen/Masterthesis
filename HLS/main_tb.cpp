@@ -44,8 +44,12 @@ int main(){
 
 
 //TOP TESTBENCH
-	only_fragment_tb();
+//	retval += split_tb();
+//	std::cout << std::endl;
+	retval += scheduler_tb();
 	std::cout << std::endl;
+//	only_fragment_tb();
+//	std::cout << std::endl;
 //	retval += top_tb();
 //	std::cout << std::endl;
 
