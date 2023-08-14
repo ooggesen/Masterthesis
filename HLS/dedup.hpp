@@ -22,7 +22,7 @@
 /*
  * @brief size of the FIFO to the sha1 kernel
  */
-#define MSG_BUFF_SIZE (int)(MAX_SMALL_CHUNK_SIZE/32)
+#define MSG_BUFF_SIZE (int) (MAX_SMALL_CHUNK_SIZE/32)
 
 /**
  * @brief Dedup pipeline stage

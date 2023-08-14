@@ -14,9 +14,9 @@
 //bug fix for rtl/c simulation
 #include "hls_math.h"
 
-#define BRAM_DEPTH ((int) SC_STREAM_SIZE/4) //must be a fraction of SC_STREAM_SIZE
+#define BRAM_DEPTH (int) (SC_STREAM_SIZE/4) //must be a fraction of SC_STREAM_SIZE
 
-#define MAX_BRAM_SIZE ((int)MAX_FILE_SIZE*8/SMALL_CHUNK_SIZE * SC_STREAM_SIZE/BRAM_DEPTH * 3/4)
+#define MAX_BRAM_SIZE (int) (MAX_FILE_SIZE*8/SMALL_CHUNK_SIZE * SC_STREAM_SIZE/BRAM_DEPTH * 3/4)
 //number of small chunk packages the complete BRAM can hold, assumes a duplication rate of one fourth
 
 struct bram_data{
