@@ -134,14 +134,14 @@ void top(hls::stream< ap_uint< 64 > > &in,
 
 	//segment into fine grained chunks, NP_REFINE parallel
 	split< bc_packet , c_data_t >(post_fragment_meta_buffer,
-			post_fragment_data_buffer, post_fragment_end_buffer, NP_REFINE,
+			post_fragment_data_buffer, post_fragment_end_buffer,
 			pre_refine_meta_split, pre_refine_data_split, pre_refine_end_split);
 	refine_parallel: for (int n = 0; n < NP_REFINE ; n++){
 #pragma HLS UNROLL
 		fragment_refine(pre_refine_meta_split[n], pre_refine_data_split[n], pre_refine_end_split[n],
 				post_refine_meta_merge[n], post_refine_data_merge[n], post_refine_end_merge[n]);
 	}
-	merge< sc_packet , c_data_t >(post_refine_meta_merge, post_refine_data_merge, post_refine_end_merge, NP_REFINE,
+	merge< sc_packet , c_data_t >(post_refine_meta_merge, post_refine_data_merge, post_refine_end_merge,
 			post_refine_meta_buffer, post_refine_data_buffer, post_refine_end_buffer);
 
 	dedup(post_refine_meta_buffer, post_refine_data_buffer, post_refine_end_buffer,
@@ -153,6 +153,3 @@ void top(hls::stream< ap_uint< 64 > > &in,
 	//write out
 	write_out(size_out_buffer, out_buffer, end_out_buffer, size_out, out, end_out);
 }
-
-
-
