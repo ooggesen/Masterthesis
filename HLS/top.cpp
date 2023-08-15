@@ -24,6 +24,7 @@ static void read_in(
 	bool end = end_in.read();
 
 	read_in_loop: while(!end){
+#pragma HLS LOOP_TRIPCOUNT min=1 max=1 avg=1
 #pragma HLS LOOP_FLATTEN off
 		end_out.write(false);
 
@@ -58,13 +59,18 @@ static void write_out(
 	bool end = end_in.read();
 
 	write_out_loop: while(!end){
+#pragma HLS LOOP_TRIPCOUNT min=1 max=1 avg=1
 #pragma HLS LOOP_FLATTEN off
 		end_out.write(false);
 
-		c_size_t size = size_in.read();
-		size_out.write(size);
+		c_size_t size = MAX_FILE_SIZE;
 
 		write_file: for (c_size_t i = 0 ; i < MAX_FILE_SIZE ; i += 8 ){
+			//size info comes after all data
+			if (!size_in.empty()){
+				size = size_in.read();
+				size_out.write(size);
+			}
 			if (i >= size)
 				break;
 
