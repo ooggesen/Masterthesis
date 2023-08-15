@@ -135,7 +135,7 @@ static void check_input(
 	c_data_t data_in_buffer[SC_STREAM_SIZE];
 #pragma HLS ARRAY_PARTITION variable=data_in_buffer type=complete
 
-	if (!end_in.empty()){
+	if (!end && !end_in.empty()){
 		if (!end_in.read()){
 			read_in(meta_in, data_in, data_in_buffer, read_current);
 
@@ -157,7 +157,7 @@ static void check_input(
 
 			//add output length to total file length
 			if (read_current.is_duplicate)
-				file_length += 40; // 160 bit(20 byte) + 4 byte zero stuffing + 8 byte chunk type + 8 byte size
+				file_length += 40; // 160 bit(20 byte) hash + 4 byte zero stuffing + 8 byte chunk type + 8 byte size
 			else{
 				file_length += read_current.size + 16; // size + 8 byte chunk type + 8 byte size + max of 8 byte zero stuffing
 				if (read_current.size % 8 != 0){
@@ -192,8 +192,8 @@ void reorder(hls::stream< sc_packet > &meta_in,
 		hls::stream< ap_uint< 64 > > &data_out,
 		hls::stream< bool > &end_out){
 	//positions for the next chunk
-	l1_pos_t l1_pos;
-	l2_pos_t l2_pos;
+	l1_pos_t l1_pos = 0;
+	l2_pos_t l2_pos = 0;
 	//file length buffer
 	c_size_t file_length = 0;
 	//buffer for storing chunks
@@ -211,6 +211,7 @@ void reorder(hls::stream< sc_packet > &meta_in,
 	bool end = false;
 	int buffer_counter = 0;
 	reorder_loop: while(!end || buffer_counter != 0) {
+#pragma HLS LOOP_TRIPCOUNT min=1 max=1 avg=1
 #pragma HLS PIPELINE off
 #pragma HLS LOOP_FLATTEN off
 		check_input(meta_in, data_in, end_in, l1_pos, l2_pos, file_length, buffer, buffer_counter,

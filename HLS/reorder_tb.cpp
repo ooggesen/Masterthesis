@@ -12,7 +12,7 @@
 
 using namespace std;
 
-#define NUM_TESTS BUFFER_SIZE_2
+#define NUM_TESTS BUFFER_SIZE_2*BUFFER_SIZE_1
 
 struct test_result_pair{
 	sc_packet test;
