@@ -46,12 +46,12 @@ int main(){
 //TOP TESTBENCH
 //	retval += split_tb();
 //	std::cout << std::endl;
-	retval += merge_tb();
-	std::cout << std::endl;
+//	retval += merge_tb();
+//	std::cout << std::endl;
 //	only_fragment_tb();
 //	std::cout << std::endl;
-//	retval += top_tb();
-//	std::cout << std::endl;
+	retval += top_tb();
+	std::cout << std::endl;
 
 
 	return retval;

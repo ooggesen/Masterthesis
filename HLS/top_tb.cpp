@@ -47,6 +47,18 @@ int top_tb(){
 	cout << "     Testing whole top module     " << endl;
 	cout << "**********************************" << endl;
 
+	//declarations
+	hls::stream< ap_uint< 64 > > test_data("test_data");
+	hls::stream< ap_uint< 8 > > compare_data("compare_data");
+	hls::stream< c_size_t > test_size("test_size"), compare_size("compare_size");
+	hls::stream< bool > test_end("test_end");
+
+	hls::stream< ap_uint< 64 > > out_stream("out_stream");
+	hls::stream< bool > out_end("out_end");
+	hls::stream< c_size_t > out_size("out_size");
+
+	int errors = 0;
+	bool end;
 
 	//FIRST PHASE -> no duplicate input
 	cout << "Testing on random output. Likely no duplicates." << endl << endl;
@@ -54,27 +66,19 @@ int top_tb(){
 	//Generating input data
 	cout << "Generating enough data for at least " << NUM_TESTS << " big chunk segments for the top function." << endl << endl;
 
-	hls::stream< ap_uint< 64 > > test_data("test_data");
-	hls::stream< ap_uint< 8 > > compare_data("compare_data");
-	hls::stream< c_size_t > test_size("test_size"), compare_size("compare_size");
-	hls::stream< bool > test_end("test_end");
 	generate_test_data(NUM_TESTS, test_data, compare_data, test_size, compare_size, test_end);
 	compare_size.read();
 
 	//Running
 	cout << "Running the dut." << endl << endl;
 
-	hls::stream< ap_uint< 64 > > out_stream("out_stream");
-	hls::stream< bool > out_end("out_end");
-	hls::stream< c_size_t > out_size("out_size");
 	top(test_data, test_size, test_end, out_stream, out_size, out_end);
 
 
 	//Checking
 	cout << "Checking results." << endl;
-	int errors = 0;
 
-	bool end = out_end.read();
+	end = out_end.read();
 
 	while(!end){
 	//Check header
@@ -154,7 +158,8 @@ int top_tb(){
 
 		end = out_end.read();
 	}
-	/*
+
+
 	//SECOND PHASE -> only duplicates
 	cout << endl << endl << "Generating purely duplicate data." << endl << endl;
 
@@ -223,7 +228,7 @@ int top_tb(){
 
 				if (type == TYPE_FINGERPRINT && last_hash != 0 && (hash == 0 || last_hash != hash)){
 					cout << "Wrong hash." << endl;
-					cout << "Might be end of big chunk and no error." << endl;
+					cout << "Might be edges of big chunk and no error." << endl;
 				}
 
 				last_hash = ap_uint< 192 >(hash); //if no duplicate sets last hash to 0 again
@@ -231,10 +236,11 @@ int top_tb(){
 
 		end = out_end.read();
 	}
-	*/
 
 	return errors;
 }
+
+
 
 
 int only_fragment_tb(){

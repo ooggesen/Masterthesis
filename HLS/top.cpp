@@ -63,15 +63,15 @@ static void write_out(
 #pragma HLS LOOP_FLATTEN off
 		end_out.write(false);
 
-		c_size_t size = MAX_FILE_SIZE;
+		volatile c_size_t size = MAX_FILE_SIZE;
 
 		write_file: for (c_size_t i = 0 ; i < MAX_FILE_SIZE ; i += 8 ){
 			//size info comes after all data
 			if (!size_in.empty()){
 				size = size_in.read();
-				size_out.write(size);
+				size_out.write(ap_uint< W_CHUNK_SIZE >(size));
 			}
-			if (i >= size)
+			if (i >= ap_uint< W_CHUNK_SIZE >(size))
 				break;
 
 			out.write(in.read());
