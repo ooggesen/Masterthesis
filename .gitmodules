@@ -1,3 +1,9 @@
 [submodule "Submodules/Vitis_libraries"]
 	path = Submodules/Vitis_libraries
 	url = https://github.com/Xilinx/Vitis_Libraries.git
+[submodule "HLS/Dynamatic/dynamatic-implementation"]
+	path = HLS/Dynamatic/dynamatic-implementation
+	url = git@git.tu-berlin.de:masterthesis1/dynamatic-implementation.git
+[submodule "HLS/dynamatic-implementation"]
+	path = HLS/dynamatic-implementation
+	url = git@git.tu-berlin.de:masterthesis1/dynamatic-implementation.git
