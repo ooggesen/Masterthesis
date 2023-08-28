@@ -5,7 +5,7 @@
  *
  *
  * @author Ole Oggesen
- * @bug data in BRAM module is only initialized by transmission of bitcode with the static keyword
+ * @bug
  * 	if buffer is full, read or write will not exit
  */
 
