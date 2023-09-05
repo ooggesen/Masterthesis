@@ -16,3 +16,7 @@ Create a new project in VitisHLS.
 Add all testbenches, as well as the files test_bench.cpp and test_bench.hpp to the testbenches. 
 Add all other *.hpp and *.cpp files to source files. 
 Select the top module for synthesis and follow the instructions in main_tb.cpp for testing.
+
+## todos
+
+Change the bram hash table to have a prime size.
