@@ -159,7 +159,7 @@ static void check_input(
 			if (read_current.is_duplicate)
 				file_length += 40; // 160 bit(20 byte) hash + 4 byte zero stuffing + 8 byte chunk type + 8 byte size
 			else{
-				file_length += read_current.size + 16; // size + 8 byte chunk type + 8 byte size + max of 8 byte zero stuffing
+				file_length += read_current.size + 16; // size + 8 byte chunk type + 8 byte size + max of 7 byte zero stuffing
 				if (read_current.size % 8 != 0){
 					file_length += 8 - (read_current.size % 8); // account for zero stuffing
 				}
