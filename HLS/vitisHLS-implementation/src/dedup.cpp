@@ -119,6 +119,7 @@ static void write_out(hls::stream< sc_packet > &meta_in,
 		hls::stream< c_data_t > &data_out,
 		hls::stream< bool > &end_out){
 	//write data
+	end_out.write(false);
 	sc_packet meta = meta_in.read();
 	meta_out.write(meta);
 
@@ -128,7 +129,6 @@ static void write_out(hls::stream< sc_packet > &meta_in,
 			break;
 		data_out.write(data_in.read());
 	}
-	end_out.write(false);
 
 	//set the end flag for the while loop
 	end = end_in.read();

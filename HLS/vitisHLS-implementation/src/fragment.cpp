@@ -34,15 +34,14 @@ static void write_out(
 	while(!end){
 #pragma HLS LOOP_TRIPCOUNT min = 1 max = 1 avg = 1
 #pragma HLS LOOP_FLATTEN off
-		c_size_t chunk_length = size_in.read();
+		end_out.write(false);
 
 		//write meta data
 		bc_packet tmp_meta;
 		tmp_meta.l1_pos = l1++;
+		c_size_t chunk_length = size_in.read();
 		tmp_meta.size = chunk_length;
 		meta_out.write(tmp_meta);
-
-		end_out.write(false);
 
 		//write data
 		write_chunk: for (int i = 0 ; i < (int) MAX_BIG_CHUNK_SIZE / W_DATA + 1 ; i++){

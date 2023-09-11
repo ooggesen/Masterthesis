@@ -97,33 +97,33 @@ void top(hls::stream< ap_uint< 64 > > &in,
 	//definitions
 	//buffer
 	hls::stream< ap_uint< 64 > , MAX_BIG_CHUNK_SIZE/64> 	in_buffer("in_buffer");
-	hls::stream< c_size_t , 2> 								size_in_buffer("size_in_buffer");
-	hls::stream< bool , 2> 									end_in_buffer("end_in");
+	hls::stream< c_size_t , 1> 								size_in_buffer("size_in_buffer");
+	hls::stream< bool , 1> 									end_in_buffer("end_in");
 
 	hls::stream< ap_uint< 64 > , MAX_BIG_CHUNK_SIZE/64> 	out_buffer("out_buffer");
-	hls::stream< c_size_t , 2> 								size_out_buffer("size_out_buffer");
-	hls::stream< bool , 2 > 								end_out_buffer("end_out_buffer");
+	hls::stream< c_size_t , 1 > 							size_out_buffer("size_out_buffer");
+	hls::stream< bool , 1 > 								end_out_buffer("end_out_buffer");
 
-	hls::stream< bc_packet, 2 > 							post_fragment_meta_buffer("post_fragment_meta_buffer");
-	hls::stream< c_data_t , BC_STREAM_SIZE> 				post_fragment_data_buffer("post_fragment_data_buffer");
-	hls::stream< bool , 2 > 								post_fragment_end_buffer("post_fragment_end_buffer");
+	hls::stream< bc_packet, 1 > 							post_fragment_meta_buffer("post_fragment_meta_buffer");
+	hls::stream< c_data_t , 2 > 							post_fragment_data_buffer("post_fragment_data_buffer");
+	hls::stream< bool , 1 > 								post_fragment_end_buffer("post_fragment_end_buffer");
 
-	hls::stream< sc_packet, 2 > 							pre_reorder_meta_buffer("pre_reorder_meta_buffer");
-	hls::stream< c_data_t , BC_STREAM_SIZE> 				pre_reorder_data_buffer("pre_reorder_data_buffer");
-	hls::stream< bool , 2 > 								pre_reorder_end_buffer("pre_reorder_end_buffer");
+	hls::stream< sc_packet, 1 > 							pre_reorder_meta_buffer("pre_reorder_meta_buffer");
+	hls::stream< c_data_t , 2> 								pre_reorder_data_buffer("pre_reorder_data_buffer");
+	hls::stream< bool , 1 > 								pre_reorder_end_buffer("pre_reorder_end_buffer");
 
-	hls::stream< sc_packet, 2 > 							post_refine_meta_buffer("post_refine_meta_buffer");
-	hls::stream< c_data_t, SC_STREAM_SIZE > 				post_refine_data_buffer("post_refine_data_buffer");
-	hls::stream< bool , 2 > 								post_refine_end_buffer("post_refine_end_buffer");
+	hls::stream< sc_packet, 1 > 							post_refine_meta_buffer("post_refine_meta_buffer");
+	hls::stream< c_data_t, 2 > 								post_refine_data_buffer("post_refine_data_buffer");
+	hls::stream< bool , 1 > 								post_refine_end_buffer("post_refine_end_buffer");
 
-	hls::stream< sc_packet, 2 > 							post_dedup_meta_buffer("post_dedup_meta_buffer");
-	hls::stream< c_data_t, SC_STREAM_SIZE > 				post_dedup_data_buffer("post_dedup_data_buffer");
-	hls::stream< bool , 2 > 								post_dedup_end_buffer("post_dedup_end_buffer");
+	hls::stream< sc_packet, 1 > 							post_dedup_meta_buffer("post_dedup_meta_buffer");
+	hls::stream< c_data_t, 2 > 								post_dedup_data_buffer("post_dedup_data_buffer");
+	hls::stream< bool , 1 > 								post_dedup_end_buffer("post_dedup_end_buffer");
 
 	//splitter
-	hls::stream< bc_packet , 2 > 							pre_refine_meta_split[NP_REFINE];
-	hls::stream< c_data_t , BC_STREAM_SIZE > 				pre_refine_data_split[NP_REFINE];
-	hls::stream< bool, 2 > 									pre_refine_end_split[NP_REFINE];
+	hls::stream< bc_packet , 1 > 							pre_refine_meta_split[NP_REFINE];
+	hls::stream< c_data_t , 2 > 							pre_refine_data_split[NP_REFINE];
+	hls::stream< bool, 1 > 									pre_refine_end_split[NP_REFINE];
 
 	//merger
 	hls::stream< sc_packet, 2 > 							post_refine_meta_merge[NP_REFINE];
@@ -132,13 +132,10 @@ void top(hls::stream< ap_uint< 64 > > &in,
 
 	//START OF PIPELINE
 #pragma HLS DATAFLOW
-	//read
 	read_in(in, size_in, end_in, in_buffer, size_in_buffer, end_in_buffer);
 
-	//segment into coarse grained chunks, serial
 	fragment(in_buffer, size_in_buffer, end_in_buffer, post_fragment_meta_buffer, post_fragment_data_buffer, post_fragment_end_buffer);
 
-	//segment into fine grained chunks, NP_REFINE parallel
 	split< bc_packet , c_data_t >(post_fragment_meta_buffer,
 			post_fragment_data_buffer, post_fragment_end_buffer,
 			pre_refine_meta_split, pre_refine_data_split, pre_refine_end_split);
@@ -153,9 +150,7 @@ void top(hls::stream< ap_uint< 64 > > &in,
 	dedup(post_refine_meta_buffer, post_refine_data_buffer, post_refine_end_buffer,
 			pre_reorder_meta_buffer, pre_reorder_data_buffer, pre_reorder_end_buffer);
 
-	//reorder the sc_packets for output
 	reorder(pre_reorder_meta_buffer, pre_reorder_data_buffer, pre_reorder_end_buffer, size_out_buffer, out_buffer, end_out_buffer);
 
-	//write out
 	write_out(size_out_buffer, out_buffer, end_out_buffer, size_out, out, end_out);
 }
