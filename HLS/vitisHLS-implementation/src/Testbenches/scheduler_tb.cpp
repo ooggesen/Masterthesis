@@ -5,7 +5,7 @@
  * @bug No known bugs
  */
 
-#include "scheduler.hpp"
+#include "../scheduler.hpp"
 #include "test_bench.hpp"
 
 #define NUM_TESTS 2 //number of big chunks packets equivalents

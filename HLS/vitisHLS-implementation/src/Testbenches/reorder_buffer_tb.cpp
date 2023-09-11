@@ -8,8 +8,8 @@
  */
 
 
-#include "reorder.hpp"
-#include "reorder_buffer.hpp"
+#include "../reorder.hpp"
+#include "../reorder_buffer.hpp"
 #include "test_bench.hpp"
 
 using namespace std;

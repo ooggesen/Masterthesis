@@ -10,8 +10,7 @@
 #define BRAM_HPP
 
 #include "bus_def.hpp"
-
-//bug fix for rtl/c simulation
+#define __gmp_const const
 #include "hls_math.h"
 
 #define BRAM_DEPTH (int) (SC_STREAM_SIZE/4) //must be a fraction of SC_STREAM_SIZE

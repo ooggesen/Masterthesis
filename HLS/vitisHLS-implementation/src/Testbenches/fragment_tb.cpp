@@ -8,7 +8,7 @@
  */
 
 #include "test_bench.hpp"
-#include "fragment.hpp"
+#include "../fragment.hpp"
 
 #define NUM_TESTS 5
 

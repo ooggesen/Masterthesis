@@ -23,16 +23,14 @@
 #include "bus_def.hpp"
 #include "fragment.hpp"
 #include "fragment_refine.hpp"
-#include "parsec/rabin.hpp"
 #include "dedup.hpp"
 #include "reorder.hpp"
-#include "reorder_buffer.hpp"
 #include "scheduler.hpp"
 
 
 
 /**
- * @brief Top level interace for the dedup kernel
+ * @brief Top level interface for the dedup kernel
  *
  * Since in dataflow region only one read and write access to an array is allowed we could not implement parallel dedup pipeline stages.
  * Refer to future work in thesis paper.

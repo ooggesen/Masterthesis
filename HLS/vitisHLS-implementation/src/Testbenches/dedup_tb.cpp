@@ -8,7 +8,7 @@
  */
 
 
-#include "dedup.hpp"
+#include "../dedup.hpp"
 #include "test_bench.hpp"
 
 #include <iostream>

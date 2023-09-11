@@ -9,7 +9,6 @@
 
 
 #include "test_bench.hpp"
-#include "bus_def.hpp"
 #include "hls_math.h"
 using namespace std;
 

@@ -7,7 +7,7 @@
  * @bug No known bugs
  */
 
-#include "reorder.hpp"
+#include "../reorder.hpp"
 #include "test_bench.hpp"
 
 using namespace std;

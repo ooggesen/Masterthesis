@@ -11,7 +11,7 @@
 
 
 #include "test_bench.hpp"
-#include "top.hpp"
+#include "../top.hpp"
 
 #define NUM_TESTS 2
 using namespace std;

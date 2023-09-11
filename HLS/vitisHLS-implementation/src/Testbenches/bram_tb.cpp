@@ -9,8 +9,7 @@
 
 #include <iostream>
 
-#include "bus_def.hpp"
-#include "bram.hpp"
+#include "../bram.hpp"
 #include "test_bench.hpp"
 using namespace std;
 
