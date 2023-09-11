@@ -28,7 +28,7 @@ void bram(bool wren, bool rden,
 	//define the bram array
 	static bram_data buffer[MAX_BRAM_SIZE];
 #pragma HLS BIND_STORAGE variable=buffer type=ram_2p impl=bram
-//#pragma HLS ARRAY_PARTITION variable=buffer type=block factor=256 dim=1
+#pragma HLS ARRAY_PARTITION variable=buffer type=block factor=256 dim=1
 	//initialize buffer
 	if (wren && rden){
 		for (int i = 0 ; i < MAX_BRAM_SIZE ; i++){
