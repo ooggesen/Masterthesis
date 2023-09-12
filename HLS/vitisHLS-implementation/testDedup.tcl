@@ -19,7 +19,7 @@ source "./Dedup/solution1/directives.tcl"
 
 for {set i 1000} {$i < 10000} {set i [expr {$i + 1000}]} {
 	exec mkdir -v $result_dir/$i
-    cosim_design -argv $i "unique"
+    cosim_design -argv -s$i -d"unique"
     exec mv -v $work_dir/sim/report/ $result_dir/$i
 }
 
