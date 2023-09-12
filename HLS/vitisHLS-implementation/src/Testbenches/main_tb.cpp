@@ -13,7 +13,7 @@
 
 #include "test_bench.hpp"
 
-int main(){
+int main(int argc, char* argv[]){
 	int retval = 0;
 
 
@@ -50,7 +50,7 @@ int main(){
 //	std::cout << std::endl;
 //	only_fragment_tb();
 //	std::cout << std::endl;
-	retval += top_tb();
+	retval += top_tb(argc, argv);
 	std::cout << std::endl;
 
 

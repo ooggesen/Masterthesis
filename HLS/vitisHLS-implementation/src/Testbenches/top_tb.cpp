@@ -41,8 +41,18 @@ static void read_seperator(hls::stream< ap_uint< 64 > > &out_stream, ap_uint< 64
 }
 
 
+static void print_help(){
+	cout << "Options:" << endl;
+	cout << "-s <int>    Declare amount of data to read from input file." << endl;
+	cout << "-d <string> Declare the type of data to read." << endl;
+	cout << "              duplicate: Purely duplicate data." << endl;
+	cout << "              semi: Random data with 50% duplication." << endl;
+	cout << "              unique: Purely random data. Likely no duplicates." << endl;
+}
 
-int top_tb(){
+
+
+int top_tb(int argc, char* argv[]){
 	cout << "**********************************" << endl;
 	cout << "     Testing whole top module     " << endl;
 	cout << "**********************************" << endl;
@@ -57,43 +67,114 @@ int top_tb(){
 	hls::stream< bool > out_end("out_end");
 	hls::stream< c_size_t > out_size("out_size");
 
+	char data_path[200] = "/mnt/ole/Documents/coderepo/HLS/vitisHLS-implementation/data";
+	char file_name[30] = "/duplicate.bin";
+	int data_size = 1000;
+
 	int errors = 0;
 	bool end;
 
-	//FIRST PHASE -> no duplicate input
-	cout << "Testing on random output. Likely no duplicates." << endl << endl;
+	cout << "Parsing input arguments." << endl << endl;
+	int ch;
+	while(-1 != (ch = getopt(argc, argv, "s:d:"))){
+		switch(ch){
+			case 's':
+				data_size = stoi(optarg);
+				cout << "Set test data size to " << stoi(optarg) << endl;
+				break;
+			case 'd':
+				if (0 == strcmp(optarg, "duplicate")){
+					strcpy(file_name, "/duplicate.bin" );
+					cout << "Set data type to purely duplicate data." << endl;
+				} else if (0 == strcmp(optarg, "semi")){
+					strcpy(file_name, "/partlyDuplicate.bin");
+					cout << "Set data type to semi duplicate data." << endl;
+				} else if (0 == strcmp(optarg, "unique")){
+					strcpy(file_name, "/random.bin");
+					cout << "Set data type to purely unique data." << endl;
+				} else {
+					cout << "Wrong argument. The following options are allowed." << endl;
+					cout << "duplicate: Purely duplicate data." << endl;
+					cout << "semi: Random data with 50% duplication." << endl;
+					cout << "unique: Purely random data. Likely no duplicates." << endl;
+					return -1;
+				}
+				break;
+			case 'h':
+				print_help();
+				break;
+			default:
+				cout << "Wrong input arguments." << endl;
+				print_help();
+				break;
+		}
+	}
 
-	//Generating input data
-	cout << "Generating enough data for at least " << NUM_TESTS << " big chunk segments for the top function." << endl << endl;
 
-	generate_test_data(NUM_TESTS, test_data, compare_data, test_size, compare_size, test_end);
+
+	cout << "Reading data." << endl << endl;
+
+	strcat(data_path, file_name);
+	ifstream data_file(data_path, ios::in | ios::binary);
+	if(data_file.is_open()){
+		test_end.write(false);
+		test_end.write(true);
+
+		int b;
+		int size = 0;
+		ap_uint<64> buffer;
+		while((b = data_file.get()) != EOF){
+			if (size == MAX_FILE_SIZE || size == data_size){
+				break;
+			}
+
+			compare_data.write(b);
+
+			int pos = size % 8;
+			buffer.range(7 + pos*8, pos*8) = b;
+			if (pos == 7){
+				test_data.write(buffer);
+				buffer = 0;
+			}
+
+			size++;
+		}
+
+		test_size.write(size);
+		compare_size.write(size);
+	} else{
+		cerr << "Could not open input file. Did you run ../test_data/main.c and moved the generated data to ./data ?" << endl;
+		return -1;
+	}
+
 	compare_size.read();
 
-	//Running
+
+
 	cout << "Running the dut." << endl << endl;
 
 	top(test_data, test_size, test_end, out_stream, out_size, out_end);
 
 
-	//Checking
+
 	cout << "Checking results." << endl;
 
 	end = out_end.read();
 
 	while(!end){
-	//Check header
-	errors += check_header(out_stream);
+		//Check header
+		errors += check_header(out_stream);
 
-	//Check data
-	if (out_stream.empty()){
-		cout << "Top module produced no data." << endl << endl;
-		errors++;
-	}
-	bool only_unique = true;
-	int counter = 0;
-	c_size_t size_buffer = 16;
-	c_size_t size_boundary = out_size.read();
-	while(size_boundary > size_buffer){
+		//Check data
+		if (out_stream.empty()){
+			cout << "Top module produced no data." << endl << endl;
+			errors++;
+		}
+		bool only_unique = true;
+		int counter = 0;
+		c_size_t size_buffer = 16;
+		c_size_t size_boundary = out_size.read();
+		while(size_boundary > size_buffer){
 			ap_uint< 64 > type;
 			c_size_t size;
 			read_seperator(out_stream, type, size);
@@ -154,84 +235,6 @@ int top_tb(){
 				cout << "Received hash: " << hash << endl;
 			}
 			counter++;
-		}
-
-		end = out_end.read();
-	}
-
-
-	//SECOND PHASE -> only duplicates
-	cout << endl << endl << "Generating purely duplicate data." << endl << endl;
-
-	cout << "Generating enough data for at least " << NUM_TESTS << " big chunk segments for the top function." << endl << endl;
-
-	ap_uint< 64 > input;
-	for (int i = 0 ; i < 8 ; i++){
-		input.range(7 + 8*i, 8*i) = 255;
-	}
-
-	cout << "Every input is " << hex << input << endl;
-
-	c_size_t file_length = 1.1*NUM_TESTS*BIG_CHUNK_SIZE/8;
-	file_length -= file_length % 8;
-	for (int i = 0 ; i < file_length.to_long() ; i += 8){
-		test_data.write(input);
-	}
-
-	//Running
-	cout << "Running the dut." << endl << endl;
-	test_size.write(file_length);
-	test_end.write(false);
-	test_end.write(true);
-
-	top(test_data, test_size, test_end, out_stream, out_size, out_end);
-
-	//Checking
-	cout << "Checking results." << endl;
-	end = out_end.read();
-	while(!end){
-		errors += check_header(out_stream);
-
-		ap_uint< 192 > last_hash = 0;
-		c_size_t size_buffer = 16; // 16 bytes for header
-		c_size_t size_boundary = out_size.read();
-		while(size_boundary > size_buffer){
-				ap_uint< 64 > type;
-				c_size_t size;
-				read_seperator(out_stream, type, size);
-				size_buffer += 16; // 16 bytes for seperator
-
-				if (type == TYPE_FINGERPRINT){
-					cout << "Found duplicate chunk." << endl;
-				} else {
-					cout << "Found unique chunk." << endl;
-				}
-
-				//Check data
-				ap_uint< 192 > hash = 0;
-				c_data_t buffer = 0;
-				for (int i = 0 ; i < size.to_long() ; i += 8){
-					size_buffer += 8;
-					ap_uint< 64 > out_long = out_stream.read();
-
-					if (type == TYPE_FINGERPRINT){
-						hash.range(63 + i*8 , i*8) = out_long;
-					} else {
-						int pos = (i/8) % (1024/64);
-
-						if (i != 0 && pos == 0)
-							cout << hex << buffer << endl;
-
-						buffer.range(63 + 64*pos, 64*pos) = out_long;
-					}
-				}
-
-				if (type == TYPE_FINGERPRINT && last_hash != 0 && (hash == 0 || last_hash != hash)){
-					cout << "Wrong hash." << endl;
-					cout << "Might be edges of big chunk and no error." << endl;
-				}
-
-				last_hash = ap_uint< 192 >(hash); //if no duplicate sets last hash to 0 again
 		}
 
 		end = out_end.read();

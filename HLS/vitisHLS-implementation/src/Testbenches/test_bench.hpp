@@ -23,6 +23,9 @@
 #include <time.h>
 
 #include <iostream>
+#include <fstream>
+#include <string.h>
+#include <unistd.h>
 
 /*
  * @brief Prints out the values of a small chunk packet type
@@ -98,7 +101,7 @@ void shuffle(hls::stream< sc_packet > &sorted_meta,
  * the small chunk at the end of a complete big chunk.
  * And the small chunk which concludes the test, since the data is not divisible by the big chunk size.
  */
-int top_tb();
+int top_tb(int argc, char* argv[]);
 
 int only_fragment_tb();
 int dedup_tb();
