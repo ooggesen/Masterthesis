@@ -30,7 +30,7 @@
 #define W_L1_ORDER 16 //width of l1 position integer in bits -> 2^16 * avgerage big chunk size(2 MB) = 130 GB > MAX_FILE_SIZE
 #define W_L2_ORDER 16 //width of l2 position integer in bits -> 2^16 * average small chunk size(512 bytes) > average big chunk size(2MB)
 //relational definitions
-#define MAX_SMALL_CHUNK_SIZE  	(40 * SMALL_CHUNK_SIZE) //maximum size of a small chunk in bits
+#define MAX_SMALL_CHUNK_SIZE  	(20 * SMALL_CHUNK_SIZE) //maximum size of a small chunk in bits
 #define MAX_BIG_CHUNK_SIZE		(MAX_SMALL_CHUNK_SIZE + BIG_CHUNK_SIZE) //maximum size of a big chunk in bits
 #define SC_STREAM_SIZE 			(int) (MAX_SMALL_CHUNK_SIZE/W_DATA + 1) //size of data array containing a small chunk
 #define BC_STREAM_SIZE 			(int) (MAX_BIG_CHUNK_SIZE/W_DATA + 1) //size of data array containing a big chunk

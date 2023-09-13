@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define MAX_FILE_SIZE 1000000
+#define MAX_FILE_SIZE 10000000
 //generate test data
 int main() {
     //generating purely random data, with no duplicates
@@ -27,21 +27,29 @@ int main() {
     }
 
     srand(0);
-    int counter = 0;
+    int boundary = 55;
+    int r_counter = 0, d_counter = 0;
     for (int i = 0 ; i < MAX_FILE_SIZE ; i++){
         unsigned char surprise_char;
-        if (counter >= 2){
-            if (rand() % 101 < 25)
-                counter = 0;
+        if (r_counter >= boundary){
+            if (rand() % 100 <= 1){
+                d_counter++;
+        	}
                 
             surprise_char = 255;
+            
+            if (d_counter >= boundary)
+            	r_counter = 0;
         } else {
+		    if (rand() % 100 <= 1){
+		    	d_counter = 0;
+		    	r_counter++;
+	    	}
+		    	
         	surprise_char = rand() % 256;
 		}
+		
         fwrite(&surprise_char, sizeof(surprise_char), 1, fp );
-        
-        if (rand() % 101 < 50)
-        	counter++;
     }
 
     fclose(fp);
