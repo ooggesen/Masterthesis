@@ -140,6 +140,10 @@ int top_tb(int argc, char* argv[]){
 
 			size++;
 		}
+		//Write left over data
+		if (buffer != 0){
+			test_data.write(buffer);
+		}
 
 		test_size.write(size);
 		compare_size.write(size);
@@ -177,6 +181,7 @@ int top_tb(int argc, char* argv[]){
 			c_size_t size_buffer = 16;
 			c_size_t size_boundary = out_size.read();
 			while(size_boundary > size_buffer){
+				cout << endl << "chunk nr. " << counter << "---------------------------------------" << endl;
 				ap_uint< 64 > type;
 				c_size_t size;
 				read_seperator(out_stream, type, size);
@@ -188,9 +193,14 @@ int top_tb(int argc, char* argv[]){
 					errors++;
 				}
 
+				if (type == TYPE_COMPRESS){
+					cout << "Found unique chunk." << endl;
+				} else if (type == TYPE_FINGERPRINT){
+					cout << "Found duplicate chunk." << endl;
+				}
+
 				if (only_unique && type == TYPE_FINGERPRINT){
 					only_unique = false;
-					cout << "Duplicate data chunk found." << endl;
 					cout << "Following data can not be checked." << endl;
 				}
 
@@ -252,7 +262,9 @@ int top_tb(int argc, char* argv[]){
 			ap_uint< 192 > last_hash = 0;
 			c_size_t size_buffer = 16; // 16 bytes for header
 			c_size_t size_boundary = out_size.read();
+			int counter = 0;
 			while(size_boundary > size_buffer){
+					cout << endl << "chunk nr. " << counter << "---------------------------------------" << endl;
 					ap_uint< 64 > type;
 					c_size_t size;
 					read_seperator(out_stream, type, size);
@@ -289,6 +301,7 @@ int top_tb(int argc, char* argv[]){
 					}
 
 					last_hash = ap_uint< 192 >(hash); //if no duplicate sets last hash to 0 again
+					counter++;
 			}
 
 			end = out_end.read();
