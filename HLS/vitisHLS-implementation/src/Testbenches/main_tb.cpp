@@ -30,6 +30,10 @@ int main(int argc, char* argv[]){
 //	std::cout << std::endl;
 //	retval += reorder_buffer_tb();
 //	std::cout << std::endl;
+//	retval += split_tb();
+//	std::cout << std::endl;
+//	retval += merge_tb();
+//	std::cout << std::endl;
 
 
 //KERNEL TESTBENCHES
@@ -44,10 +48,6 @@ int main(int argc, char* argv[]){
 
 
 //TOP TESTBENCH
-//	retval += split_tb();
-//	std::cout << std::endl;
-//	retval += merge_tb();
-//	std::cout << std::endl;
 //	only_fragment_tb();
 //	std::cout << std::endl;
 	retval += top_tb(argc, argv);
