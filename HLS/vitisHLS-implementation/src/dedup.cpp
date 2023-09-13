@@ -35,8 +35,7 @@ static void read_in(
 
 	read_data: for (c_size_t i = 0; i < (int) MAX_SMALL_CHUNK_SIZE/W_DATA + 1; i++){
 #pragma HLS LOOP_FLATTEN off
-		long size_remaining = meta.size.to_long() - i.to_long()*W_DATA/8;
-		if (size_remaining <= (long) 0)
+		if (i >= hls::ceil((double)meta.size.to_long()*8  / W_DATA))
 			break;
 
 		c_data_t current = data_in.read();
@@ -47,7 +46,7 @@ static void read_in(
 		write_to_sha1_buff: for (int j = 0; j < W_DATA/32 ; j++){
 	#pragma HLS PIPELINE II=1
 			// stop after the last package in stream
-			if (size_remaining - j*4 > 0){
+			if (i*W_DATA/8 + j*4 < meta.size.to_long()){
 				sha1_msg.write(current.range(31 + 32 * j, 32 * j));
 			}
 		}
@@ -123,7 +122,7 @@ static void write_out(hls::stream< sc_packet > &meta_in,
 	sc_packet meta = meta_in.read();
 	meta_out.write(meta);
 
-	write: for (c_size_t i = 0 ; i < MAX_SMALL_CHUNK_SIZE / W_DATA ; i++){
+	write: for (c_size_t i = 0 ; i < SC_STREAM_SIZE ; i++){
 #pragma HLS PIPELINE II=6
 		if (i >= hls::ceil((double) meta.size*8/W_DATA))
 			break;
@@ -147,7 +146,7 @@ void dedup(hls::stream< sc_packet > &meta_in,
 	hls::stream< sc_packet, 2> dedup_meta("dedup_meta");
 	hls::stream< sc_packet , 2> write_out_meta("write_out_meta");
 	hls::stream< c_data_t, SC_STREAM_SIZE > bram_data("bram_data");
-	hls::stream< c_data_t, SC_STREAM_SIZE > write_out_data("wrie_out_data");
+	hls::stream< c_data_t, SC_STREAM_SIZE > write_out_data("write_out_data");
 	hls::stream< bool , 2 > write_out_end("write_out_end");
 	//sha1 streams
 	hls::stream< ap_uint< 32 > , MSG_BUFF_SIZE > sha1_msg("sha1_msg");
