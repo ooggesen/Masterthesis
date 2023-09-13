@@ -11,7 +11,7 @@
 
 
 //defines how many bytes are put into big chunk before rabin fingerprint
-#define MIN_BC_SIZE (BIG_CHUNK_SIZE - 10*SMALL_CHUNK_SIZE)
+#define MIN_BC_SIZE BIG_CHUNK_SIZE
 
 
 
