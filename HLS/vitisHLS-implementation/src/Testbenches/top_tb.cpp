@@ -159,85 +159,140 @@ int top_tb(int argc, char* argv[]){
 
 	//-------------------------------------------------
 	cout << "Checking results." << endl;
+	if (strcmp(file_name, "/duplicate.bin") != 0){
+		//Testbench for semi and random data
+		end = out_end.read();
 
-	end = out_end.read();
+		while(!end){
+			//Check header
+			errors += check_header(out_stream);
 
-	while(!end){
-		//Check header
-		errors += check_header(out_stream);
-
-		//Check data
-		if (out_stream.empty()){
-			cout << "Top module produced no data." << endl << endl;
-			errors++;
-		}
-		bool only_unique = true;
-		int counter = 0;
-		c_size_t size_buffer = 16;
-		c_size_t size_boundary = out_size.read();
-		while(size_boundary > size_buffer){
-			ap_uint< 64 > type;
-			c_size_t size;
-			read_seperator(out_stream, type, size);
-			size_buffer += 16;
-
-			//check type
-			if (!(type == TYPE_COMPRESS || type == TYPE_FINGERPRINT)){
-				cout << "Wrong type information." << endl;
+			//Check data
+			if (out_stream.empty()){
+				cerr << "Top module produced no data." << endl << endl;
 				errors++;
 			}
+			bool only_unique = true;
+			int counter = 0;
+			c_size_t size_buffer = 16;
+			c_size_t size_boundary = out_size.read();
+			while(size_boundary > size_buffer){
+				ap_uint< 64 > type;
+				c_size_t size;
+				read_seperator(out_stream, type, size);
+				size_buffer += 16;
 
-			if (only_unique && type == TYPE_FINGERPRINT){
-				only_unique = false;
-				cout << "Duplicate data chunk found." << endl;
-				cout << "Following data can not be checked." << endl;
-			}
-
-			//check size
-			if (size == 0){
-				cout << "Empty chunk output." << endl;
-				errors++;
-			}
-
-			if (size != 20 && type == TYPE_FINGERPRINT){
-				//hash must be 160 bit long
-				cout << "Wrong size for sha1 hash." << endl;
-				errors++;
-			}
-
-			//Check data and empty out stream
-			ap_uint< 192 > hash = 0;
-			for (int i = 0 ; i < size.to_long() ; i += 8){
-				size_buffer += 8;
-				ap_uint< 64 > compare_long;
-				ap_uint< 64 > out_long = out_stream.read();
-				for (int j = 0 ; j < 8 ; j++){
-					if (i + j < size.to_long())
-						compare_long.range(7 + 8*j, 8*j) = compare_data.read();
-					else
-						compare_long.range(7 + 8*j, 8*j) = 0;
+				//check type
+				if (!(type == TYPE_COMPRESS || type == TYPE_FINGERPRINT)){
+					cerr << "Wrong type information." << endl;
+					errors++;
 				}
-				if (only_unique && type == TYPE_COMPRESS){
-					if (out_long != compare_long){
-						cout << "Wrong data output." << endl;
-						cout << "Expected: " << hex << compare_long << endl;
-						cout << "Received: " << hex << out_long << endl;
-						errors++;
+
+				if (only_unique && type == TYPE_FINGERPRINT){
+					only_unique = false;
+					cout << "Duplicate data chunk found." << endl;
+					cout << "Following data can not be checked." << endl;
+				}
+
+				//check size
+				if (size == 0){
+					cerr << "Empty chunk output." << endl;
+					errors++;
+				}
+
+				if (size != 20 && type == TYPE_FINGERPRINT){
+					//hash must be 160 bit long
+					cerr << "Wrong size for sha1 hash." << endl;
+					errors++;
+				}
+
+				//Check data and empty out stream
+				ap_uint< 192 > hash = 0;
+				for (int i = 0 ; i < size.to_long() ; i += 8){
+					size_buffer += 8;
+					//build compare data in long format
+					ap_uint< 64 > compare_long;
+					ap_uint< 64 > out_long = out_stream.read();
+					for (int j = 0 ; j < 8 ; j++){
+						if (i + j < size.to_long())
+							compare_long.range(7 + 8*j, 8*j) = compare_data.read();
+						else
+							compare_long.range(7 + 8*j, 8*j) = 0;
+					}
+
+					//check data with compare stream
+					if (only_unique && type == TYPE_COMPRESS){
+						if (out_long != compare_long){
+							cerr << "Wrong data output." << endl;
+							cerr << "Expected: " << hex << compare_long << endl;
+							cerr << "Received: " << hex << out_long << endl;
+							errors++;
+						}
+					}
+
+					if (type == TYPE_FINGERPRINT){
+						hash.range(63 + 8*i , 8*i);
 					}
 				}
 
 				if (type == TYPE_FINGERPRINT){
-					hash.range(63 + 8*i , 8*i);
+					cout << "Received hash: " << hash << endl;
 				}
+				counter++;
 			}
 
-			if (type == TYPE_FINGERPRINT){
-				cout << "Received hash: " << hash << endl;
-			}
-			counter++;
+			end = out_end.read();
 		}
-
+	} else {
+		//Purely duplicate testbench
 		end = out_end.read();
+		while(!end){
+			errors += check_header(out_stream);
+
+			ap_uint< 192 > last_hash = 0;
+			c_size_t size_buffer = 16; // 16 bytes for header
+			c_size_t size_boundary = out_size.read();
+			while(size_boundary > size_buffer){
+					ap_uint< 64 > type;
+					c_size_t size;
+					read_seperator(out_stream, type, size);
+					size_buffer += 16; // 16 bytes for seperator
+
+					if (type == TYPE_FINGERPRINT){
+						cout << "Found duplicate chunk." << endl;
+					} else {
+						cout << "Found unique chunk." << endl;
+					}
+
+					//Check data
+					ap_uint< 192 > hash = 0;
+					c_data_t buffer = 0;
+					for (int i = 0 ; i < size.to_long() ; i += 8){
+						size_buffer += 8;
+						ap_uint< 64 > out_long = out_stream.read();
+
+						if (type == TYPE_FINGERPRINT){
+							hash.range(63 + i*8 , i*8) = out_long;
+						} else {
+							int pos = (i/8) % (1024/64);
+
+							if (i != 0 && pos == 0)
+								cout << hex << buffer << endl;
+
+							buffer.range(63 + 64*pos, 64*pos) = out_long;
+						}
+					}
+
+					if (type == TYPE_FINGERPRINT && last_hash != 0 && (hash == 0 || last_hash != hash)){
+						cerr << "Wrong hash." << endl;
+						cerr << "Might be edges of big chunk and no error." << endl;
+					}
+
+					last_hash = ap_uint< 192 >(hash); //if no duplicate sets last hash to 0 again
+			}
+
+			end = out_end.read();
+		}
 	}
 
 	return errors;
