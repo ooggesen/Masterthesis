@@ -74,6 +74,7 @@ int top_tb(int argc, char* argv[]){
 	int errors = 0;
 	bool end;
 
+	//-------------------------------------------------
 	cout << "Parsing input arguments." << endl << endl;
 	int ch;
 	while(-1 != (ch = getopt(argc, argv, "s:d:"))){
@@ -111,7 +112,7 @@ int top_tb(int argc, char* argv[]){
 	}
 
 
-
+	//-------------------------------------------------
 	cout << "Reading data." << endl << endl;
 
 	strcat(data_path, file_name);
@@ -150,13 +151,13 @@ int top_tb(int argc, char* argv[]){
 	compare_size.read();
 
 
-
+	//-------------------------------------------------
 	cout << "Running the dut." << endl << endl;
 
 	top(test_data, test_size, test_end, out_stream, out_size, out_end);
 
 
-
+	//-------------------------------------------------
 	cout << "Checking results." << endl;
 
 	end = out_end.read();
@@ -181,7 +182,6 @@ int top_tb(int argc, char* argv[]){
 			size_buffer += 16;
 
 			//check type
-
 			if (!(type == TYPE_COMPRESS || type == TYPE_FINGERPRINT)){
 				cout << "Wrong type information." << endl;
 				errors++;
