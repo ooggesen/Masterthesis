@@ -30,17 +30,18 @@ int main() {
     int counter = 0;
     for (int i = 0 ; i < MAX_FILE_SIZE ; i++){
         unsigned char surprise_char;
-        if (counter >= 3){
-            if (rand() % 101 < 33)
+        if (counter >= 2){
+            if (rand() % 101 < 25)
                 counter = 0;
-            if(rand() % 101 < 50){
-                surprise_char = 255;
-            } else {
-                surprise_char = rand() % 256;
-            }
-        }
+                
+            surprise_char = 255;
+        } else {
+        	surprise_char = rand() % 256;
+		}
         fwrite(&surprise_char, sizeof(surprise_char), 1, fp );
-        counter++;
+        
+        if (rand() % 101 < 50)
+        	counter++;
     }
 
     fclose(fp);
