@@ -201,7 +201,7 @@ int top_tb(int argc, char* argv[]){
 
 				if (only_unique && type == TYPE_FINGERPRINT){
 					only_unique = false;
-					cout << "Following data can not be checked." << endl;
+					cerr << "WARNING: Following data can not be checked." << endl; //since not sure how much must be read from compare_data
 				}
 
 				//check size
@@ -241,7 +241,7 @@ int top_tb(int argc, char* argv[]){
 					}
 
 					if (type == TYPE_FINGERPRINT){
-						hash.range(63 + 8*i , 8*i);
+						hash.range(63 + 8*i , 8*i) = out_long;
 					}
 				}
 
@@ -249,6 +249,11 @@ int top_tb(int argc, char* argv[]){
 					cout << "Received hash: " << hash << endl;
 				}
 				counter++;
+			}
+
+			if (!only_unique){
+				while(!compare_data.empty())
+					compare_data.read();
 			}
 
 			end = out_end.read();
