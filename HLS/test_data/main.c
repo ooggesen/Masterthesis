@@ -32,7 +32,7 @@ int main() {
     for (int i = 0 ; i < MAX_FILE_SIZE ; i++){
         unsigned char surprise_char;
         if (r_counter >= boundary){
-            if (rand() % 100 <= 1){
+            if (rand() % 100 < 1){
                 d_counter++;
         	}
                 
@@ -41,7 +41,7 @@ int main() {
             if (d_counter >= boundary)
             	r_counter = 0;
         } else {
-		    if (rand() % 100 <= 1){
+		    if (rand() % 100 < 1){
 		    	d_counter = 0;
 		    	r_counter++;
 	    	}
