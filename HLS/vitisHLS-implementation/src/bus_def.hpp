@@ -32,8 +32,8 @@
 //relational definitions
 #define MAX_SMALL_CHUNK_SIZE  	(40 * SMALL_CHUNK_SIZE) //maximum size of a small chunk in bits
 #define MAX_BIG_CHUNK_SIZE		(MAX_SMALL_CHUNK_SIZE + BIG_CHUNK_SIZE) //maximum size of a big chunk in bits
-#define SC_STREAM_SIZE 			(int) (MAX_SMALL_CHUNK_SIZE/W_DATA) //size of data array containing a small chunk
-#define BC_STREAM_SIZE 			(int) (MAX_BIG_CHUNK_SIZE/W_DATA) //size of data array containing a big chunk
+#define SC_STREAM_SIZE 			(int) (MAX_SMALL_CHUNK_SIZE/W_DATA + 1) //size of data array containing a small chunk
+#define BC_STREAM_SIZE 			(int) (MAX_BIG_CHUNK_SIZE/W_DATA + 1) //size of data array containing a big chunk
 // type definitions
 typedef ap_uint<W_DATA> c_data_t; //contains small and big chunks chunks
 typedef ap_uint<W_ADDR> addr_t; //address for BRAM access
