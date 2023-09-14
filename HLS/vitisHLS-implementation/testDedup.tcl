@@ -1,19 +1,28 @@
 #synthesize your project and run this script to generate delay data
 
 #path/to/solution
-set work_dir "/mnt/ole/Documents/coderepo/HLS/vitisHLS-implementation/Dedup/solution1" 
-#path to folder for storing cosim reports
-set result_dir "/mnt/ole/Documents/coderepo/HLS/vitisHLS-implementation/reports"	
+set solution_dir [file join [pwd] "Dedup/solution1/sim/report/"]
+
+#path/to/report/folder
+set result_dir [file join [pwd] "reports"]
 
 #get time and date
 set system_time [clock seconds]
-set system_time [clock format $system_time -format %D||%H:%M:%S]
+set system_time [clock format $system_time -format %d%m%y%H%M%S]
 
 #set different data type keywords to test on
 set data_type(0) duplicate
 set data_type(1) semi
 set data_type(2) unique
 
+#set data size specifiers
+set data_start 5000
+set data_max 1000000
+set data_mul 1.3034 
+#insert the nth root of (data_max/data_start) above
+
+
+#prepare vitis project
 open_project Dedup
 set_top top
 
@@ -26,23 +35,28 @@ add_files "src/fragment.cpp src/fragment_refine.cpp src/fragment.hpp src/fragmen
 
 source "./Dedup/solution1/directives.tcl"
 
-#synthesize
-csynth_design
+#synthesize the top file
+#csynth_design
 
 #run cosims for data generation
-exec mkdir -v $result_dir/$system_time
+set result_dir [file join $result_dir $system_time]
+exec mkdir -v $result_dir
 
-for {set dt_it 0} {$dt_it < array size data_type} {incr dt_it}
-
-	exec mkdir -v $result_dir/$system_time/$data_type($dt_it)
+for {set dt_it 0} {$dt_it < [array size data_type]} {incr dt_it} {
 	
-	for {set i 1000} {$i < 1000000} {set i [expr {$i + 2000}]} {
+	set type_dir [file join $result_dir $data_type($dt_it)] 
 	
-		exec mkdir -v $result_dir/$system_time/$data_type($dt_it)/$i
+	exec mkdir -v $type_dir
+	
+	for {set i $data_start} {$i < $data_max} {set i [expr {$i * $data_mul}]} { #about 20 data points
+	
+		set size_dir [file join $type_dir $i] 
+		exec mkdir -v $size_dir
+		
 		#cosim
-		cosim_design -argv -s $i -d $data_type($dt_it)
+		cosim_design -argv [format "-s %s -d %s" $i $data_type($dt_it)]
 		#move reports to report folder
-		exec mv -v $work_dir/sim/report/ $result_dir/$system_time/$data_type($dt_it)/$i
+		exec mv -v $solution_dir $size_dir
 	}
 }
 
