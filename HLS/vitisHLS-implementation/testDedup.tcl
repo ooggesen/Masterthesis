@@ -19,7 +19,7 @@ set data_type(2) unique
 set data_start 5000
 set data_max 1000000
 set data_mul 1.3034 
-#insert the nth root of (data_max/data_start) above
+#insert the nth root of (data_max/data_start) above, where n is the ammound of data points per data type
 
 
 #prepare vitis project
