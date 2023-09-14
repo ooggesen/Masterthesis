@@ -252,6 +252,7 @@ int top_tb(int argc, char* argv[]){
 			}
 
 			if (!only_unique){
+				//compare data is not emptied correctly is duplicates are contained in testbench
 				while(!compare_data.empty())
 					compare_data.read();
 			}
@@ -310,6 +311,11 @@ int top_tb(int argc, char* argv[]){
 			}
 
 			end = out_end.read();
+		}
+
+		//emptying compare_data which is not used in duplicate test bench
+		while(!compare_data.empty()){
+			compare_data.read();
 		}
 	}
 
