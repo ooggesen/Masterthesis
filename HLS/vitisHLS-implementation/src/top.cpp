@@ -63,18 +63,21 @@ static void write_out(
 #pragma HLS LOOP_FLATTEN off
 		end_out.write(false);
 
-		volatile c_size_t size = MAX_FILE_SIZE;
-
-		write_file: for (c_size_t i = 0 ; i < MAX_FILE_SIZE ; i += 8 ){
+		c_size_t size = MAX_FILE_SIZE+1;
+		c_size_t i = 0;
+		write_file: while(true){
 			//size info comes after all data
-			if (!size_in.empty()){
+			if (!size_in.empty() && size == MAX_FILE_SIZE+1){
 				size = size_in.read();
-				size_out.write(ap_uint< W_CHUNK_SIZE >(size));
+				size_out.write(size);
 			}
-			if (i >= ap_uint< W_CHUNK_SIZE >(size))
+			if (i >= size)
 				break;
 
-			out.write(in.read());
+			if (!in.empty()){
+				out.write(in.read());
+				i += 8;
+			}
 		}
 
 		end = end_in.read();
@@ -97,33 +100,29 @@ void top(hls::stream< ap_uint< 64 > > &in,
 	//definitions
 	//buffer
 	hls::stream< ap_uint< 64 > , MAX_BIG_CHUNK_SIZE/64> 	in_buffer("in_buffer");
-	hls::stream< c_size_t , 1> 								size_in_buffer("size_in_buffer");
-	hls::stream< bool , 1> 									end_in_buffer("end_in");
+	hls::stream< c_size_t , 2> 								size_in_buffer("size_in_buffer");
+	hls::stream< bool , 2> 									end_in_buffer("end_in");
 
 	hls::stream< ap_uint< 64 > , MAX_BIG_CHUNK_SIZE/64> 	out_buffer("out_buffer");
-	hls::stream< c_size_t , 1 > 							size_out_buffer("size_out_buffer");
-	hls::stream< bool , 1 > 								end_out_buffer("end_out_buffer");
+	hls::stream< c_size_t , 2 > 							size_out_buffer("size_out_buffer");
+	hls::stream< bool , 2 > 								end_out_buffer("end_out_buffer");
 
-	hls::stream< bc_packet, 1 > 							post_fragment_meta_buffer("post_fragment_meta_buffer");
-	hls::stream< c_data_t , 2 > 							post_fragment_data_buffer("post_fragment_data_buffer");
-	hls::stream< bool , 1 > 								post_fragment_end_buffer("post_fragment_end_buffer");
+	hls::stream< bc_packet, 2 > 							post_fragment_meta_buffer("post_fragment_meta_buffer");
+	hls::stream< c_data_t , 4 > 							post_fragment_data_buffer("post_fragment_data_buffer");
+	hls::stream< bool , 2 > 								post_fragment_end_buffer("post_fragment_end_buffer");
 
-	hls::stream< sc_packet, 1 > 							pre_reorder_meta_buffer("pre_reorder_meta_buffer");
-	hls::stream< c_data_t , 2> 								pre_reorder_data_buffer("pre_reorder_data_buffer");
-	hls::stream< bool , 1 > 								pre_reorder_end_buffer("pre_reorder_end_buffer");
+	hls::stream< sc_packet, 2 > 							pre_reorder_meta_buffer("pre_reorder_meta_buffer");
+	hls::stream< c_data_t , SC_STREAM_SIZE > 				pre_reorder_data_buffer("pre_reorder_data_buffer");
+	hls::stream< bool , 2 > 								pre_reorder_end_buffer("pre_reorder_end_buffer");
 
-	hls::stream< sc_packet, 1 > 							post_refine_meta_buffer("post_refine_meta_buffer");
-	hls::stream< c_data_t, 2 > 								post_refine_data_buffer("post_refine_data_buffer");
-	hls::stream< bool , 1 > 								post_refine_end_buffer("post_refine_end_buffer");
-
-	hls::stream< sc_packet, 1 > 							post_dedup_meta_buffer("post_dedup_meta_buffer");
-	hls::stream< c_data_t, 2 > 								post_dedup_data_buffer("post_dedup_data_buffer");
-	hls::stream< bool , 1 > 								post_dedup_end_buffer("post_dedup_end_buffer");
+	hls::stream< sc_packet, 2 > 							post_refine_meta_buffer("post_refine_meta_buffer");
+	hls::stream< c_data_t, SC_STREAM_SIZE > 				post_refine_data_buffer("post_refine_data_buffer");
+	hls::stream< bool , 2 > 								post_refine_end_buffer("post_refine_end_buffer");
 
 	//splitter
-	hls::stream< bc_packet , 1 > 							pre_refine_meta_split[NP_REFINE];
-	hls::stream< c_data_t , 2 > 							pre_refine_data_split[NP_REFINE];
-	hls::stream< bool, 1 > 									pre_refine_end_split[NP_REFINE];
+	hls::stream< bc_packet , 2 > 							pre_refine_meta_split[NP_REFINE];
+	hls::stream< c_data_t , SC_STREAM_SIZE > 				pre_refine_data_split[NP_REFINE];
+	hls::stream< bool, 2 > 									pre_refine_end_split[NP_REFINE];
 
 	//merger
 	hls::stream< sc_packet, 2 > 							post_refine_meta_merge[NP_REFINE];
