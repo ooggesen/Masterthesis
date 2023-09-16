@@ -6,7 +6,8 @@
  *
  * @author Ole Oggesen
  * @bug
- * 	if buffer is full, read or write will not exit
+ * 	.if buffer is full, read or write will not exit
+ * 	.since no minimum small chunk size is implemented, it might result in a to small bram memory space
  */
 
 
@@ -39,24 +40,29 @@ void bram(bool wren, bool rden,
 
 	// linear probing: looking for entry that contains data with correct hash value to read from
 	unsigned long int addr;
+	addr_t hash;
 	//initial address
-	if (rden)
+	if (rden){
 		addr = packet_r.addr % MAX_BRAM_SIZE;
-	else if (wren)
+		hash = packet_r.addr;
+	}
+	else if (wren) {
 		addr = packet_w.addr % MAX_BRAM_SIZE;
+		hash = packet_w.addr;
+	}
 
 	find_memory: for (int i = 0 ; i < SC_STREAM_SIZE/BRAM_DEPTH; i++){
 #pragma HLS LOOP_FLATTEN off
 		if (i >= hls::ceil((double) size.to_long()*8 / W_DATA / BRAM_DEPTH))
 			break;
 
-		find_addr: while (buffer[addr].hash != 0 && buffer[addr].hash != packet_r.addr){
-#pragma HLS PIPELINE II=2
+		find_addr: while (buffer[addr].hash != 0 && buffer[addr].hash != hash){
+#pragma HLS PIPELINE II=69
 			increment_addr(addr);
 		}
 
 		//transfer data data
-		if (wren) buffer[addr].hash =  packet_w.addr;
+		if (wren) buffer[addr].hash =  hash;
 		transfer_loop_bram: for (int j = 0 ; j < BRAM_DEPTH ; j++){
 #pragma HLS PIPELINE II=1
 			if (rden)

@@ -15,8 +15,8 @@
 
 #define BRAM_DEPTH (int) (SC_STREAM_SIZE/4) //must be a fraction of SC_STREAM_SIZE
 
-#define MAX_BRAM_SIZE (int) (MAX_FILE_SIZE*8/SMALL_CHUNK_SIZE * SC_STREAM_SIZE/BRAM_DEPTH * 3/4)
-//number of small chunk packages the complete BRAM can hold, assumes a duplication rate of one fourth
+#define MAX_BRAM_SIZE (int) (MAX_FILE_SIZE*8/SMALL_CHUNK_SIZE * SC_STREAM_SIZE/BRAM_DEPTH + 1)
+//number of small chunk packages the complete BRAM can hold
 
 struct bram_data{
 	c_data_t data[BRAM_DEPTH];
