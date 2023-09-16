@@ -4,7 +4,8 @@
  * @brief Declarations and macros used for the reorder buffer in the reorder pipeline stage
  *
  * @author Ole Oggesen
- * @bug No known bugs
+ * @bug
+ * 		No minimum small chunk size is defined, which might lead to non sufficient buffer space
  */
 
 #ifndef REORDER_BUFFER_HPP
@@ -18,7 +19,7 @@
 
 //definitions
 #define BUFFER_SIZE_1 NP_REFINE //buffer depth for big chunks
-#define BUFFER_SIZE_2 (int) (MAX_BIG_CHUNK_SIZE / SMALL_CHUNK_SIZE) //buffer depth for small chunks
+#define BUFFER_SIZE_2 (int) (MAX_BIG_CHUNK_SIZE / SMALL_CHUNK_SIZE + 1) //buffer depth for small chunks
 
 /**
  * @brief Data format for the reorder buffer
