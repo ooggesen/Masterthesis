@@ -29,7 +29,7 @@ static void write_out(
 		meta_out.write(sc_meta);
 		end_out.write(false);
 
-		write_chunk: for (int i = 0 ; i < (int) MAX_SMALL_CHUNK_SIZE / W_DATA + 1 ; i++){
+		write_chunk: for (int i = 0 ; i < SC_STREAM_SIZE ; i++){
 #pragma HLS LOOP_FLATTEN off
 			if (i >= hls::ceil((double) sc_meta.size.to_long()*8 / W_DATA))
 				break;
@@ -123,7 +123,7 @@ static void convert_to_byte_stream(
 		meta_out.write(bc_meta);
 		end_out.write(false);
 
-		read_data: for (c_size_t i = 0 ; i < MAX_BIG_CHUNK_SIZE / W_DATA + 1; i++){
+		read_data: for (c_size_t i = 0 ; i < BC_STREAM_SIZE; i++){
 #pragma HLS LOOP_FLATTEN  off
 			if (i*W_DATA/8 >= bc_meta.size.to_long())
 				break;

@@ -44,7 +44,7 @@ static void write_out(
 		meta_out.write(tmp_meta);
 
 		//write data
-		write_chunk: for (int i = 0 ; i < (int) MAX_BIG_CHUNK_SIZE / W_DATA + 1 ; i++){
+		write_chunk: for (int i = 0 ; i < BC_STREAM_SIZE ; i++){
 #pragma HLS LOOP_FLATTEN off
 			if (i >= hls::ceil((double) chunk_length.to_long()*8 / W_DATA))
 				break;
