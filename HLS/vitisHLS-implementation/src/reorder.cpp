@@ -122,6 +122,7 @@ static void check_input(
 		hls::stream< sc_packet > &meta_in,
 		hls::stream< c_data_t > &data_in,
 		hls::stream< bool > &end_in,
+		bool &init,
 		l1_pos_t &l1,
 		l2_pos_t &l2,
 		c_size_t &file_length,
@@ -140,7 +141,8 @@ static void check_input(
 			read_in(meta_in, data_in, data_in_buffer, read_current);
 
 			//at start of file
-			if (read_current.l1_pos == 0 && read_current.l2_pos == 0){
+			if (init){
+				init = false;
 				end_out.write(false);
 				write_header(out);
 
@@ -210,13 +212,13 @@ void reorder(hls::stream< sc_packet > &meta_in,
 	}
 
 	//reorder loop
-	bool end = false;
+	bool end = false, init = true;
 	int buffer_counter = 0;
 	reorder_loop: while(!end || buffer_counter != 0) {
 #pragma HLS LOOP_TRIPCOUNT min=1 max=1 avg=1
 #pragma HLS PIPELINE off
 #pragma HLS LOOP_FLATTEN off
-		check_input(meta_in, data_in, end_in, l1_pos, l2_pos, file_length, buffer, buffer_counter,
+		check_input(meta_in, data_in, end_in, init, l1_pos, l2_pos, file_length, buffer, buffer_counter,
 				end, size_out, data_out, end_out);
 
 		check_buffer(l1_pos, l2_pos, buffer, buffer_counter, data_out);

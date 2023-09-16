@@ -220,12 +220,19 @@ void shuffle(hls::stream< sc_packet > &sorted_meta,
 		hls::stream< bool > &shuffeled_end){
 	srand(0);
 
-	hls::stream< sc_packet > meta_buffer("meta_buffer");
-	hls::stream< c_data_t > data_buffer("data_buffer");
-	hls::stream< bool > end_buffer("end_buffer");
+	hls::stream< sc_packet > meta_buffer[NP_REFINE];
+	hls::stream< c_data_t > data_buffer[NP_REFINE];
+	hls::stream< bool > end_buffer[NP_REFINE];
 	int in_buffer = 0;
-	while(!sorted_meta.empty() || !meta_buffer.empty()){
-		unsigned percent = rand() % 101;
+	while(!sorted_meta.empty() || in_buffer != 0){
+		unsigned percent = rand() % 100;
+
+		int pos;
+		if (rand() %100 < 50)
+			pos = 0;
+		else
+			pos = 1;
+
 		if (!sorted_meta.empty() && percent < 33){
 			//write directly from input to output
 			sc_packet packet = sorted_meta.read();
@@ -234,24 +241,22 @@ void shuffle(hls::stream< sc_packet > &sorted_meta,
 			for (int i = 0  ; i < hls::ceil((double) packet.size.to_long()*8 / W_DATA) ; i++){
 				shuffeled_data.write(sorted_data.read());
 			}
-		} else if (in_buffer >= BUFFER_SIZE_1 ||
-				in_buffer >= BUFFER_SIZE_2 ||
-				(!meta_buffer.empty() && (percent < 66 || sorted_meta.empty()))){
+		} else if (!meta_buffer[pos].empty() && (percent < 66 || sorted_meta.empty())){
 			//write from buffer to output
-			sc_packet packet = meta_buffer.read();
+			sc_packet packet = meta_buffer[pos].read();
 			shuffeled_meta.write(packet);
-			shuffeled_end.write(end_buffer.read());
+			shuffeled_end.write(end_buffer[pos].read());
 			for (int i = 0 ; i < hls::ceil((double) packet.size.to_long()*8 / W_DATA) ; i ++){
-				shuffeled_data.write(data_buffer.read());
+				shuffeled_data.write(data_buffer[pos].read());
 			}
 			in_buffer--;
 		} else if (!sorted_meta.empty()){
 			//write from input to buffer
 			sc_packet packet = sorted_meta.read();
-			meta_buffer.write(packet);
-			end_buffer.write(sorted_end.read());
+			meta_buffer[pos].write(packet);
+			end_buffer[pos].write(sorted_end.read());
 			for (int i = 0 ; i < hls::ceil((double) packet.size.to_long()*8 / W_DATA) ; i ++){
-				data_buffer.write(sorted_data.read());
+				data_buffer[pos].write(sorted_data.read());
 			}
 			in_buffer++;
 		}

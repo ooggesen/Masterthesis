@@ -71,7 +71,7 @@ int shuffle_tb(){
 	cout << "*****************************" << endl;
 
 	//Generating input data
-	cout << "Generating " << NUM_TESTS << " tests for the shuffle function." << endl;
+	cout << "Generating " << NUM_TESTS*10 << " tests for the shuffle function." << endl;
 	cout << "This test assumes that so few data is generated, that all small chunks belong to the same big chunk." << endl;
 
 	hls::stream< sc_packet > test_meta("test_meta"), compare_meta("compare_meta");
