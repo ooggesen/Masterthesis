@@ -4,7 +4,7 @@
  * @brief Contains the reorder pipeline stage
  *
  * @author Ole Oggesen
- * @bug Reorder stage assumes an empty buffer before the arrival of a new file.
+ * @bug No known bugs
  */
 
 #include "reorder.hpp"
@@ -141,8 +141,8 @@ static void check_input(
 
 			//at start of file
 			if (read_current.l1_pos == 0 && read_current.l2_pos == 0){
-				write_header(out);
 				end_out.write(false);
+				write_header(out);
 
 				l1 = 0;
 				l2 = 0;
@@ -175,8 +175,10 @@ static void check_input(
 				write_buffer(read_current, data_in_buffer, buffer, buffer_counter);
 			}
 		} else {
+			if (file_length != 0)
+				size_out.write(file_length);
+
 			end = true;
-			size_out.write(file_length);
 			end_out.write(true);
 		}
 	}
