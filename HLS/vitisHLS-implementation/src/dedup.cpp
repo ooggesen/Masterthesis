@@ -33,7 +33,7 @@ static void read_in(
 
 	sha1_len.write((unsigned long long) meta.size);
 
-	read_data: for (c_size_t i = 0; i < (int) MAX_SMALL_CHUNK_SIZE/W_DATA + 1; i++){
+	read_data: for (c_size_t i = 0; i < SC_STREAM_SIZE; i++){
 #pragma HLS LOOP_FLATTEN off
 		if (i >= hls::ceil((double)meta.size.to_long()*8  / W_DATA))
 			break;
