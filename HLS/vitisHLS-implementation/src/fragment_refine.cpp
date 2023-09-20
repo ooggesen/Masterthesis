@@ -87,7 +87,7 @@ static void segment_sc_packet(
 			sc_packet sc_meta;
 			sc_meta.l1_pos = bc_meta.l1_pos;
 			sc_meta.l2_pos = l2++;
-			sc_meta.last_l2_chunk = bc_length == 0;
+			sc_meta.last_l2_chunk = (bc_length == 0);
 			sc_meta.size = sc_size;
 			//deafult values. Get correctly set by dedup kernel.
 			sc_meta.hash = 0;
@@ -123,7 +123,7 @@ static void convert_to_byte_stream(
 		meta_out.write(bc_meta);
 		end_out.write(false);
 
-		read_data: for (c_size_t i = 0 ; i < BC_STREAM_SIZE; i++){
+		read_data: for (c_size_t i = 0 ; i < MAX_BIG_CHUNK_SIZE / 8; i++){
 #pragma HLS LOOP_FLATTEN  off
 			if (i*W_DATA/8 >= bc_meta.size.to_long())
 				break;
