@@ -70,10 +70,10 @@ add_files -tb src/Testbenches/top_tb.cpp -cflags "-Wno-unknown-pragmas" -csimfla
 source "./Dedup/solution1/directives.tcl"
 
 #simulate the top file
-csim_design -clean
+#csim_design -clean
 
 #synthesize the top file
-csynth_design
+#csynth_design
 
 #run cosims for data generation
 set result_dir [file join $result_dir $system_time]
@@ -85,8 +85,9 @@ for {set dt_it 0} {$dt_it < [array size data_type]} {incr dt_it} {
 	
 	exec mkdir -v $type_dir
 	
-	for {set i $data_start} {$i < $data_max} {set i [expr {$i * $data_mul}]} { #about 20 data points
+	for {set i $data_start} {$i < $data_max} {set i [expr {$i * $data_mul}]} { 
 	
+		set i [expr int($i)]
 		set size_dir [file join $type_dir $i] 
 		exec mkdir -v $size_dir
 		
