@@ -19,7 +19,7 @@ void write_buffer(sc_packet &meta, c_data_t data[SC_STREAM_SIZE], buffer_cell bu
 	bc->valid = true;
 	bc->meta = sc_packet(meta);
 	write_data_to_buffer: for (c_size_t i  = 0 ; i < SC_STREAM_SIZE ; i++){
-#pragma HLS UNROLL
+#pragma HLS LOOP_FLATTEN
 		bc->data[i] = data[i];
 	}
 	counter++;
@@ -36,7 +36,7 @@ void read_buffer(l1_pos_t &l1, l2_pos_t &l2, buffer_cell buffer[][BUFFER_SIZE_2]
 		meta_out = sc_packet(bc->meta);
 
 		read_data_from_buffer: for (c_size_t i  = 0 ; i < SC_STREAM_SIZE ; i++){
-#pragma HLS UNROLL
+#pragma HLS LOOP_FLATTEN
 			data_out[i] = bc->data[i];
 		}
 
