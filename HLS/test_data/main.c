@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #define MAX_FILE_SIZE 10000000
 //generate test data
@@ -11,7 +12,7 @@ int main() {
         return EXIT_FAILURE;
     }
 
-    srand(0);
+    srand(time(NULL));
     for (int i = 0 ; i < MAX_FILE_SIZE ; i++){
         unsigned char random_char = rand() % 256;
         fwrite(&random_char, sizeof(random_char), 1, fp );
