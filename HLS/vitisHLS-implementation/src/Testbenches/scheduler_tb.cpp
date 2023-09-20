@@ -8,7 +8,7 @@
 #include "../scheduler.hpp"
 #include "test_bench.hpp"
 
-#define NUM_TESTS 2 //number of big chunks packets equivalents
+#define NUM_TESTS 5 //number of big chunks packets equivalents
 
 using namespace std;
 

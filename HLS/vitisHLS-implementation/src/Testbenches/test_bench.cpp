@@ -85,7 +85,7 @@ void generate_test_data(unsigned num_tests,
 		test_end.write(false);
 
 		bc_packet packet;
-		packet.size = (BIG_CHUNK_SIZE - 10*SMALL_CHUNK_SIZE + rand() % (40 * SMALL_CHUNK_SIZE))/8;
+		packet.size = BIG_CHUNK_SIZE + rand() % MAX_SMALL_CHUNK_SIZE;
 		packet.l1_pos = l1++;
 
 		//print_test_data(packet);
@@ -152,7 +152,7 @@ void generate_test_data(unsigned num_tests,
 				compare_data.write(current_data);
 			}
 		} else {
-			packet.size = (rand() % 24) + SMALL_CHUNK_SIZE/8 - 12; //small variances in size
+			packet.size = (int) ((rand() % MAX_SMALL_CHUNK_SIZE) / 8 );
 
 			is_duplicate = false;
 
@@ -178,7 +178,7 @@ void generate_test_data(unsigned num_tests,
 		bool is_last_l2_chunk = false;
 		// increment the l1 positions after an average big chunk if transmitted
 		// modified by chance
-		if (l2 * SMALL_CHUNK_SIZE >= BIG_CHUNK_SIZE && rand() % 101 < 30) {
+		if (l2 * SMALL_CHUNK_SIZE >= BIG_CHUNK_SIZE && rand() % 100 < 5 || (l2+1) * SMALL_CHUNK_SIZE >= MAX_BIG_CHUNK_SIZE) {
 			l2 = 0;
 			l1++;
 			is_last_l2_chunk = true;

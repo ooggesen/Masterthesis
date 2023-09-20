@@ -59,6 +59,8 @@ int fragment_tb(){
 		if (current_bc.size == 0){
 			cout << "Segmented an empty big chunk." << endl;
 			errors++;
+		} else if (current_bc.size < BIG_CHUNK_SIZE/8) {
+			cout << "Big chunk smaller than minimum amount. Is ok if at end of file." << endl;
 		}
 
 		file_length += current_bc.size;
