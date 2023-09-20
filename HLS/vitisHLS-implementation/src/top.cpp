@@ -63,21 +63,26 @@ static void write_out(
 #pragma HLS LOOP_FLATTEN off
 		end_out.write(false);
 
-		c_size_t size = MAX_FILE_SIZE+1;
-		c_size_t i = 0;
-		write_file: while(true){
-			//size info comes after all data
-			if (!size_in.empty() && size == MAX_FILE_SIZE+1){
-				size = size_in.read();
-				size_out.write(size);
-			}
-			if (i >= size)
+		//pass all data until size information arrives
+		c_size_t written;
+		buffer_spill: for (written = 0; written < MAX_FILE_SIZE ; written += 8){
+			while(in.empty() && size_in.empty());
+
+			if (!size_in.empty())
 				break;
 
-			if (!in.empty()){
-				out.write(in.read());
-				i += 8;
-			}
+			out.write(in.read());
+		}
+
+
+		//write the rest
+		c_size_t size = size_in.read();
+		size_out.write(size);
+		write_rest_data: for ( ; written < MAX_FILE_SIZE ; written += 8){
+			if (written >= size)
+				break;
+
+			out.write(in.read());
 		}
 
 		end = end_in.read();
@@ -99,11 +104,11 @@ void top(hls::stream< ap_uint< 64 > > &in,
 //#pragma HLS INTERFACE mode=ap_ctrl_chain port=return
 	//definitions
 	//buffer
-	hls::stream< ap_uint< 64 > , MAX_BIG_CHUNK_SIZE/64> 	in_buffer("in_buffer");
-	hls::stream< c_size_t , 2> 								size_in_buffer("size_in_buffer");
+	hls::stream< ap_uint< 64 > , W_DATA/64> 				in_buffer("in_buffer");
+	hls::stream< c_size_t , 2 > 							size_in_buffer("size_in_buffer");
 	hls::stream< bool , 2> 									end_in_buffer("end_in");
 
-	hls::stream< ap_uint< 64 > , MAX_BIG_CHUNK_SIZE/64> 	out_buffer("out_buffer");
+	hls::stream< ap_uint< 64 > , W_DATA/64 > 				out_buffer("out_buffer");
 	hls::stream< c_size_t , 2 > 							size_out_buffer("size_out_buffer");
 	hls::stream< bool , 2 > 								end_out_buffer("end_out_buffer");
 
@@ -121,7 +126,7 @@ void top(hls::stream< ap_uint< 64 > > &in,
 
 	//splitter
 	hls::stream< bc_packet , 2 > 							pre_refine_meta_split[NP_REFINE];
-	hls::stream< c_data_t , SC_STREAM_SIZE > 				pre_refine_data_split[NP_REFINE];
+	hls::stream< c_data_t , 8 > 							pre_refine_data_split[NP_REFINE];
 	hls::stream< bool, 2 > 									pre_refine_end_split[NP_REFINE];
 
 	//merger
