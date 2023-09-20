@@ -136,7 +136,7 @@ static void check_input(
 	c_data_t data_in_buffer[SC_STREAM_SIZE];
 #pragma HLS ARRAY_PARTITION variable=data_in_buffer type=complete
 
-	if (!end && !end_in.empty()){
+	if (!end_in.empty()){
 		if (!end_in.read()){
 			read_in(meta_in, data_in, data_in_buffer, read_current);
 
@@ -177,11 +177,7 @@ static void check_input(
 				write_buffer(read_current, data_in_buffer, buffer, buffer_counter);
 			}
 		} else {
-			if (file_length != 0)
-				size_out.write(file_length);
-
 			end = true;
-			end_out.write(true);
 		}
 	}
 }
@@ -205,8 +201,8 @@ void reorder(hls::stream< sc_packet > &meta_in,
 #pragma HLS BIND_STORAGE variable=buffer type=ram_2p
 
 	//initialize buffer
-	for (int i = 0 ; i < BUFFER_SIZE_1 ; i++ ){
-		for (int j  = 0 ; j < BUFFER_SIZE_2 ; j++ ){
+	init_buffer_1: for (int i = 0 ; i < BUFFER_SIZE_1 ; i++ ){
+		init_buffer_2: for (int j  = 0 ; j < BUFFER_SIZE_2 ; j++ ){
 			buffer[i][j].valid = false;
 		}
 	}
@@ -223,4 +219,7 @@ void reorder(hls::stream< sc_packet > &meta_in,
 
 		check_buffer(l1_pos, l2_pos, buffer, buffer_counter, data_out);
 	}
+
+	end_out.write(true);
+	size_out.write(file_length);
 }
