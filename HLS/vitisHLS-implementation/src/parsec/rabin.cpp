@@ -80,11 +80,11 @@ void rabinseg_in_stream(hls::stream< ap_uint< 8 > > &in,
 	c_size_t size_buffer = 0;
 	c_size_t bc_size_buffer = bc_size;
 
-	int i = NWINDOW;
+	int i;
 	unsigned h = 0;
 	unsigned x;
 
-	init_buffer: for (int i = 0; i < NWINDOW; i++) {
+	init_buffer: for (i = 0; i < NWINDOW; i++) {
 #pragma HLS PIPELINE II=1
 		if (bc_size_buffer == 0) //end of big chunk
 			break;
@@ -103,9 +103,9 @@ void rabinseg_in_stream(hls::stream< ap_uint< 8 > > &in,
 		h ^= rabintab[x];
 	}
 
-    segment_stream: for (int i = 0 ; i < MAX_SMALL_CHUNK_SIZE/8 ; i++ ) {
+    segment_stream: for ( ; i < MAX_SMALL_CHUNK_SIZE/8 ; i++ ) {
 #pragma HLS PIPELINE II=2
-    	if ((h & RabinMask) == 0 || bc_size_buffer == 0)
+    	if ((h & RabinMask) == 0 || bc_size_buffer <= 0)
     		break;
 
         x = buffer.read();
@@ -125,7 +125,7 @@ void rabinseg_in_stream(hls::stream< ap_uint< 8 > > &in,
     }
 
 	//flush the buffer
-	for (int i = 0 ; i < NWINDOW ; i++){
+	for (i = 0 ; i < NWINDOW ; i++){
 		if (buffer.empty())
 			break;
 		buffer.read();
