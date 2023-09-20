@@ -78,7 +78,7 @@ static void fill_buffer(hls::stream< ap_uint< 8 > > &in,
 	c_size_t file_length_buffer = file_length;
 	c_size_t read_counter = 0;
 	fill_buffer_loop: for (int i = 0 ;  i < MIN_BC_SIZE/8 ; i++){
-		if (file_length_buffer == 0){
+		if (file_length_buffer <= 0){
 			break;
 		}
 		out.write(in.read());

@@ -53,7 +53,7 @@ void bram(bool wren, bool rden,
 
 	find_memory: for (int i = 0 ; i < SC_STREAM_SIZE/BRAM_DEPTH; i++){
 #pragma HLS LOOP_FLATTEN off
-		if (i >= hls::ceil((double) size.to_long()*8 / W_DATA / BRAM_DEPTH))
+		if (i * BRAM_DEPTH >= hls::ceil((double) size.to_long()*8 / W_DATA))
 			break;
 
 		find_addr: while (buffer[addr].hash != 0 && buffer[addr].hash != hash){

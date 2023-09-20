@@ -210,7 +210,7 @@ void reorder(hls::stream< sc_packet > &meta_in,
 	//reorder loop
 	bool end = false, init = true;
 	int buffer_counter = 0;
-	reorder_loop: while(!end || buffer_counter != 0) {
+	reorder_loop: while(!end || buffer_counter > 0) {
 #pragma HLS LOOP_TRIPCOUNT min=1 max=1 avg=1
 #pragma HLS PIPELINE off
 #pragma HLS LOOP_FLATTEN off
