@@ -16,7 +16,6 @@ void top_split(
 		hls::stream< sc_packet > out[NP_MERGE],
 		hls::stream< c_data_t > data_out[NP_MERGE],
 		hls::stream< bool > end_out[NP_MERGE]){
-//#pragma HLS INTERFACE port=return mode=ap_none
 	split< sc_packet , c_data_t >(in, data_in, end_in, out, data_out, end_out);
 }
 
