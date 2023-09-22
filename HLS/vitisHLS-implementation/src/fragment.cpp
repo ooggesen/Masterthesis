@@ -177,11 +177,11 @@ void fragment(hls::stream< ap_uint< 64 > > &in,
 		hls::stream< c_data_t > &out,
 		hls::stream< bool > &end_out){
 #pragma HLS DATAFLOW
-	hls::stream< ap_uint< 8 > , MAX_BIG_CHUNK_SIZE/8 > segment_data("segment_data");
+	hls::stream< ap_uint< 8 > , MAX_BIG_CHUNK_SIZE/8 + 1 > segment_data("segment_data");
 	hls::stream< c_size_t , 2 > segment_size("segment_size");
 	hls::stream< bool , 2 > segment_end("segment_end");
 
-	hls::stream< ap_uint< 8 > , MAX_BIG_CHUNK_SIZE/8 > write_data("write_data");
+	hls::stream< ap_uint< 8 > , MAX_BIG_CHUNK_SIZE/8 + 1 > write_data("write_data");
 	hls::stream< c_size_t , 2 > write_size("write_size");
 	hls::stream< bool , 2 > write_end("write_end");
 

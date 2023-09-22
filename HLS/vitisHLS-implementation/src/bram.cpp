@@ -8,6 +8,7 @@
  * @bug
  * 	.if buffer is full, read or write will not exit
  * 	.since no minimum small chunk size is implemented, it might result in a to small bram memory space
+ * 	.bram reads data without checking validity. Calling function must match the content.
  */
 
 

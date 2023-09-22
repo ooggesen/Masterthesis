@@ -105,7 +105,7 @@ void rabinseg_in_stream(hls::stream< ap_uint< 8 > > &in,
 
     segment_stream: for ( ; i < MAX_SMALL_CHUNK_SIZE/8 ; i++ ) {
 #pragma HLS PIPELINE II=2
-    	if ((h & RabinMask) == 0 || bc_size_buffer <= 0)
+    	if ((h & RabinMask) == 0 || bc_size_buffer == 0)
     		break;
 
         x = buffer.read();

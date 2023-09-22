@@ -87,7 +87,7 @@ static void segment_sc_packet(
 			sc_packet sc_meta;
 			sc_meta.l1_pos = bc_meta.l1_pos;
 			sc_meta.l2_pos = l2++;
-			sc_meta.last_l2_chunk = (bc_length <= 0);
+			sc_meta.last_l2_chunk = (bc_length == 0);
 			sc_meta.size = sc_size;
 			//deafult values. Get correctly set by dedup kernel.
 			sc_meta.hash = 0;
@@ -153,11 +153,11 @@ void fragment_refine(hls::stream< bc_packet > &meta_in,
 #pragma HLS DATAFLOW
 
 	hls::stream< bc_packet, 2 > segment_meta("segment_meta");
-	hls::stream< ap_uint< 8 > , MAX_BIG_CHUNK_SIZE/8 > segment_data("segment_data");
+	hls::stream< ap_uint< 8 > , MAX_BIG_CHUNK_SIZE/8  + 1> segment_data("segment_data");
 	hls::stream< bool, 2 > segment_end("segment_end");
 
 	hls::stream< sc_packet, 2 > write_meta("write_meta");
-	hls::stream< ap_uint< 8 > , MAX_SMALL_CHUNK_SIZE/8 * 2 > write_data("write_data");
+	hls::stream< ap_uint< 8 > , MAX_SMALL_CHUNK_SIZE/8 +1 > write_data("write_data");
 	hls::stream< bool , 2 > write_end("write_end");
 
 	convert_to_byte_stream(meta_in, data_in, end_in, segment_meta, segment_data, segment_end);

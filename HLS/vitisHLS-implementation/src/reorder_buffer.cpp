@@ -27,7 +27,7 @@ void write_buffer(sc_packet &meta, c_data_t data[SC_STREAM_SIZE], buffer_cell bu
 
 
 
-void read_buffer(l1_pos_t &l1, l2_pos_t &l2, buffer_cell buffer[][BUFFER_SIZE_2],
+void read_buffer(l1_pos_t l1, l2_pos_t l2, buffer_cell buffer[][BUFFER_SIZE_2],
 		sc_packet &meta_out, c_data_t *data_out, bool &success, int &counter){
 	buffer_cell *bc = &buffer[l1.to_int() % BUFFER_SIZE_1][l2.to_int() % BUFFER_SIZE_2];
 
