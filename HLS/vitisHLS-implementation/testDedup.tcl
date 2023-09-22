@@ -18,8 +18,8 @@ set data_type(2) unique
 #set data size specifiers
 set data_start 5000
 set data_max 1000000
-set data_mul 1.3034 
-#insert the nth root of (data_max/data_start) above, where n is the ammound of data points per data type
+set data_mul 1.32162 
+#insert the (n-1)th root of (data_max/data_start) above, where n is the ammound of data points per data type
 
 
 #prepare vitis project
@@ -73,7 +73,7 @@ source "./Dedup/solution1/directives.tcl"
 #csim_design -clean
 
 #synthesize the top file
-#csynth_design
+csynth_design
 
 #run cosims for data generation
 set result_dir [file join $result_dir $system_time]
