@@ -104,16 +104,16 @@ void top(hls::stream< ap_uint< 64 > > &in,
 //#pragma HLS INTERFACE mode=ap_ctrl_chain port=return
 	//definitions
 	//buffer
-	hls::stream< ap_uint< 64 > , W_DATA/64> 				in_buffer("in_buffer");
+	hls::stream< ap_uint< 64 > , W_DATA/64 * 2> 			in_buffer("in_buffer");
 	hls::stream< c_size_t , 2 > 							size_in_buffer("size_in_buffer");
 	hls::stream< bool , 2> 									end_in_buffer("end_in");
 
-	hls::stream< ap_uint< 64 > , W_DATA/64 > 				out_buffer("out_buffer");
+	hls::stream< ap_uint< 64 > , W_DATA/64 * 2> 			out_buffer("out_buffer");
 	hls::stream< c_size_t , 2 > 							size_out_buffer("size_out_buffer");
 	hls::stream< bool , 2 > 								end_out_buffer("end_out_buffer");
 
 	hls::stream< bc_packet, 2 > 							post_fragment_meta_buffer("post_fragment_meta_buffer");
-	hls::stream< c_data_t , 4 > 							post_fragment_data_buffer("post_fragment_data_buffer");
+	hls::stream< c_data_t , 8 > 							post_fragment_data_buffer("post_fragment_data_buffer");
 	hls::stream< bool , 2 > 								post_fragment_end_buffer("post_fragment_end_buffer");
 
 	hls::stream< sc_packet, 2 > 							pre_reorder_meta_buffer("pre_reorder_meta_buffer");
