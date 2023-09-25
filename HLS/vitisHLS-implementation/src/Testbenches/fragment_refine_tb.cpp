@@ -17,7 +17,7 @@ int fragment_refine_tb(){
 	cout << "**********************************" << endl;
 	cout << "  Testing fragment refine kernel  " << endl;
 	cout << "**********************************" << endl;
-
+	int errors = 0;
 	//Generating input data
 	cout << "Generating " << NUM_TESTS << " big chunk for segmentation with the fragment refine kernel." << endl << endl;
 
@@ -30,16 +30,36 @@ int fragment_refine_tb(){
 	//running
 	cout << "Running the fragment refine kernel." << endl;
 
-	hls::stream< sc_packet > out_meta("out_meta");
-	hls::stream< c_data_t > out_data("out_data");
-	hls::stream< bool > out_end("out_end");
-	fragment_refine(test_meta, test_data, test_end, out_meta, out_data, out_end);
+	hls::stream< sc_packet > out_meta("out_meta"), buffer_meta("buffer_meta");
+	hls::stream< c_data_t > out_data("out_data"), buffer_data("buffer_data");
+	hls::stream< bool > out_end("out_end"), buffer_end("buffer_end");
+	while(true){
+		fragment_refine(test_meta, test_data, test_end, buffer_meta, buffer_data, buffer_end);
 
+		if (buffer_end.read()){
+			out_end.write(true);
+
+			break;
+		}
+		out_end.write(false);
+
+		sc_packet meta = buffer_meta.read();
+		out_meta.write(meta);
+
+		for (int i = 0 ; i < meta.size ; i += W_DATA / 8){
+			out_data.write(buffer_data.read());
+		}
+
+		if(!buffer_meta.empty() || !buffer_data.empty() || !buffer_end.empty()){
+			cerr << "Kernel returned more than one small chunk." << endl;
+			errors++;
+		}
+	}
 	cout << "Test run finished." << endl << endl;
 
 	//Checking
 	cout << "Checking the results." << endl;
-	int errors = 0;
+
 	unsigned long long l1 = 0, l2 = 0;
 	unsigned long long total_l1_size = 0;
 	while (!compare_meta.empty()){
@@ -60,7 +80,7 @@ int fragment_refine_tb(){
 			cout << "checking small chunk nr.: " << l2 << "-----" << endl;
 
 			if (out_end.read()){
-				cout << "Wrong end flag." << endl;
+				cerr << "Wrong end flag." << endl;
 				errors++;
 			}
 
@@ -69,7 +89,7 @@ int fragment_refine_tb(){
 			//Checking metadata
 			if(current_sc.l1_pos != l1 ||
 					current_sc.l2_pos != l2){
-				cout << "Wrong positional arguments." << endl;
+				cerr << "Wrong positional arguments." << endl;
 				errors++;
 			}
 
@@ -89,7 +109,7 @@ int fragment_refine_tb(){
 						compare_buffer.range(7 + 8*j, 8*j) = 0;
 				}
 				if (sc_buffer != compare_buffer){
-					cout << "Wrong data detected, at transmission of " << (double) i/hls::ceil((double) current_sc.size.to_long()*8 / W_DATA)*100 << "% of small chunk." << endl;
+					cerr << "Wrong data detected, at transmission of " << (double) i/hls::ceil((double) current_sc.size.to_long()*8 / W_DATA)*100 << "% of small chunk." << endl;
 					//cout << "Expected: " << bc_buffer.range(7 + 8*bc_pos, 8*bc_pos) << ", received: " << sc_buffer.range(7 + 8*j, 8*j) << endl;
 					errors++;
 				}
@@ -98,7 +118,7 @@ int fragment_refine_tb(){
 
 		//Checking integrity of big chunk after fragmentation
 		if (total_l1_size != current_bc.size.to_long()){
-			cout << "Data was lost in segmentation process. Small chunks summed up to " << total_l1_size << ", but expected " << current_bc.size.to_long() << endl;
+			cerr << "Data was lost in segmentation process. Small chunks summed up to " << total_l1_size << ", but expected " << current_bc.size.to_long() << endl;
 			errors++;
 		}
 
@@ -107,13 +127,13 @@ int fragment_refine_tb(){
 	}
 
 	if(!out_end.read()){
-		cout << "Wrong  end flag at end of process." << endl;
+		cerr << "Wrong  end flag at end of process." << endl;
 		errors++;
 	}
 
 
 	if (!compare_data.empty()){
-		cout << "Data lost at end of file." << endl;
+		cerr << "Data lost at end of file." << endl;
 		errors++;
 	}
 
