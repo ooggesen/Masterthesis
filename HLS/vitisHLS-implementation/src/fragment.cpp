@@ -28,12 +28,21 @@ static void write_out(
 		hls::stream< c_data_t > &data_out,
 		hls::stream< bool > &end_out){
 
-	bool end = end_in.read();
-	l1_pos_t l1 = 0;
+	static bool init_write = true;
+	static l1_pos_t l1;
 
-	while(!end){
-#pragma HLS LOOP_TRIPCOUNT min = 1 max = 1 avg = 1
-#pragma HLS LOOP_FLATTEN off
+	if (init_write){
+		l1 = 0;
+		init_write = false;
+	}
+
+	for (int i = 0 ; i < NP_REFINE ; i++){
+		if (end_in.read()){
+			end_out.write(true);
+			init_write = true;
+			return;
+		}
+
 		end_out.write(false);
 
 		//write meta data
@@ -45,7 +54,6 @@ static void write_out(
 
 		//write data
 		write_chunk: for (int i = 0 ; i < BC_STREAM_SIZE ; i++){
-#pragma HLS LOOP_FLATTEN off
 			if (i >= hls::ceil((double) chunk_length.to_long()*8 / W_DATA))
 				break;
 
@@ -59,11 +67,7 @@ static void write_out(
 			}
 			data_out.write(buffer);
 		}
-
-		end = end_in.read();
 	}
-
-	end_out.write(true);
 }
 
 
@@ -105,30 +109,38 @@ static void segment_bc_packet(
 #pragma HLS BIND_STORAGE variable=rabinwintab type=rom_1p
 	rabininit(rabintab, rabinwintab);
 
-	bool end = end_in.read();
+	static bool end_seg = end_in.read(), init_seg = true;
+	static c_size_t file_length_seg;
+	if(!end_seg){
+		if (init_seg){
+			file_length_seg = size_in.read();
+			init_seg = false;
+		}
 
-	while(!end){
-#pragma HLS LOOP_TRIPCOUNT min = 1 max = 1 avg = 1
-#pragma HLS PIPELINE off
-		c_size_t file_length = size_in.read();
+		//write NP_REFINE big chunks
+		segment_file: for (int i = 0 ; i < NP_REFINE ; i++){
+			if (file_length_seg <= 0)
+				break;
 
-		segment_file: while(file_length > 0){
-#pragma HLS LOOP_FLATTEN off
 			end_out.write(false);
 
 			c_size_t bc_size;
-			fill_buffer(in, file_length, bc_size, out);
+			fill_buffer(in, file_length_seg, bc_size, out);
 
 			c_size_t sc_size;
-			rabinseg_in_stream(in, file_length, out, sc_size, rabintab, rabinwintab);
+			rabinseg_in_stream(in, file_length_seg, out, sc_size, rabintab, rabinwintab);
 
 			size_out.write(sc_size + bc_size);
 		}
 
-		end = end_in.read();
+		if (file_length_seg <= 0){
+			if (end_in.read()){
+				end_seg = true;
+				end_out.write(true);
+			} else
+				init_seg = true;
+		}
 	}
-
-	end_out.write(true);
 }
 
 
@@ -141,31 +153,41 @@ static void convert_to_byte_stream(
 		hls::stream< c_size_t > &size_out,
 		hls::stream< bool > &end_out){
 
-	bool end = end_in.read();
+	static bool end_byte = end_in.read(), init_byte = true;
+	static c_size_t file_length_byte;
+	static c_size_t input_counter_byte;
 
-	while(!end){
-#pragma HLS LOOP_FLATTEN off
-#pragma HLS LOOP_TRIPCOUNT min = 1 max = 1 avg = 1
-		c_size_t file_length = size_in.read();
-		end_out.write(false);
-		size_out.write(file_length);
+	if (!end_byte){
+		if (init_byte){
+			file_length_byte = size_in.read();
+			input_counter_byte = 0;
 
-		read_data: for (c_size_t i = 0 ; i < (int) MAX_FILE_SIZE/8 ; i++){
-#pragma HLS PIPELINE II=8
-			if (i*8 >= file_length)
+			end_out.write(false);
+			size_out.write(file_length_byte);
+			init_byte = false;
+		}
+
+		read_data: for (c_size_t i = 0 ; i < (int) MAX_BIG_CHUNK_SIZE / 64 * 2 ; i++){
+			if (input_counter_byte >= file_length_byte || out.full())
 				break;
 
 			ap_uint< 64 > current_long = in.read();
 			convert_to_byte: for (int j = 0 ; j < 8 ; j++){
-				if (i*8 + j < file_length)
+				if (input_counter_byte + j < file_length_byte)
 					out.write(current_long.range(7 + 8*j, 8*j));
 			}
+
+			input_counter_byte += 8;
 		}
 
-		end = end_in.read();
+		if (input_counter_byte >= file_length_byte){
+			if (end_in.read()){
+				end_byte = true;
+				end_out.write(true);
+			} else
+				init_byte = true;
+		}
 	}
-
-	end_out.write(true);
 }
 
 
@@ -177,13 +199,13 @@ void fragment(hls::stream< ap_uint< 64 > > &in,
 		hls::stream< c_data_t > &out,
 		hls::stream< bool > &end_out){
 #pragma HLS DATAFLOW
-	hls::stream< ap_uint< 8 > , MAX_BIG_CHUNK_SIZE/8 + 1 > segment_data("segment_data");
-	hls::stream< c_size_t , 2 > segment_size("segment_size");
-	hls::stream< bool , 2 > segment_end("segment_end");
+	static hls::stream< ap_uint< 8 > , MAX_BIG_CHUNK_SIZE/8 * 2 + 1 > 			segment_data("segment_data");
+	static hls::stream< c_size_t , 2 > 										segment_size("segment_size");
+	static hls::stream< bool , 2 > 											segment_end("segment_end");
 
-	hls::stream< ap_uint< 8 > , MAX_BIG_CHUNK_SIZE/8 + 1 > write_data("write_data");
-	hls::stream< c_size_t , 2 > write_size("write_size");
-	hls::stream< bool , 2 > write_end("write_end");
+	hls::stream< ap_uint< 8 > , MAX_BIG_CHUNK_SIZE/8 + 1 > 				write_data("write_data");
+	hls::stream< c_size_t , 2 > 										write_size("write_size");
+	hls::stream< bool , 2 > 											write_end("write_end");
 
 	convert_to_byte_stream(in, size_in, end_in, segment_data, segment_size, segment_end);
 

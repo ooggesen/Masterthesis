@@ -3,6 +3,11 @@
  *
  * @brief Contains fragment testbench
  *
+ * TO USE THIS TESTBENCH with the csim, declare the following streams as static:
+ * 	segment_meta
+ * 	segment_data
+ * 	segment_end
+ *
  * @author Ole Oggesen
  * @bug No known bugs
  */
@@ -17,6 +22,7 @@ int fragment_tb(){
 	cout << "**********************************" << endl;
 	cout << "     Testing fragment kernel      " << endl;
 	cout << "**********************************" << endl;
+	int errors = 0;
 
 	//Generating input data
 	cout << "Generating enough data for at least " << NUM_TESTS << " big chunk segments for the coarse grained fragment kernel." << endl << endl;
@@ -30,16 +36,39 @@ int fragment_tb(){
 	//Running
 	cout << "Running the fragment kernel." << endl << endl;
 
-	hls::stream< bc_packet > out_meta("out_meta");
-	hls::stream< c_data_t > out_data("out_data");
-	hls::stream< bool > out_end("out_end");
-	fragment(test_data, test_size, test_end, out_meta, out_data, out_end);
+	hls::stream< bc_packet > out_meta("out_meta"), buffer_meta("buffer_meta");
+	hls::stream< c_data_t > out_data("out_data"), buffer_data("buffer_data");
+	hls::stream< bool > out_end("out_end"), buffer_end("buffer_end");
+	bool end = false;
+	while(!end){
+		fragment(test_data, test_size, test_end, buffer_meta, buffer_data, buffer_end);
+
+		for (int i = 0 ; i < NP_REFINE ; i ++){
+			if (buffer_end.read()){
+				out_end.write(true);
+
+				end = true;
+				break;
+			}
+			out_end.write(false);
+
+			bc_packet meta = buffer_meta.read();
+			out_meta.write(meta);
+
+			for (int i = 0 ; i < meta.size ; i += W_DATA / 8){
+				out_data.write(buffer_data.read());
+			}
+		}
+
+		if(!buffer_meta.empty() || !buffer_data.empty() || !buffer_end.empty()){
+			cerr << "WARNING: Kernel returned more than two small chunk." << endl;
+			errors++;
+		}
+	}
 
 	//Checking
 	cout << "Checking the results." << endl << endl;
-	int errors = 0;
 	l1_pos_t l1 = 0;
-	bool end;
 	c_size_t file_length = 0;
 	while(!out_meta.empty()){
 		cout << "Checking the " << l1 << "th big chunk.-----" << endl;
@@ -48,7 +77,7 @@ int fragment_tb(){
 		end = out_end.read();
 
 		if (end){
-			cout << "Wrong end flag." << endl;
+			cerr << "Wrong end flag." << endl;
 			errors++;
 		}
 
@@ -57,16 +86,16 @@ int fragment_tb(){
 
 		//Check meta data
 		if (current_bc.size == 0){
-			cout << "Segmented an empty big chunk." << endl;
+			cerr << "Segmented an empty big chunk." << endl;
 			errors++;
 		} else if (current_bc.size < BIG_CHUNK_SIZE/8) {
-			cout << "Big chunk smaller than minimum amount. Is ok if at end of file." << endl;
+			cerr << "Big chunk smaller than minimum amount. Is ok if at end of file." << endl;
 		}
 
 		file_length += current_bc.size;
 
 		if (current_bc.l1_pos != l1){
-			cout << "Wrong positional argument." << endl;
+			cerr << "Wrong positional argument." << endl;
 			errors++;
 		}
 
@@ -84,9 +113,9 @@ int fragment_tb(){
 				}
 			}
 			if (c_out_buffer != c_compare_buffer){
-				cout << "Wrong data detected, at transmission of " << (double) i/hls::ceil((double) current_bc.size.to_long()*8 / W_DATA)*100 << "% of big chunk." << endl;
-				cout << "expected: " << hex << c_compare_buffer << endl;
-				cout << "received: " << hex << c_out_buffer << endl << endl;
+				cerr << "Wrong data detected, at transmission of " << (double) i/hls::ceil((double) current_bc.size.to_long()*8 / W_DATA)*100 << "% of big chunk." << endl;
+				cerr << "expected: " << hex << c_compare_buffer << endl;
+				cerr << "received: " << hex << c_out_buffer << endl << endl;
 				errors++;
 			}
 		}
@@ -95,24 +124,24 @@ int fragment_tb(){
 	}
 
 	if (file_length != compare_size.read()){
-		cout << "Data lost along pipeline. Size mismatch." << endl;
+		cerr << "Data lost along pipeline. Size mismatch." << endl;
 		errors++;
 	}
 
 	if (!out_end.read()){
-		cout << "Wrong end flag at end of stream." << endl;
+		cerr << "Wrong end flag at end of stream." << endl;
 		errors++;
 	}
 
 	if (!compare_data.empty()){
-		cout << "Data lost along pipeline. Data not read in." << endl;
+		cerr << "Data lost along pipeline. Data not read in." << endl;
 		errors++;
 	}
 
 	if (errors == 0){
-		cout << "All tests passed." << endl;
+		cerr << "All tests passed." << endl;
 	} else {
-		cout << "Test failed." << endl;
+		cerr << "Test failed." << endl;
 	}
 
 	return errors;

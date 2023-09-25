@@ -13,6 +13,7 @@
 //user includes
 #include "bus_def.hpp"
 #include "parsec/rabin.hpp"
+#include "top.hpp"
 //vitis hls includes
 #include "hls_stream.h"
 #define __gmp_const const
