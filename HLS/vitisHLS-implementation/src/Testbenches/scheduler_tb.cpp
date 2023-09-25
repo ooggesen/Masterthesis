@@ -16,7 +16,7 @@ int split_tb(){
 	cout << "******************************************************" << endl;
 	cout << "     Testing split scheduler from the top module      " << endl;
 	cout << "******************************************************" << endl;
-
+	int errors = 0;
 	int num_tests_total = NUM_TESTS*35;
 	cout << "Generating enough data for at least " << num_tests_total << " small chunk segments." << endl << endl;
 
@@ -29,15 +29,49 @@ int split_tb(){
 
 	//splitter
 	cout << "Running the scheduler..." << endl;
-	hls::stream< sc_packet > 	meta_split[NP_MERGE];
-	hls::stream< c_data_t > 	data_split[NP_MERGE];
-	hls::stream< bool > 		end_split[NP_MERGE];
+	hls::stream< sc_packet > 	meta_split[NP_MERGE], meta_buffer[NP_MERGE];
+	hls::stream< c_data_t > 	data_split[NP_MERGE], data_buffer[NP_MERGE];
+	hls::stream< bool > 		end_split[NP_MERGE], end_buffer[NP_MERGE];
 
-	top_split(test_meta, test_data, test_end, meta_split, data_split, end_split);
+	bool end = false;
+	while(!end){
+		top_split(test_meta, test_data, test_end, meta_buffer, data_buffer, end_buffer);
+
+		for (int i = 0 ; i < NP_MERGE ; i++){
+			if (end_buffer[i].read()){
+				end_split[i].write(true);
+
+				end = true;
+				break;
+			}
+			end_split[i].write(false);
+
+			sc_packet meta = meta_buffer[i].read();
+			meta_split[i].write(meta);
+
+			for (int d = 0 ; d < meta.size ; d += W_DATA / 8){
+				data_split[i].write(data_buffer[i].read());
+			}
+
+			if(!meta_buffer[i].empty() || !data_buffer[i].empty()){
+				cerr << "Kernel returned more than one small chunk." << endl;
+				errors++;
+			}
+		}
+	}
+
+	for (int i = 0 ; i < NP_MERGE ; i++){
+		if (!end_buffer[i].empty()){
+			end_split[i].write(true);
+
+			if (!end_buffer[i].read()){
+				cerr << "Wrong end flag." << endl;
+			}
+		}
+	}
 
 	cout << "Finished run." << endl << endl << "Checking output" << endl;
 
-	int errors = 0;
 	for ( int num_test = 0 ; num_test < num_tests_total ; num_test++ ){
 		bool end = end_split[num_test % NP_MERGE].read();
 		sc_packet meta = meta_split[num_test % NP_MERGE].read();
@@ -82,7 +116,7 @@ int merge_tb(){
 	cout << "******************************************************" << endl;
 	cout << "     Testing the schedulers from the top module       " << endl;
 	cout << "******************************************************" << endl;
-
+	int errors = 0;
 	int num_tests_total = NUM_TESTS*35;
 	cout << "Generating enough data for at least " << num_tests_total << " small chunk segments." << endl << endl;
 
@@ -99,18 +133,44 @@ int merge_tb(){
 	hls::stream< c_data_t > 	data_split[NP_MERGE];
 	hls::stream< bool > 		end_split[NP_MERGE];
 
-	hls::stream< sc_packet > 	meta_unified("meta_unified");
-	hls::stream< c_data_t > 	data_unified("data_unified");
-	hls::stream< bool > 		end_unified("end_unified");
+	hls::stream< sc_packet > 	meta_unified("meta_unified"), meta_buffer("meta_buffer");
+	hls::stream< c_data_t > 	data_unified("data_unified"), data_buffer("data_buffer");
+	hls::stream< bool > 		end_unified("end_unified"), end_buffer("end_buffer");
 
 	//assumes split workes fine, tested in separate testbench
-	split<sc_packet, c_data_t>(test_meta, test_data, test_end, meta_split, data_split, end_split);
+	bool end = false;
+	while(!end){
+		split<sc_packet, c_data_t>(test_meta, test_data, test_end, meta_split, data_split, end_split);
+		top_merge(meta_split, data_split, end_split, meta_buffer, data_buffer, end_buffer);
 
-	top_merge(meta_split, data_split, end_split, meta_unified, data_unified, end_unified);
+		for (int i = 0 ; i < NP_REFINE ; i ++){
+			if (end_buffer.empty())
+				continue;
+
+			if (end_buffer.read()){
+				end_unified.write(true);
+
+				end = true;
+				break;
+			}
+			end_unified.write(false);
+
+			sc_packet meta = meta_buffer.read();
+			meta_unified.write(meta);
+
+			for (int i = 0 ; i < meta.size ; i += W_DATA / 8){
+				data_unified.write(data_buffer.read());
+			}
+		}
+
+		if(!meta_buffer.empty() || !data_buffer.empty() || !end_buffer.empty()){
+			cerr << "WARNING: Kernel returned more than two small chunk." << endl;
+			errors++;
+		}
+	}
 
 	cout << "Finished run." << endl << endl << "Checking output" << endl;
 
-	int errors = 0;
 	for (int num_test = 0 ; num_test < num_tests_total ; num_test++){
 		sc_packet meta = meta_unified.read();
 		bool end = end_unified.read();

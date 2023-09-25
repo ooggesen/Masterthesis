@@ -28,15 +28,10 @@ void merge(hls::stream< M > meta_in[NP_MERGE],
 		hls::stream< M > &meta_out,
 		hls::stream< D > &data_out,
 		hls::stream< bool > &end_out){
-	bool end = false;
-	bool end_np[NP_MERGE];
+	static bool end = false;
+	static bool end_np[NP_MERGE];
 
-	init_end_buffer: for (int i = 0 ; i < NP_MERGE ; i++){
-		end_np[i] = false;
-	}
-
-	merger: while(!end){
-#pragma HLS LOOP_FLATTEN  off
+	if (!end){
 		end = true;
 		round_robin: for (int n = 0 ; n < NP_MERGE ; n++){
 #pragma HLS LOOP_FLATTEN off
@@ -57,14 +52,15 @@ void merge(hls::stream< M > meta_in[NP_MERGE],
 
 					D buffer; //dummy buffer for length info
 					merge_data: for (int i = 0 ; i < hls::ceil((double) meta_data.size.to_long()*8 / buffer.length()) ; i++){
-#pragma HLS PIPELINE II=6
 						data_out.write(data_in[n].read());
 					}
 				}
 			}
 		}
 	}
-	end_out.write(true);
+
+	if (end)
+		end_out.write(true);
 }
 
 
@@ -82,28 +78,28 @@ void split(hls::stream< M > &meta_in,
 		hls::stream< M > meta_out[NP_MERGE],
 		hls::stream< D > data_out[NP_MERGE],
 		hls::stream< bool > end_out[NP_MERGE]){
-	int n = 0;
-	bool end = end_in.read();
+	static bool end = false, send_end = true;
 
-	splitter: while(!end){
-#pragma HLS LOOP_FLATTEN off
-		end_out[n].write(false);
+	if (!end && !end_in.empty()){
+		for (int n = 0 ; n < NP_MERGE ; n++){
+			end = end_in.read();
+			if (end){
+				send_end_flag: for (int i = 0 ; i < NP_MERGE ; i++){
+					end_out[i].write(true);
+				}
+				break;
+			}
 
-		M meta_data = meta_in.read();
-		meta_out[n].write(meta_data);
+			end_out[n].write(false);
 
-		D buffer;
-		for (int i = 0 ; i < hls::ceil((double)meta_data.size.to_long()*8 / buffer.length()) ; i++){
-#pragma HLS PIPELINE II=6
-			data_out[n].write(data_in.read());
+			M meta_data = meta_in.read();
+			meta_out[n].write(meta_data);
+
+			D buffer;
+			for (c_size_t i = 0 ; i < meta_data.size ; i += buffer.length() / 8){
+				data_out[n].write(data_in.read());
+			}
 		}
-		n = ++n % NP_MERGE;
-
-		end = end_in.read();
-	}
-
-	send_end_flag: for (int i = 0 ; i < NP_MERGE ; i++){
-		end_out[i].write(true);
 	}
 }
 
