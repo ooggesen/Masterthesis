@@ -20,6 +20,9 @@ static void write_out(
 		hls::stream< sc_packet > &meta_out,
 		hls::stream< c_data_t > &out,
 		hls::stream< bool > &end_out){
+	if (end_in.empty())
+		return;
+
 	if (end_in.read()){
 		end_out.write(true);
 		return;
@@ -64,12 +67,21 @@ static void segment_sc_packet(
 	unsigned rabintab[256], rabinwintab[256];
 	rabininit(rabintab, rabinwintab);
 
-	static bool end_seg = end_in.read(), init_seg = true;
+	static bool end_seg, init_seg = true;
 	static c_size_t bc_size =0;
 	static l2_pos_t l2 = 0;
 	static bc_packet meta_seg;
 	if(!end_seg){
 		if (init_seg){
+			if (end_in.empty())
+				return;
+
+			if (end_in.read()){
+				end_out.write(true);
+				end_seg = true;
+				return;
+			}
+
 			meta_seg = meta_in.read();
 			bc_size = meta_seg.size;
 			init_seg = false;
@@ -96,12 +108,7 @@ static void segment_sc_packet(
 		}
 
 		if (bc_size == 0){
-			if (end_in.read()){
-				end_out.write(true);
-				end_seg = true;
-			} else{
-				init_seg = true;
-			}
+			init_seg = true;
 		}
 	}
 }
@@ -118,12 +125,21 @@ static void convert_to_byte_stream(
 		hls::stream< ap_uint< 8 > > &out,
 		hls::stream< bool > &end_out){
 
-	static bool end_byte = end_in.read(), init_byte = true;
+	static bool end_byte, init_byte = true;
 	static bc_packet meta_byte;
 	static c_size_t input_counter_byte;
 
 	if (!end_byte){
 		if (init_byte){
+			if (end_in.empty())
+				return;
+
+			if (end_in.read()){
+				end_byte = true;
+				end_out.write(true);
+				return;
+			}
+
 			meta_byte = meta_in.read();
 			input_counter_byte = 0;
 
@@ -146,11 +162,7 @@ static void convert_to_byte_stream(
 		}
 
 		if (input_counter_byte >= meta_byte.size){
-			if (end_in.read()){
-				end_byte = true;
-				end_out.write(true);
-			} else
-				init_byte = true;
+			init_byte = true;
 		}
 	}
 }
@@ -166,12 +178,12 @@ void fragment_refine(hls::stream< bc_packet > &meta_in,
 #pragma HLS DATAFLOW
 
 	static hls::stream< bc_packet, 2 > 								segment_meta("segment_meta");
-	static hls::stream< ap_uint< 8 > , MAX_BIG_CHUNK_SIZE/8  + 1> 	segment_data("segment_data");
+	static hls::stream< ap_uint< 8 > , MAX_BIG_CHUNK_SIZE/8 > 	segment_data("segment_data");
 	static hls::stream< bool, 2 > 									segment_end("segment_end");
 
 	hls::stream< sc_packet, 2 > 									write_meta("write_meta");
-	hls::stream< ap_uint< 8 > , MAX_SMALL_CHUNK_SIZE/8 +1 >			write_data("write_data");
-	static hls::stream< bool , 2 > 										write_end("write_end");
+	hls::stream< ap_uint< 8 > , MAX_SMALL_CHUNK_SIZE/8 >			write_data("write_data");
+	static hls::stream< bool , 2 > 									write_end("write_end");
 
 	convert_to_byte_stream(meta_in, data_in, end_in, segment_meta, segment_data, segment_end);
 
