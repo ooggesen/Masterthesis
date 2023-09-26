@@ -14,6 +14,7 @@
 //user includes
 #include "bus_def.hpp"
 #include "bram.hpp"
+#include "top.hpp"
 //includes from vitis libraries
 #include "hls_stream.h"
 #include "sha1.hpp"

@@ -112,8 +112,6 @@ static void check_duplicate(
 
 static void write_out(hls::stream< sc_packet > &meta_in,
 		hls::stream< c_data_t > &data_in,
-		hls::stream< bool > &end_in,
-		bool &end,
 		hls::stream< sc_packet > &meta_out,
 		hls::stream< c_data_t > &data_out,
 		hls::stream< bool > &end_out){
@@ -128,9 +126,6 @@ static void write_out(hls::stream< sc_packet > &meta_in,
 			break;
 		data_out.write(data_in.read());
 	}
-
-	//set the end flag for the while loop
-	end = end_in.read();
 }
 
 
@@ -156,24 +151,28 @@ void dedup(hls::stream< sc_packet > &meta_in,
 	hls::stream< bool , 2 > sha1_end_digest("sha1_end_digest");
 
 	//initialize buffer
-	bram_packet read;
-	bram(true, true, read, read, 0);
-
-	bool end = end_in.read();
-
-	dedup_loop: while (!end){
-#pragma HLS LOOP_TRIPCOUNT min=1 max=1 avg=1
-		read_in(meta_in, data_in, bram_meta, bram_data, sha1_msg, sha1_len, sha1_end_len);
-
-		//calculate sha1 hash
-		xf::security::sha1< 32 >(sha1_msg, sha1_len, sha1_end_len, sha1_digest, sha1_end_digest);
-
-		//check for duplicate
-		check_duplicate(bram_meta, bram_data, sha1_digest, sha1_end_digest, write_out_meta, write_out_data);
-
-		//pass to next stage and update end flag
-		write_out(write_out_meta, write_out_data, end_in, end, meta_out, data_out, end_out);
+	static bool init = true;
+	if (init){
+		bram_packet read;
+		bram(true, true, read, read, 0);
+		init = false;
 	}
 
-	end_out.write(true);
+	if(end_in.empty())
+		return;
+	if(end_in.read()){
+		end_out.write(true);
+		return;
+	}
+
+	read_in(meta_in, data_in, bram_meta, bram_data, sha1_msg, sha1_len, sha1_end_len);
+
+	//calculate sha1 hash
+	xf::security::sha1< 32 >(sha1_msg, sha1_len, sha1_end_len, sha1_digest, sha1_end_digest);
+
+	//check for duplicate
+	check_duplicate(bram_meta, bram_data, sha1_digest, sha1_end_digest, write_out_meta, write_out_data);
+
+	//pass to next stage and update end flag
+	write_out(write_out_meta, write_out_data, meta_out, data_out, end_out);
 }
