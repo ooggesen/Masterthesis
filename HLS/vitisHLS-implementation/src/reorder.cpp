@@ -69,22 +69,23 @@ static void update_pos(bool &last_l2_chunk, l1_pos_t &l1_pos, l2_pos_t &l2_pos){
  * @brief Checks the buffer for the next small chunk according to level 1 and level 2 positions
  */
 static void check_buffer(l1_pos_t &l1, l2_pos_t &l2, buffer_cell buffer[][BUFFER_SIZE_2],
-		int &buffer_counter, bool &buffer_hit, hls::stream< ap_uint< 64 > > &out){
+		int &buffer_counter, hls::stream< ap_uint< 64 > > &out){
 	sc_packet bram_current;
 	c_data_t bram_data_buffer[SC_STREAM_SIZE];
 #pragma HLS ARRAY_PARTITION variable=bram_data_buffer type=complete
 
 	bool chunk_in_buffer;
-	read_buffer(l1, l2, buffer, bram_current, bram_data_buffer, chunk_in_buffer, buffer_counter);
-	if (chunk_in_buffer){
-		buffer_hit = true;
-		//update next chunk positions
-		update_pos(bram_current.last_l2_chunk, l1, l2);
+	for (int i = 0 ; i < NP_REFINE ; i++) {
+		read_buffer(l1, l2, buffer, bram_current, bram_data_buffer, chunk_in_buffer, buffer_counter);
+		if (chunk_in_buffer){
+			//update next chunk positions
+			update_pos(bram_current.last_l2_chunk, l1, l2);
 
-		//write to output stream
-		write_out(bram_current, bram_data_buffer, out);
-	} else {
-		buffer_hit = false;
+			//write to output stream
+			write_out(bram_current, bram_data_buffer, out);
+		} else {
+			break;
+		}
 	}
 }
 
@@ -126,8 +127,6 @@ static void check_input(
 		hls::stream< sc_packet > &meta_in,
 		hls::stream< c_data_t > &data_in,
 		hls::stream< bool > &end_in,
-		bool &init,
-		bool buffer_hit,
 		l1_pos_t &l1,
 		l2_pos_t &l2,
 		c_size_t &file_length,
@@ -140,21 +139,9 @@ static void check_input(
 	c_data_t data_in_buffer[SC_STREAM_SIZE];
 #pragma HLS ARRAY_PARTITION variable=data_in_buffer type=complete
 
-	if (!end_in.empty() && !buffer_hit){
+	if (!end_in.empty()){
 		if (!end_in.read()){
 			read_in(meta_in, data_in, data_in_buffer, read_current);
-
-			//at start of file
-			if (init){
-				init = false;
-				end_out.write(false);
-				write_header(out);
-
-				l1 = 0;
-				l2 = 0;
-
-				file_length = 16; //8 byte checkbit plus 8 byte compress type information
-			}
 
 			//add output length to total file length
 			if (read_current.is_duplicate)
@@ -191,35 +178,43 @@ void reorder(hls::stream< sc_packet > &meta_in,
 		hls::stream< ap_uint< 64 > > &data_out,
 		hls::stream< bool > &end_out){
 	//positions for the next chunk
-	l1_pos_t l1_pos = 0;
-	l2_pos_t l2_pos = 0;
+	static l1_pos_t l1_pos = 0;
+	static l2_pos_t l2_pos = 0;
 	//file length buffer
-	c_size_t file_length = 0;
+	static c_size_t file_length = 0;
 	//buffer for storing chunks
-	buffer_cell buffer[BUFFER_SIZE_1][BUFFER_SIZE_2];
+	static buffer_cell buffer[BUFFER_SIZE_1][BUFFER_SIZE_2];
 #pragma HLS BIND_STORAGE variable=buffer type=ram_2p
 
-	//initialize buffer
-	init_buffer_1: for (int i = 0 ; i < BUFFER_SIZE_1 ; i++ ){
-		init_buffer_2: for (int j  = 0 ; j < BUFFER_SIZE_2 ; j++ ){
-			buffer[i][j].valid = false;
+	static bool end = false, init = true;
+	static int buffer_counter = 0;
+
+	//initializations
+	if (init){
+		init = false;
+		end_out.write(false);
+		write_header(data_out);
+
+		//initialize buffer
+		init_buffer_1: for (int i = 0 ; i < BUFFER_SIZE_1 ; i++ ){
+			init_buffer_2: for (int j  = 0 ; j < BUFFER_SIZE_2 ; j++ ){
+				buffer[i][j].valid = false;
+			}
 		}
+
+		l1_pos = l2_pos = 0;
+
+		file_length = 16; //8 byte checkbit plus 8 byte compress type information in header
 	}
 
-	//reorder loop
-	bool end = false, init = true;
-	int buffer_counter = 0;
-	bool buffer_hit = false;
-	reorder_loop: while(!end || buffer_counter > 0) {
-#pragma HLS LOOP_TRIPCOUNT min=1 max=1 avg=1
-#pragma HLS PIPELINE off
-#pragma HLS LOOP_FLATTEN off
-		check_input(meta_in, data_in, end_in, init, buffer_hit, l1_pos, l2_pos, file_length, buffer, buffer_counter,
-				end, data_out, end_out);
 
-		check_buffer(l1_pos, l2_pos, buffer, buffer_counter, buffer_hit, data_out);
+	check_input(meta_in, data_in, end_in, l1_pos, l2_pos, file_length, buffer, buffer_counter,
+			end, data_out, end_out);
+
+	check_buffer(l1_pos, l2_pos, buffer, buffer_counter, data_out);
+
+	if (end && buffer_counter == 0){
+		end_out.write(true);
+		size_out.write(file_length);
 	}
-
-	end_out.write(true);
-	size_out.write(file_length);
 }
