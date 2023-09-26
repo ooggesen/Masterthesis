@@ -133,8 +133,7 @@ static void check_input(
 		buffer_cell buffer[][BUFFER_SIZE_2],
 		int &buffer_counter,
 		bool &end,
-		hls::stream< ap_uint< 64 > > &out,
-		hls::stream< bool > &end_out){
+		hls::stream< ap_uint< 64 > > &out){
 	sc_packet read_current;
 	c_data_t data_in_buffer[SC_STREAM_SIZE];
 #pragma HLS ARRAY_PARTITION variable=data_in_buffer type=complete
@@ -208,11 +207,13 @@ void reorder(hls::stream< sc_packet > &meta_in,
 	}
 
 
+	//parsing of small chunks
 	check_input(meta_in, data_in, end_in, l1_pos, l2_pos, file_length, buffer, buffer_counter,
-			end, data_out, end_out);
+			end, data_out);
 
 	check_buffer(l1_pos, l2_pos, buffer, buffer_counter, data_out);
 
+	//end of process condition
 	if (end && buffer_counter == 0){
 		end_out.write(true);
 		size_out.write(file_length);

@@ -150,7 +150,7 @@ void dedup(hls::stream< sc_packet > &meta_in,
 	hls::stream< addr_t , 2 > sha1_digest("sha1_digest");
 	hls::stream< bool , 2 > sha1_end_digest("sha1_end_digest");
 
-	//initialize buffer
+	//initialize buffer and input checks
 	static bool init = true;
 	if (init){
 		bram_packet read;
@@ -165,6 +165,7 @@ void dedup(hls::stream< sc_packet > &meta_in,
 		return;
 	}
 
+	//parsing input
 	read_in(meta_in, data_in, bram_meta, bram_data, sha1_msg, sha1_len, sha1_end_len);
 
 	//calculate sha1 hash

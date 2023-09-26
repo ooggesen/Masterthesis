@@ -31,6 +31,7 @@ static void write_out(
 	static bool init_write = true;
 	static l1_pos_t l1;
 
+	//Initialization and checks
 	if (init_write){
 		l1 = 0;
 		init_write = false;
@@ -44,6 +45,8 @@ static void write_out(
 		return;
 	}
 
+
+	//pasing of data
 	end_out.write(false);
 
 	//write meta data
@@ -95,7 +98,9 @@ static void fill_buffer(hls::stream< ap_uint< 8 > > &in,
 }
 
 
-
+/*
+ * @brief segment the byte stream according to rabin fingerprint
+ */
 static void segment_bc_packet(
 		hls::stream< ap_uint< 8 > > &in,
 		hls::stream< c_size_t > &size_in,
@@ -144,7 +149,9 @@ static void segment_bc_packet(
 }
 
 
-
+/*
+ * @brief Convert the c_data input stream into byte stream
+ */
 static void convert_to_byte_stream(
 		hls::stream< ap_uint< 64 > > &in,
 		hls::stream< c_size_t > &size_in,
