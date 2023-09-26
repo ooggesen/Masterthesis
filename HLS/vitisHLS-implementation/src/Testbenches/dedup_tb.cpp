@@ -34,6 +34,7 @@ int dedup_tb()
 	cout << "**********************************" << endl;
 	cout << "       Testing dedup kernel       " << endl;
 	cout << "**********************************" << endl;
+	int errors = 0;
 
 	//Generating input data
 	cout << "Generating " << NUM_TESTS << " tests for the dedup kernel." << endl;
@@ -46,36 +47,59 @@ int dedup_tb()
 	//running dedup
 	cout << "Starting dedup kernel." << endl;
 
-	hls::stream< sc_packet > out_meta("out_meta");
-	hls::stream< c_data_t > out_data("out_data");
-	hls::stream< bool > out_end("out_end");
-	dedup(test_meta, test_data, test_end, out_meta, out_data, out_end);
+	hls::stream< sc_packet > out_meta("out_meta"), buffer_meta("buffer_meta");
+	hls::stream< c_data_t > out_data("out_data"), buffer_data("buffer_data");
+	hls::stream< bool > out_end("out_end"), buffer_end("buffer_end");
+
+	bool end = false;
+	while(!end){
+		dedup(test_meta, test_data, test_end, buffer_meta, buffer_data, buffer_end);
+
+		if (buffer_end.read()){
+			out_end.write(true);
+
+			end = true;
+			break;;
+		}
+		out_end.write(false);
+
+		sc_packet meta = buffer_meta.read();
+		out_meta.write(meta);
+
+		for (int i = 0 ; i < meta.size ; i += W_DATA / 8){
+			out_data.write(buffer_data.read());
+		}
+
+		if(!buffer_meta.empty() || !buffer_data.empty() || !buffer_end.empty()){
+			cerr << "WARNING: Kernel returned more than one small chunk." << endl;
+			errors++;
+		}
+	}
 
 	cout << endl << "Dedup run finished." << endl;
 
 	//check results
-	int errors = 0;
 
 	cout << "Checking results." << endl;
 
 	for (int i = 0 ; i < NUM_TESTS ; i++){
 		if (out_end.read()){
-			cout << "Wrong end flag. Set too early." << endl;
+			cerr << "Wrong end flag. Set too early." << endl;
 			errors++;
 		}
 
 		sc_packet compare = compare_meta.read();
 		sc_packet current = out_meta.read();
 		if (current.is_duplicate != compare.is_duplicate){
-			cout << left << "Wrong prediction:" << endl;
-			cout << left << "compare data: "  << right << setw(2) << compare.is_duplicate << endl;
-			cout << left << "out_stream: " << right << setw(2) << current.is_duplicate << endl;
+			cerr << left << "Wrong prediction:" << endl;
+			cerr << left << "compare data: "  << right << setw(2) << compare.is_duplicate << endl;
+			cerr << left << "out_stream: " << right << setw(2) << current.is_duplicate << endl;
 			++errors;
 		}
 
 		for (int j = 0 ; j < hls::ceil((double) compare.size.to_long()*8 /W_DATA) ; j++){
 			if (compare_data.read() != out_data.read()){
-				cout << "Wrong data output." << endl;
+				cerr << "Wrong data output." << endl;
 				errors++;
 			}
 		}

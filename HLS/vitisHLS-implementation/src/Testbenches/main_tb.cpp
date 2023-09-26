@@ -4,9 +4,10 @@
  * @brief Contains the main function for calling different tb
  *
  * Usage:
- * 	uncomment the testbenches you want to run. Then start simulation.
+ * 	uncomment one testbench you want to run. Then start simulation.
+ * 	The semi dataflow and no dataflow version pipeline stages can only be cosimulated in the top testbench.
  *
- *@author Ole Oggesen
+ * @author Ole Oggesen
  *
  * @bug No module is tested for immediate deduplication of several files without intermediate pause.
  */

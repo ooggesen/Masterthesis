@@ -161,7 +161,7 @@ void generate_test_data(unsigned num_tests,
 				for (int seg = 0 ; seg < W_DATA/8 ; seg++){
 					//write to buffer
 					if (packet.size.to_long() > elem*W_DATA/8 + seg){
-						ap_uint< 32 > random_data = rand() % (1 << 7);
+						ap_uint< 8 > random_data = rand() % (1 << 7);
 						data_buffer[elem].range(7 + 8*seg, 8*seg) = random_data;
 					} else
 						data_buffer[elem].range(7 + 8*seg, 8*seg) = 0;

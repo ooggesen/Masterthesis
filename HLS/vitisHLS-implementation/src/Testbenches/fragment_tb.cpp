@@ -43,25 +43,26 @@ int fragment_tb(){
 	while(!end){
 		fragment(test_data, test_size, test_end, buffer_meta, buffer_data, buffer_end);
 
-		for (int i = 0 ; i < NP_REFINE ; i ++){
-			if (buffer_end.read()){
-				out_end.write(true);
+		if (buffer_end.empty())
+			break;
 
-				end = true;
-				break;
-			}
-			out_end.write(false);
+		if (buffer_end.read()){
+			out_end.write(true);
 
-			bc_packet meta = buffer_meta.read();
-			out_meta.write(meta);
+			end = true;
+			break;
+		}
+		out_end.write(false);
 
-			for (int i = 0 ; i < meta.size ; i += W_DATA / 8){
-				out_data.write(buffer_data.read());
-			}
+		bc_packet meta = buffer_meta.read();
+		out_meta.write(meta);
+
+		for (int i = 0 ; i < meta.size ; i += W_DATA / 8){
+			out_data.write(buffer_data.read());
 		}
 
 		if(!buffer_meta.empty() || !buffer_data.empty() || !buffer_end.empty()){
-			cerr << "WARNING: Kernel returned more than two small chunk." << endl;
+			cerr << "WARNING: Kernel returned more than one small chunk." << endl;
 			errors++;
 		}
 	}
