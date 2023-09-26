@@ -12,7 +12,7 @@
 #define TOP_HPP
 
 //Number of Threads
-#define NP_REFINE 2
+#define NP_REFINE 1
 //vitis hls includes
 #define __gmp_const const
 #include "ap_int.h"
