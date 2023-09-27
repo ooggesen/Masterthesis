@@ -125,7 +125,7 @@ void top(hls::stream< ap_uint< 64 > > &in,
 	//flags
 	bool end = false;
 	//START OF PIPELINE
-	parse_file: for (int num_bc = 0 ; num_bc < (int) MAX_FILE_SIZE / BIG_CHUNK_SIZE + 1 ; num_bc++){
+	parse_file: for (int num_bc = 0 ; num_bc < (int) MAX_FILE_SIZE * 8 / BIG_CHUNK_SIZE + 1 ; num_bc++){
 		if (end)
 			break;
 
@@ -133,7 +133,7 @@ void top(hls::stream< ap_uint< 64 > > &in,
 
 		fragment(in_buffer, size_in_buffer, end_in_buffer, post_fragment_meta_buffer, post_fragment_data_buffer, post_fragment_end_buffer);
 
-		parse_bc: for (int num_sc= 0 ; num_sc < MAX_BIG_CHUNK_SIZE / SMALL_CHUNK_SIZE + 1 ; num_sc++){
+		parse_bc: for (int num_sc= 0 ; num_sc < (int) MAX_BIG_CHUNK_SIZE / SMALL_CHUNK_SIZE + 1 ; num_sc++){
 			if (end)
 				break;
 
