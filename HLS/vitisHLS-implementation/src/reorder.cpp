@@ -38,6 +38,7 @@ static void write_out(sc_packet &meta_in, c_data_t *data_in, hls::stream< ap_uin
 
 		//unique chunk -> write chunk to output
 		write_data_to_file: for (c_size_t i = 0 ; i < SC_STREAM_SIZE ; i++){
+#pragma HLS PIPELINE II=16
 			if (i.to_long() >= hls::ceil((double) meta_in.size.to_long()*8 / W_DATA))
 				break;
 
@@ -75,7 +76,7 @@ static void check_buffer(l1_pos_t &l1, l2_pos_t &l2, buffer_cell buffer[][BUFFER
 #pragma HLS ARRAY_PARTITION variable=bram_data_buffer type=complete
 
 	bool chunk_in_buffer;
-	for (int i = 0 ; i < NP_REFINE ; i++) {
+	for (int i = 0 ; i < 2 ; i++) {
 		read_buffer(l1, l2, buffer, bram_current, bram_data_buffer, chunk_in_buffer, buffer_counter);
 		if (chunk_in_buffer){
 			//update next chunk positions
@@ -178,14 +179,18 @@ void reorder(hls::stream< sc_packet > &meta_in,
 		hls::stream< bool > &end_out){
 	//positions for the next chunk
 	static l1_pos_t l1_pos = 0;
+#pragma HLS RESET variable=l1_pos
 	static l2_pos_t l2_pos = 0;
+#pragma HLS RESET variable=l2_pos
 	//file length buffer
 	static c_size_t file_length = 0;
+#pragma HLS RESET variable=file_length
+
 	//buffer for storing chunks
 	static buffer_cell buffer[BUFFER_SIZE_1][BUFFER_SIZE_2];
 #pragma HLS BIND_STORAGE variable=buffer type=ram_2p
 
-	static bool end = false, init = true;
+	static bool end_r = false, init = true;
 	static int buffer_counter = 0;
 
 	//initializations
@@ -209,12 +214,12 @@ void reorder(hls::stream< sc_packet > &meta_in,
 
 	//parsing of small chunks
 	check_input(meta_in, data_in, end_in, l1_pos, l2_pos, file_length, buffer, buffer_counter,
-			end, data_out);
+			end_r, data_out);
 
 	check_buffer(l1_pos, l2_pos, buffer, buffer_counter, data_out);
 
 	//end of process condition
-	if (end && buffer_counter == 0){
+	if (end_r && buffer_counter == 0){
 		end_out.write(true);
 		size_out.write(file_length);
 	}

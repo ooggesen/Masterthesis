@@ -64,13 +64,18 @@ static void segment_sc_packet(
 		hls::stream< ap_uint< 8 > > &out,
 		hls::stream< bool > &end_out){
 	//intialize the rabin lookup tables
-	unsigned rabintab[256], rabinwintab[256];
-	rabininit(rabintab, rabinwintab);
+	static unsigned rabintab[256], rabinwintab[256];
 
 	static bool end_seg, init_seg = true;
+#pragma HLS RESET variable= end_seg
+#pragma HLS RESET variable= init_seg
 	static c_size_t bc_size =0;
+#pragma HLS RESET variable= bc_size
 	static l2_pos_t l2 = 0;
+#pragma HLS RESET variable= l2
 	static bc_packet meta_seg;
+#pragma HLS RESET variable= meta_seg
+
 	if(!end_seg){
 		if (init_seg){
 			if (end_in.empty())
@@ -81,6 +86,8 @@ static void segment_sc_packet(
 				end_seg = true;
 				return;
 			}
+
+			rabininit(rabintab, rabinwintab);
 
 			meta_seg = meta_in.read();
 			bc_size = meta_seg.size;
@@ -126,8 +133,16 @@ static void convert_to_byte_stream(
 		hls::stream< bool > &end_out){
 
 	static bool end_byte, init_byte = true;
+#pragma HLS RESET variable= end_byte
+#pragma HLS RESET variable= init_byte
 	static bc_packet meta_byte;
+#pragma HLS RESET variable= meta_byte
 	static c_size_t input_counter_byte;
+#pragma HLS RESET variable= input_counter_byte
+	static c_data_t current_long;
+#pragma HLS RESET variable=current_long
+	static int pos_byte = 0;
+#pragma HLS RESET variable= pos_byte
 
 	if (!end_byte){
 		if (init_byte){
@@ -146,22 +161,32 @@ static void convert_to_byte_stream(
 			end_out.write(false);
 			meta_out.write(meta_byte);
 			init_byte = false;
+			pos_byte = 0;
 		}
 
-		read_data: for (c_size_t i = 0 ; i < SC_STREAM_SIZE ; i++){
-			if (input_counter_byte >= meta_byte.size || out.full())
+		read_data: for (c_size_t i = 0 ; i < SC_STREAM_SIZE + 1; i++){
+			if (input_counter_byte + pos_byte >= meta_byte.size)
 				break;
 
-			c_data_t current_long = in.read();
+			if (pos_byte == 0)
+				current_long = in.read();
+
 			convert_to_byte: for (int j = 0 ; j < W_DATA / 8 ; j++){
-				if (input_counter_byte + j < meta_byte.size)
-					out.write(current_long.range(7 + 8*j, 8*j));
+				if (input_counter_byte + pos_byte < meta_byte.size && pos_byte < W_DATA/8){
+					if (out.write_nb(current_long.range(7 + 8*pos_byte, 8*pos_byte)))
+						pos_byte++;
+					else
+						return;
+				}
 			}
 
-			input_counter_byte += W_DATA / 8;
+			if (pos_byte == W_DATA/8){
+				input_counter_byte += W_DATA / 8;
+				pos_byte = 0;
+			}
 		}
 
-		if (input_counter_byte >= meta_byte.size){
+		if (input_counter_byte + pos_byte >= meta_byte.size){
 			init_byte = true;
 		}
 	}
@@ -172,13 +197,12 @@ static void convert_to_byte_stream(
 void fragment_refine(hls::stream< bc_packet > &meta_in,
 		hls::stream< c_data_t > &data_in,
 		hls::stream< bool >  &end_in,
+		int instance,
 		hls::stream< sc_packet > &meta_out,
 		hls::stream< c_data_t > &data_out,
 		hls::stream< bool > &end_out){
-#pragma HLS DATAFLOW
-
 	static hls::stream< bc_packet, 2 > 								segment_meta("segment_meta");
-	static hls::stream< ap_uint< 8 > , MAX_BIG_CHUNK_SIZE/8 > 	segment_data("segment_data");
+	static hls::stream< ap_uint< 8 > , MAX_BIG_CHUNK_SIZE/8 > 	segment_data("segment_data"); //stream size must be a multiple of W_DATA/8 to avoid deadlocks
 	static hls::stream< bool, 2 > 									segment_end("segment_end");
 
 	hls::stream< sc_packet, 2 > 									write_meta("write_meta");

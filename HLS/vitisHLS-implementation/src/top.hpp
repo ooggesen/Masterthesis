@@ -32,8 +32,6 @@
 /**
  * @brief Top level interface for the dedup kernel
  *
- * Since in dataflow region only one read and write access to an array is allowed we could not implement parallel dedup pipeline stages.
- * Refer to future work in thesis paper.
  *
  * @param in 		Input data stream
  * @param size_in	Size of input file

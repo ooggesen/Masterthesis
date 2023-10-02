@@ -19,7 +19,7 @@
 
 //definitions
 #define BUFFER_SIZE_1 (NP_REFINE + 1) //buffer depth for big chunks
-#define BUFFER_SIZE_2 (int) (1.5*MAX_BIG_CHUNK_SIZE / SMALL_CHUNK_SIZE) //buffer depth for small chunks
+#define BUFFER_SIZE_2 (int) (MAX_BIG_CHUNK_SIZE / SMALL_CHUNK_SIZE) //buffer depth for small chunks
 
 /**
  * @brief Data format for the reorder buffer
