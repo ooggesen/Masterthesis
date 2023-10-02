@@ -4,7 +4,7 @@
  * @brief Contains the main function for calling different tb
  *
  * Usage:
- * 	uncomment one testbench you want to run. Then start simulation.
+ * 	uncomment ONE testbench you want to run. Then start simulation or cosim.
  * 	The semi dataflow and no dataflow version pipeline stages can only be cosimulated in the top testbench.
  *
  * @author Ole Oggesen

@@ -7,9 +7,8 @@
  * @bug No known bugs
  */
 
-
-#include "../dedup.hpp"
 #include "test_bench.hpp"
+#include "../dedup.hpp"
 
 #include <iostream>
 #include <fstream>

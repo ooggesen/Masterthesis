@@ -9,8 +9,8 @@
 
 #include <iostream>
 
-#include "../bram.hpp"
 #include "test_bench.hpp"
+#include "../bram.hpp"
 using namespace std;
 
 #define NUM_TESTS (int)(MAX_BRAM_SIZE/BRAM_DEPTH)

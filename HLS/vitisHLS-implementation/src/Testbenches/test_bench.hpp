@@ -12,7 +12,7 @@
 
 //user libraries
 #include "../bus_def.hpp"
-#include "../reorder_buffer.hpp"
+#include "../top.hpp"
 //vitis libraries
 #define __gmp_const const
 #include "ap_int.h"

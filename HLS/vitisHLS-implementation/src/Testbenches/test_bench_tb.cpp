@@ -7,7 +7,7 @@
  * @bug No known bugs
  */
 
-
+#define MY_HLS_PRINT
 #include "test_bench.hpp"
 #include "hls_math.h"
 using namespace std;

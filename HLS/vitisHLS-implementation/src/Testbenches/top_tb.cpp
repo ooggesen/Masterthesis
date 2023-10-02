@@ -9,7 +9,6 @@
  * @bug No known bugs
  */
 
-
 #include "test_bench.hpp"
 #include "../top.hpp"
 
