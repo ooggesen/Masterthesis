@@ -22,7 +22,7 @@
 #define MAX_FILE_SIZE 2000000 //max file size in bytes
 //chunk size definitions
 #define SMALL_CHUNK_SIZE (512 * 8) //average small chunk size in bits, according to PARSEC paper
-#define BIG_CHUNK_SIZE (64 * SMALL_CHUNK_SIZE) //(1024 * SMALL_CHUNK_SIZE) //in PARSEC: (2*1024*1024*8)-> too big for FPGA; average big chunk size in bits
+#define BIG_CHUNK_SIZE (64 * SMALL_CHUNK_SIZE) //in PARSEC: (2*1024*1024*8)-> too big for FPGA; average big chunk size in bits
 //bus width definitions
 #define W_DATA 1024 //must be a multiple of 64 for compliance with the sha1 kernel and input output stages
 #define W_ADDR 160 //width of SHA1 signature in bits

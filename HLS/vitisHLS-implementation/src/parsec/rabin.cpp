@@ -125,7 +125,7 @@ void rabinseg_in_stream(hls::stream< ap_uint< 8 > > &in,
     }
 
 	//flush the buffer
-	for (i = 0 ; i < NWINDOW ; i++){
+	flush_buffer: for (i = 0 ; i < NWINDOW ; i++){
 		if (buffer.empty())
 			break;
 		buffer.read();

@@ -2,7 +2,7 @@
 
 This folder contains the dedup version designed with VitisHLS for the master thesis of Ole Oggesen.
 
-We used the version 2021.2 of VitisHLS.
+We used the version 2022.2 of VitisHLS.
 
 ## structure
 
