@@ -66,7 +66,7 @@ add_files -tb src/Testbenches/test_bench.hpp -cflags "-Wno-unknown-pragmas" -csi
 add_files -tb src/Testbenches/test_bench_tb.cpp -cflags "-Wno-unknown-pragmas" -csimflags "-Wno-unknown-pragmas"
 add_files -tb src/Testbenches/top_tb.cpp -cflags "-Wno-unknown-pragmas" -csimflags "-Wno-unknown-pragmas"
 
-
+config_rtl -reset state
 source "./Dedup/solution1/directives.tcl"
 
 #simulate the top file
