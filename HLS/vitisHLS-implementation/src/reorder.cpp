@@ -53,45 +53,6 @@ static void write_out(sc_packet &meta_in, c_data_t *data_in, hls::stream< ap_uin
 
 
 /**
- * @brief Updates level 1 and level 2 positions of the small chunk in the file.
- */
-static void update_pos(bool &last_l2_chunk, l1_pos_t &l1_pos, l2_pos_t &l2_pos){
-	if (last_l2_chunk){
-		l1_pos++;
-		l2_pos = 0;
-	} else {
-		l2_pos++;
-	}
-}
-
-
-
-/**
- * @brief Checks the buffer for the next small chunk according to level 1 and level 2 positions
- */
-static void check_buffer(l1_pos_t &l1, l2_pos_t &l2, buffer_cell buffer[][BUFFER_SIZE_2],
-		int &buffer_counter, hls::stream< ap_uint< 64 > > &out){
-	sc_packet bram_current;
-	c_data_t bram_data_buffer[SC_STREAM_SIZE];
-#pragma HLS ARRAY_PARTITION variable=bram_data_buffer type=complete
-
-	bool chunk_in_buffer;
-	for (int i = 0 ; i < 2 ; i++) {
-		read_buffer(l1, l2, buffer, bram_current, bram_data_buffer, chunk_in_buffer, buffer_counter);
-		if (chunk_in_buffer){
-			//update next chunk positions
-			update_pos(bram_current.last_l2_chunk, l1, l2);
-
-			//write to output stream
-			write_out(bram_current, bram_data_buffer, out);
-		} else {
-			break;
-		}
-	}
-}
-
-
-/**
  * @brief Reads data in
  */
 static void read_in(
@@ -128,11 +89,7 @@ static void check_input(
 		hls::stream< sc_packet > &meta_in,
 		hls::stream< c_data_t > &data_in,
 		hls::stream< bool > &end_in,
-		l1_pos_t &l1,
-		l2_pos_t &l2,
 		c_size_t &file_length,
-		buffer_cell buffer[][BUFFER_SIZE_2],
-		int &buffer_counter,
 		bool &end,
 		hls::stream< ap_uint< 64 > > &out){
 	sc_packet read_current;
@@ -153,15 +110,7 @@ static void check_input(
 				}
 			}
 
-			//check if this is the next chunk
-			if (l1 == read_current.l1_pos && l2 == read_current.l2_pos){
-				//write chunk to the output stream
-				update_pos(read_current.last_l2_chunk, l1, l2);
-
-				write_out(read_current, data_in_buffer, out);
-			} else {
-				write_buffer(read_current, data_in_buffer, buffer, buffer_counter);
-			}
+			write_out(read_current, data_in_buffer, out);
 		} else {
 			end = true;
 		}
@@ -178,20 +127,11 @@ void reorder(hls::stream< sc_packet > &meta_in,
 		hls::stream< ap_uint< 64 > > &data_out,
 		hls::stream< bool > &end_out){
 	//positions for the next chunk
-	static l1_pos_t l1_pos = 0;
-#pragma HLS RESET variable=l1_pos
-	static l2_pos_t l2_pos = 0;
-#pragma HLS RESET variable=l2_pos
 	//file length buffer
 	static c_size_t file_length = 0;
 #pragma HLS RESET variable=file_length
 
-	//buffer for storing chunks
-	static buffer_cell buffer[BUFFER_SIZE_1][BUFFER_SIZE_2];
-#pragma HLS BIND_STORAGE variable=buffer type=ram_2p
-
 	static bool end_r = false, init = true;
-	static int buffer_counter = 0;
 
 	//initializations
 	if (init){
@@ -199,27 +139,17 @@ void reorder(hls::stream< sc_packet > &meta_in,
 		end_out.write(false);
 		write_header(data_out);
 
-		//initialize buffer
-		init_buffer_1: for (int i = 0 ; i < BUFFER_SIZE_1 ; i++ ){
-			init_buffer_2: for (int j  = 0 ; j < BUFFER_SIZE_2 ; j++ ){
-				buffer[i][j].valid = false;
-			}
-		}
-
-		l1_pos = l2_pos = 0;
-
 		file_length = 16; //8 byte checkbit plus 8 byte compress type information in header
 	}
 
 
 	//parsing of small chunks
-	check_input(meta_in, data_in, end_in, l1_pos, l2_pos, file_length, buffer, buffer_counter,
+	check_input(meta_in, data_in, end_in, file_length,
 			end_r, data_out);
 
-	check_buffer(l1_pos, l2_pos, buffer, buffer_counter, data_out);
 
 	//end of process condition
-	if (end_r && buffer_counter == 0){
+	if (end_r){
 		end_out.write(true);
 		size_out.write(file_length);
 	}

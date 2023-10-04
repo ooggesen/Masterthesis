@@ -21,9 +21,8 @@
 #include "hls_math.h"
 
 /**
- * @brief Assembles output stream in an ordered fashion according to the level 1 and level 2 positional arguments
+ * @brief Converts data into 64 bit output stream
  *
- * Segments bus data into top level interface data
  *
  * @param meta_in 	Small chunk meta data with duplicate information
  * @param data_in	Small chunk data
