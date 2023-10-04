@@ -165,6 +165,7 @@ static void convert_to_byte_stream(
 		}
 
 		read_data: for (c_size_t i = 0 ; i < SC_STREAM_SIZE + 1; i++){
+#pragma HLS LOOP_FLATTEN off
 			if (input_counter_byte + pos_byte >= meta_byte.size)
 				break;
 
@@ -197,7 +198,6 @@ static void convert_to_byte_stream(
 void fragment_refine(hls::stream< bc_packet > &meta_in,
 		hls::stream< c_data_t > &data_in,
 		hls::stream< bool >  &end_in,
-		int instance,
 		hls::stream< sc_packet > &meta_out,
 		hls::stream< c_data_t > &data_out,
 		hls::stream< bool > &end_out){

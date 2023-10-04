@@ -219,7 +219,8 @@ static void convert_to_byte_stream(
 				if (input_counter_byte + pos_byte < file_length_byte && pos_byte < 8){
 					if (out.write_nb(current_long.range(7 + 8*pos_byte, 8*pos_byte))){
 						pos_byte++;
-					}
+					} else
+						return;
 				}
 			}
 

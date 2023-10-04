@@ -181,7 +181,7 @@ int top_tb(int argc, char* argv[]){
 			cout << "1 - deduplicated size / orignal size: " << 1-(double) size_boundary/compare_size.read() << endl;
 
 			while(size_boundary > size_buffer){
-				cout << endl << dec << "chunk nr. " << counter << "---------------------------------------" << endl;
+				cout << endl << dec << "chunk nr. " << dec << counter << "---------------------------------------" << endl;
 				ap_uint< 64 > type;
 				c_size_t size;
 				read_seperator(out_stream, type, size);
@@ -273,7 +273,7 @@ int top_tb(int argc, char* argv[]){
 
 			int counter = 0;
 			while(size_boundary > size_buffer){
-					cout << endl << "chunk nr. " << counter << "---------------------------------------" << endl;
+					cout << endl << "chunk nr. " << dec << counter << "---------------------------------------" << endl;
 					ap_uint< 64 > type;
 					c_size_t size;
 					read_seperator(out_stream, type, size);

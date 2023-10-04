@@ -14,7 +14,6 @@
 #include "dedup.hpp"
 
 
-
 static void read_in(
 		hls::stream< sc_packet > &meta_in,
 		hls::stream< c_data_t > &data_in,
@@ -24,6 +23,7 @@ static void read_in(
 		hls::stream< ap_uint< 64 > > &sha1_len,
 		hls::stream< bool , 2 > &sha1_end_len)
 {
+	//hls::print("Read in\n");
 	//write buffer
 	sc_packet meta = meta_in.read();
 	meta_out.write(meta);
@@ -66,12 +66,11 @@ static void check_duplicate(
 		hls::stream< bool > &sha1_end_digest,
 		hls::stream< sc_packet > &meta_out,
 		hls::stream< c_data_t > &data_out){
+	//hls::print("Check duplicate\n");
 	bool end = sha1_end_digest.read();
 
 	//loop only executed once
-	while(!end){
-#pragma HLS LOOP_TRIPCOUNT min=1 max=1 avg=1
-
+	if(!end){
 		//empty packet to contain read data
 		addr_t hash = sha1_digest.read();
 
@@ -115,6 +114,7 @@ static void write_out(hls::stream< sc_packet > &meta_in,
 		hls::stream< sc_packet > &meta_out,
 		hls::stream< c_data_t > &data_out,
 		hls::stream< bool > &end_out){
+	//hls::print("write_out\n");
 	//write data
 	end_out.write(false);
 	sc_packet meta = meta_in.read();
