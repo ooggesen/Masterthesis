@@ -6,7 +6,7 @@
 //generate test data
 int main() {
     //generating purely random data, with no duplicates
-    FILE *fp = fopen("../random.bin", "wb");
+    FILE *fp = fopen("../vitisHLS-implementation/data/random.bin", "wb");
     if(fp == NULL){
         fprintf(stderr, "Could not open file.\n");
         return EXIT_FAILURE;
@@ -21,13 +21,12 @@ int main() {
     fclose(fp);
 
     //generating 50/50 duplicate/random data
-    fp = fopen("../partlyDuplicate.bin", "wb");
+    fp = fopen("../vitisHLS-implementation/data/partlyDuplicate.bin", "wb");
     if(fp == NULL){
         fprintf(stderr, "Could not open file.\n");
         return EXIT_FAILURE;
     }
 
-    srand(0);
     int boundary = 55;
     int r_counter = 0, d_counter = 0;
     for (int i = 0 ; i < MAX_FILE_SIZE ; i++){
@@ -57,7 +56,7 @@ int main() {
 
     //generating purely duplicate data
 
-    fp = fopen("../duplicate.bin", "wb");
+    fp = fopen("../vitisHLS-implementation/data/duplicate.bin", "wb");
     if(fp == NULL){
         fprintf(stderr, "Could not open file.\n");
         return EXIT_FAILURE;
