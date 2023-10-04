@@ -8,7 +8,6 @@
  */
 
 #include "top.hpp"
-#include "hls_print.h"
 
 /**
  * @brief read in stage, needed for dataflow circuit
@@ -27,7 +26,7 @@ static void read_in(
 	static bool write_succ;
 
 	if (!end){
-		hls::print("\tRead in\n");
+		//hls::print("\tRead in\n");
 		if (init){
 			if (end_in.empty())
 				return;
@@ -80,14 +79,14 @@ static void write_out(
 		hls::stream< c_size_t > &size_out,
 		hls::stream< ap_uint< 64 > > &out,
 		hls::stream< bool > &end_out){
-	hls::print("\t\tWrite out\n");
+	//hls::print("\t\tWrite out\n");
 	if(!end_in.empty()){
 		end = end_in.read();
 		end_out.write(end);
 	}
 
 	//transfer data
-	for (c_size_t i = 0 ; i < MAX_SMALL_CHUNK_SIZE / 8 ; i += 8){
+	for (c_size_t i = 0 ; i < MAX_SMALL_CHUNK_SIZE / 8 + 4 ; i += 8){
 		if (in.empty())
 			break;
 
@@ -116,7 +115,7 @@ void top(hls::stream< ap_uint< 64 > > &in,
 	hls::stream< c_size_t , 2 > 								size_in_buffer("size_in_buffer");
 	hls::stream< bool , 2 > 									end_in_buffer("end_in");
 
-	hls::stream< ap_uint< 64 > , MAX_SMALL_CHUNK_SIZE/64 + 2 > 	out_buffer("out_buffer");
+	hls::stream< ap_uint< 64 > , MAX_SMALL_CHUNK_SIZE/64 + 4 > 	out_buffer("out_buffer");
 	hls::stream< c_size_t , 2 > 								size_out_buffer("size_out_buffer");
 	hls::stream< bool , 2 > 									end_out_buffer("end_out_buffer");
 
@@ -125,7 +124,7 @@ void top(hls::stream< ap_uint< 64 > > &in,
 	hls::stream< bool , 2 > 									post_fragment_end_buffer("post_fragment_end_buffer");
 
 	hls::stream< sc_packet, 2 > 								pre_reorder_meta_buffer("pre_reorder_meta_buffer");
-	hls::stream< c_data_t , SC_STREAM_SIZE > 					pre_reorder_data_buffer("pre_reorder_data_buffer");
+	hls::stream< c_data_t , SC_STREAM_SIZE> 				pre_reorder_data_buffer("pre_reorder_data_buffer");
 	hls::stream< bool , 2 > 									pre_reorder_end_buffer("pre_reorder_end_buffer");
 
 	hls::stream< sc_packet, 2 > 								post_refine_meta_buffer("post_refine_meta_buffer");
@@ -136,7 +135,7 @@ void top(hls::stream< ap_uint< 64 > > &in,
 	bool end = false;
 	//START OF PIPELINE
 	parse_file: for (int num_bc = 0 ; num_bc < (int) MAX_FILE_SIZE * 8 / BIG_CHUNK_SIZE + 1 ; num_bc++){
-		hls::print("BC loop counter %d\n", num_bc);
+		//hls::print("BC loop counter %d\n", num_bc);
 		if (end)
 			break;
 
@@ -145,7 +144,7 @@ void top(hls::stream< ap_uint< 64 > > &in,
 		fragment(in_buffer, size_in_buffer, end_in_buffer, post_fragment_meta_buffer, post_fragment_data_buffer, post_fragment_end_buffer);
 
 		parse_bc: for (int num_sc= 0 ; num_sc < (int) MAX_BIG_CHUNK_SIZE / SMALL_CHUNK_SIZE + 1 ; num_sc++){
-			hls::print("\tSC loop counter %d\n", num_sc);
+			//hls::print("\tSC loop counter %d\n", num_sc);
 			if (end)
 				break;
 

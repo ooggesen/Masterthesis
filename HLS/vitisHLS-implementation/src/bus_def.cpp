@@ -10,8 +10,10 @@
 #include "bus_def.hpp"
 
 bool is_equal(const c_data_t a[SC_STREAM_SIZE], const c_data_t b[SC_STREAM_SIZE], c_size_t &size){
-	check_equality_sc: for (int i = 0 ; i < hls::ceil((double) size.to_long()*8 / W_DATA) ; i++ ){
-#pragma HLS PIPELINE II=7
+	check_equality_sc: for (int i = 0 ; i <  SC_STREAM_SIZE ; i++ ){
+		if (i >= hls::ceil((double) size.to_long()*8 / W_DATA))
+			break;
+
 		if (a[i] != b[i])
 			return false;
 	}
