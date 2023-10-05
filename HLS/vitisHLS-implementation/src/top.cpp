@@ -124,32 +124,14 @@ void top(hls::stream< ap_uint< 64 > > &in,
 	hls::stream< c_data_t, SC_STREAM_SIZE > 				post_refine_data_buffer("post_refine_data_buffer");
 	hls::stream< bool , 2 > 								post_refine_end_buffer("post_refine_end_buffer");
 
-	//splitter
-	hls::stream< bc_packet , 2 > 							pre_refine_meta_split[NP_REFINE];
-	hls::stream< c_data_t , 8 > 							pre_refine_data_split[NP_REFINE];
-	hls::stream< bool, 2 > 									pre_refine_end_split[NP_REFINE];
-
-	//merger
-	hls::stream< sc_packet, 2 > 							post_refine_meta_merge[NP_REFINE];
-	hls::stream< c_data_t, SC_STREAM_SIZE > 				post_refine_data_merge[NP_REFINE];
-	hls::stream< bool, 2 > 									post_refine_end_merge[NP_REFINE];
-
 	//START OF PIPELINE
 #pragma HLS DATAFLOW
 	read_in(in, size_in, end_in, in_buffer, size_in_buffer, end_in_buffer);
 
 	fragment(in_buffer, size_in_buffer, end_in_buffer, post_fragment_meta_buffer, post_fragment_data_buffer, post_fragment_end_buffer);
 
-	split< bc_packet , c_data_t >(post_fragment_meta_buffer,
-			post_fragment_data_buffer, post_fragment_end_buffer,
-			pre_refine_meta_split, pre_refine_data_split, pre_refine_end_split);
-	refine_parallel: for (int n = 0; n < NP_REFINE ; n++){
-#pragma HLS UNROLL
-		fragment_refine(pre_refine_meta_split[n], pre_refine_data_split[n], pre_refine_end_split[n],
-				post_refine_meta_merge[n], post_refine_data_merge[n], post_refine_end_merge[n]);
-	}
-	merge< sc_packet , c_data_t >(post_refine_meta_merge, post_refine_data_merge, post_refine_end_merge,
-			post_refine_meta_buffer, post_refine_data_buffer, post_refine_end_buffer);
+	fragment_refine(post_fragment_meta_buffer, post_fragment_data_buffer, post_fragment_end_buffer,
+				post_refine_meta_buffer, post_refine_data_buffer, post_refine_end_buffer);
 
 	dedup(post_refine_meta_buffer, post_refine_data_buffer, post_refine_end_buffer,
 			pre_reorder_meta_buffer, pre_reorder_data_buffer, pre_reorder_end_buffer);
