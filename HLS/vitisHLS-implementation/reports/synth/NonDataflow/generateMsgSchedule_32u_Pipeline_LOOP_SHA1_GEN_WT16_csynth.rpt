@@ -1,0 +1,213 @@
+
+
+================================================================
+== Vitis HLS Report for 'generateMsgSchedule_32u_Pipeline_LOOP_SHA1_GEN_WT16'
+================================================================
+* Date:           Tue Oct  3 13:43:51 2023
+
+* Version:        2022.2 (Build 3670227 on Oct 13 2022)
+* Project:        Dedup
+* Solution:       solution1 (Vivado IP Flow Target)
+* Product family: zynquplus
+* Target device:  xczu9eg-ffvb1156-2-e
+
+
+================================================================
+== Performance Estimates
+================================================================
++ Timing: 
+    * Summary: 
+    +--------+----------+----------+------------+
+    |  Clock |  Target  | Estimated| Uncertainty|
+    +--------+----------+----------+------------+
+    |ap_clk  |  10.00 ns|  1.697 ns|     2.70 ns|
+    +--------+----------+----------+------------+
+
++ Latency: 
+    * Summary: 
+    +---------+---------+----------+----------+-----+-----+---------+
+    |  Latency (cycles) |  Latency (absolute) |  Interval | Pipeline|
+    |   min   |   max   |    min   |    max   | min | max |   Type  |
+    +---------+---------+----------+----------+-----+-----+---------+
+    |       18|       18|  0.180 us|  0.180 us|   18|   18|       no|
+    +---------+---------+----------+----------+-----+-----+---------+
+
+    + Detail: 
+        * Instance: 
+        N/A
+
+        * Loop: 
+        +----------------------+---------+---------+----------+-----------+-----------+------+----------+
+        |                      |  Latency (cycles) | Iteration|  Initiation Interval  | Trip |          |
+        |       Loop Name      |   min   |   max   |  Latency |  achieved |   target  | Count| Pipelined|
+        +----------------------+---------+---------+----------+-----------+-----------+------+----------+
+        |- LOOP_SHA1_GEN_WT16  |       16|       16|         2|          1|          1|    16|       yes|
+        +----------------------+---------+---------+----------+-----------+-----------+------+----------+
+
+
+
+================================================================
+== Utilization Estimates
+================================================================
+* Summary: 
++-----------------+---------+------+--------+--------+-----+
+|       Name      | BRAM_18K|  DSP |   FF   |   LUT  | URAM|
++-----------------+---------+------+--------+--------+-----+
+|DSP              |        -|     -|       -|       -|    -|
+|Expression       |        -|     -|       0|      26|    -|
+|FIFO             |        -|     -|       -|       -|    -|
+|Instance         |        -|     -|       0|      65|    -|
+|Memory           |        -|     -|       -|       -|    -|
+|Multiplexer      |        -|     -|       -|      45|    -|
+|Register         |        -|     -|     552|       -|    -|
++-----------------+---------+------+--------+--------+-----+
+|Total            |        0|     0|     552|     136|    0|
++-----------------+---------+------+--------+--------+-----+
+|Available        |     1824|  2520|  548160|  274080|    0|
++-----------------+---------+------+--------+--------+-----+
+|Utilization (%)  |        0|     0|      ~0|      ~0|    0|
++-----------------+---------+------+--------+--------+-----+
+
++ Detail: 
+    * Instance: 
+    +---------------------+----------------+---------+----+---+----+-----+
+    |       Instance      |     Module     | BRAM_18K| DSP| FF| LUT| URAM|
+    +---------------------+----------------+---------+----+---+----+-----+
+    |mux_164_32_1_1_U395  |mux_164_32_1_1  |        0|   0|  0|  65|    0|
+    +---------------------+----------------+---------+----+---+----+-----+
+    |Total                |                |        0|   0|  0|  65|    0|
+    +---------------------+----------------+---------+----+---+----+-----+
+
+    * DSP: 
+    N/A
+
+    * Memory: 
+    N/A
+
+    * FIFO: 
+    N/A
+
+    * Expression: 
+    +---------------------------+----------+----+---+----+------------+------------+
+    |       Variable Name       | Operation| DSP| FF| LUT| Bitwidth P0| Bitwidth P1|
+    +---------------------------+----------+----+---+----+------------+------------+
+    |add_ln840_fu_437_p2        |         +|   0|  0|  12|           5|           1|
+    |ap_block_pp0_stage0_01001  |       and|   0|  0|   2|           1|           1|
+    |icmp_ln1027_fu_431_p2      |      icmp|   0|  0|  10|           5|           6|
+    |ap_enable_pp0              |       xor|   0|  0|   2|           1|           2|
+    +---------------------------+----------+----+---+----+------------+------------+
+    |Total                      |          |   0|  0|  26|          12|          10|
+    +---------------------------+----------+----+---+----+------------+------------+
+
+    * Multiplexer: 
+    +-------------------------+----+-----------+-----+-----------+
+    |           Name          | LUT| Input Size| Bits| Total Bits|
+    +-------------------------+----+-----------+-----+-----------+
+    |ap_done_int              |   9|          2|    1|          2|
+    |ap_enable_reg_pp0_iter1  |   9|          2|    1|          2|
+    |ap_sig_allocacmp_t_V_7   |   9|          2|    5|         10|
+    |t_V_fu_140               |   9|          2|    5|         10|
+    |w_strm10_blk_n           |   9|          2|    1|          2|
+    +-------------------------+----+-----------+-----+-----------+
+    |Total                    |  45|         10|   13|         26|
+    +-------------------------+----+-----------+-----+-----------+
+
+    * Register: 
+    +-------------------------+----+----+-----+-----------+
+    |           Name          | FF | LUT| Bits| Const Bits|
+    +-------------------------+----+----+-----+-----------+
+    |W_V_10_fu_184            |  32|   0|   32|          0|
+    |W_V_11_fu_188            |  32|   0|   32|          0|
+    |W_V_12_fu_192            |  32|   0|   32|          0|
+    |W_V_13_fu_196            |  32|   0|   32|          0|
+    |W_V_14_fu_200            |  32|   0|   32|          0|
+    |W_V_15_fu_204            |  32|   0|   32|          0|
+    |W_V_16_reg_743           |  32|   0|   32|          0|
+    |W_V_1_fu_148             |  32|   0|   32|          0|
+    |W_V_2_fu_152             |  32|   0|   32|          0|
+    |W_V_3_fu_156             |  32|   0|   32|          0|
+    |W_V_4_fu_160             |  32|   0|   32|          0|
+    |W_V_5_fu_164             |  32|   0|   32|          0|
+    |W_V_6_fu_168             |  32|   0|   32|          0|
+    |W_V_7_fu_172             |  32|   0|   32|          0|
+    |W_V_8_fu_176             |  32|   0|   32|          0|
+    |W_V_9_fu_180             |  32|   0|   32|          0|
+    |W_V_fu_144               |  32|   0|   32|          0|
+    |ap_CS_fsm                |   1|   0|    1|          0|
+    |ap_done_reg              |   1|   0|    1|          0|
+    |ap_enable_reg_pp0_iter1  |   1|   0|    1|          0|
+    |t_V_fu_140               |   5|   0|    5|          0|
+    +-------------------------+----+----+-----+-----------+
+    |Total                    | 552|   0|  552|          0|
+    +-------------------------+----+----+-----+-----------+
+
+
+
+================================================================
+== Interface
+================================================================
+* Summary: 
++-------------------------+-----+-----+------------+------------------------------------------------------+--------------+
+|        RTL Ports        | Dir | Bits|  Protocol  |                     Source Object                    |    C Type    |
++-------------------------+-----+-----+------------+------------------------------------------------------+--------------+
+|ap_clk                   |   in|    1|  ap_ctrl_hs|  generateMsgSchedule<32u>_Pipeline_LOOP_SHA1_GEN_WT16|  return value|
+|ap_rst                   |   in|    1|  ap_ctrl_hs|  generateMsgSchedule<32u>_Pipeline_LOOP_SHA1_GEN_WT16|  return value|
+|ap_start                 |   in|    1|  ap_ctrl_hs|  generateMsgSchedule<32u>_Pipeline_LOOP_SHA1_GEN_WT16|  return value|
+|ap_done                  |  out|    1|  ap_ctrl_hs|  generateMsgSchedule<32u>_Pipeline_LOOP_SHA1_GEN_WT16|  return value|
+|ap_idle                  |  out|    1|  ap_ctrl_hs|  generateMsgSchedule<32u>_Pipeline_LOOP_SHA1_GEN_WT16|  return value|
+|ap_ready                 |  out|    1|  ap_ctrl_hs|  generateMsgSchedule<32u>_Pipeline_LOOP_SHA1_GEN_WT16|  return value|
+|w_strm10_din             |  out|   32|     ap_fifo|                                              w_strm10|       pointer|
+|w_strm10_num_data_valid  |   in|   10|     ap_fifo|                                              w_strm10|       pointer|
+|w_strm10_fifo_cap        |   in|   10|     ap_fifo|                                              w_strm10|       pointer|
+|w_strm10_full_n          |   in|    1|     ap_fifo|                                              w_strm10|       pointer|
+|w_strm10_write           |  out|    1|     ap_fifo|                                              w_strm10|       pointer|
+|blk_M_V                  |   in|   32|     ap_none|                                               blk_M_V|        scalar|
+|blk_M_V_1                |   in|   32|     ap_none|                                             blk_M_V_1|        scalar|
+|blk_M_V_2                |   in|   32|     ap_none|                                             blk_M_V_2|        scalar|
+|blk_M_V_3                |   in|   32|     ap_none|                                             blk_M_V_3|        scalar|
+|blk_M_V_4                |   in|   32|     ap_none|                                             blk_M_V_4|        scalar|
+|blk_M_V_5                |   in|   32|     ap_none|                                             blk_M_V_5|        scalar|
+|blk_M_V_6                |   in|   32|     ap_none|                                             blk_M_V_6|        scalar|
+|blk_M_V_7                |   in|   32|     ap_none|                                             blk_M_V_7|        scalar|
+|blk_M_V_8                |   in|   32|     ap_none|                                             blk_M_V_8|        scalar|
+|blk_M_V_9                |   in|   32|     ap_none|                                             blk_M_V_9|        scalar|
+|blk_M_V_10               |   in|   32|     ap_none|                                            blk_M_V_10|        scalar|
+|blk_M_V_11               |   in|   32|     ap_none|                                            blk_M_V_11|        scalar|
+|blk_M_V_12               |   in|   32|     ap_none|                                            blk_M_V_12|        scalar|
+|blk_M_V_13               |   in|   32|     ap_none|                                            blk_M_V_13|        scalar|
+|blk_M_V_15               |   in|   32|     ap_none|                                            blk_M_V_15|        scalar|
+|blk_M_V_14               |   in|   32|     ap_none|                                            blk_M_V_14|        scalar|
+|W_V_15_out               |  out|   32|      ap_vld|                                            W_V_15_out|       pointer|
+|W_V_15_out_ap_vld        |  out|    1|      ap_vld|                                            W_V_15_out|       pointer|
+|W_V_14_out               |  out|   32|      ap_vld|                                            W_V_14_out|       pointer|
+|W_V_14_out_ap_vld        |  out|    1|      ap_vld|                                            W_V_14_out|       pointer|
+|W_V_13_out               |  out|   32|      ap_vld|                                            W_V_13_out|       pointer|
+|W_V_13_out_ap_vld        |  out|    1|      ap_vld|                                            W_V_13_out|       pointer|
+|W_V_12_out               |  out|   32|      ap_vld|                                            W_V_12_out|       pointer|
+|W_V_12_out_ap_vld        |  out|    1|      ap_vld|                                            W_V_12_out|       pointer|
+|W_V_11_out               |  out|   32|      ap_vld|                                            W_V_11_out|       pointer|
+|W_V_11_out_ap_vld        |  out|    1|      ap_vld|                                            W_V_11_out|       pointer|
+|W_V_10_out               |  out|   32|      ap_vld|                                            W_V_10_out|       pointer|
+|W_V_10_out_ap_vld        |  out|    1|      ap_vld|                                            W_V_10_out|       pointer|
+|W_V_9_out                |  out|   32|      ap_vld|                                             W_V_9_out|       pointer|
+|W_V_9_out_ap_vld         |  out|    1|      ap_vld|                                             W_V_9_out|       pointer|
+|W_V_8_out                |  out|   32|      ap_vld|                                             W_V_8_out|       pointer|
+|W_V_8_out_ap_vld         |  out|    1|      ap_vld|                                             W_V_8_out|       pointer|
+|W_V_7_out                |  out|   32|      ap_vld|                                             W_V_7_out|       pointer|
+|W_V_7_out_ap_vld         |  out|    1|      ap_vld|                                             W_V_7_out|       pointer|
+|W_V_6_out                |  out|   32|      ap_vld|                                             W_V_6_out|       pointer|
+|W_V_6_out_ap_vld         |  out|    1|      ap_vld|                                             W_V_6_out|       pointer|
+|W_V_5_out                |  out|   32|      ap_vld|                                             W_V_5_out|       pointer|
+|W_V_5_out_ap_vld         |  out|    1|      ap_vld|                                             W_V_5_out|       pointer|
+|W_V_4_out                |  out|   32|      ap_vld|                                             W_V_4_out|       pointer|
+|W_V_4_out_ap_vld         |  out|    1|      ap_vld|                                             W_V_4_out|       pointer|
+|W_V_3_out                |  out|   32|      ap_vld|                                             W_V_3_out|       pointer|
+|W_V_3_out_ap_vld         |  out|    1|      ap_vld|                                             W_V_3_out|       pointer|
+|W_V_2_out                |  out|   32|      ap_vld|                                             W_V_2_out|       pointer|
+|W_V_2_out_ap_vld         |  out|    1|      ap_vld|                                             W_V_2_out|       pointer|
+|W_V_1_out                |  out|   32|      ap_vld|                                             W_V_1_out|       pointer|
+|W_V_1_out_ap_vld         |  out|    1|      ap_vld|                                             W_V_1_out|       pointer|
+|W_V_out                  |  out|   32|      ap_vld|                                               W_V_out|       pointer|
+|W_V_out_ap_vld           |  out|    1|      ap_vld|                                               W_V_out|       pointer|
++-------------------------+-----+-----+------------+------------------------------------------------------+--------------+
+

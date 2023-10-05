@@ -1,0 +1,195 @@
+
+
+================================================================
+== Vitis HLS Report for 'generateMsgSchedule_32u_Pipeline_LOOP_SHA1_GEN_WT64'
+================================================================
+* Date:           Tue Oct  3 13:43:52 2023
+
+* Version:        2022.2 (Build 3670227 on Oct 13 2022)
+* Project:        Dedup
+* Solution:       solution1 (Vivado IP Flow Target)
+* Product family: zynquplus
+* Target device:  xczu9eg-ffvb1156-2-e
+
+
+================================================================
+== Performance Estimates
+================================================================
++ Timing: 
+    * Summary: 
+    +--------+----------+----------+------------+
+    |  Clock |  Target  | Estimated| Uncertainty|
+    +--------+----------+----------+------------+
+    |ap_clk  |  10.00 ns|  1.697 ns|     2.70 ns|
+    +--------+----------+----------+------------+
+
++ Latency: 
+    * Summary: 
+    +---------+---------+----------+----------+-----+-----+---------+
+    |  Latency (cycles) |  Latency (absolute) |  Interval | Pipeline|
+    |   min   |   max   |    min   |    max   | min | max |   Type  |
+    +---------+---------+----------+----------+-----+-----+---------+
+    |       66|       66|  0.660 us|  0.660 us|   66|   66|       no|
+    +---------+---------+----------+----------+-----+-----+---------+
+
+    + Detail: 
+        * Instance: 
+        N/A
+
+        * Loop: 
+        +----------------------+---------+---------+----------+-----------+-----------+------+----------+
+        |                      |  Latency (cycles) | Iteration|  Initiation Interval  | Trip |          |
+        |       Loop Name      |   min   |   max   |  Latency |  achieved |   target  | Count| Pipelined|
+        +----------------------+---------+---------+----------+-----------+-----------+------+----------+
+        |- LOOP_SHA1_GEN_WT64  |       64|       64|         2|          1|          1|    64|       yes|
+        +----------------------+---------+---------+----------+-----------+-----------+------+----------+
+
+
+
+================================================================
+== Utilization Estimates
+================================================================
+* Summary: 
++-----------------+---------+------+--------+--------+-----+
+|       Name      | BRAM_18K|  DSP |   FF   |   LUT  | URAM|
++-----------------+---------+------+--------+--------+-----+
+|DSP              |        -|     -|       -|       -|    -|
+|Expression       |        -|     -|       0|     124|    -|
+|FIFO             |        -|     -|       -|       -|    -|
+|Instance         |        -|     -|       -|       -|    -|
+|Memory           |        -|     -|       -|       -|    -|
+|Multiplexer      |        -|     -|       -|     189|    -|
+|Register         |        -|     -|     555|       -|    -|
++-----------------+---------+------+--------+--------+-----+
+|Total            |        0|     0|     555|     313|    0|
++-----------------+---------+------+--------+--------+-----+
+|Available        |     1824|  2520|  548160|  274080|    0|
++-----------------+---------+------+--------+--------+-----+
+|Utilization (%)  |        0|     0|      ~0|      ~0|    0|
++-----------------+---------+------+--------+--------+-----+
+
++ Detail: 
+    * Instance: 
+    N/A
+
+    * DSP: 
+    N/A
+
+    * Memory: 
+    N/A
+
+    * FIFO: 
+    N/A
+
+    * Expression: 
+    +---------------------------+----------+----+---+----+------------+------------+
+    |       Variable Name       | Operation| DSP| FF| LUT| Bitwidth P0| Bitwidth P1|
+    +---------------------------+----------+----+---+----+------------+------------+
+    |t_V_6_fu_431_p2            |         +|   0|  0|  14|           7|           1|
+    |ap_block_pp0_stage0_01001  |       and|   0|  0|   2|           1|           1|
+    |icmp_ln420_fu_375_p2       |      icmp|   0|  0|  10|           7|           7|
+    |ap_enable_pp0              |       xor|   0|  0|   2|           1|           2|
+    |ret_V_fu_405_p2            |       xor|   0|  0|  32|          32|          32|
+    |xor_ln1499_1_fu_399_p2     |       xor|   0|  0|  32|          32|          32|
+    |xor_ln1499_fu_393_p2       |       xor|   0|  0|  32|          32|          32|
+    +---------------------------+----------+----+---+----+------------+------------+
+    |Total                      |          |   0|  0| 124|         112|         107|
+    +---------------------------+----------+----+---+----+------------+------------+
+
+    * Multiplexer: 
+    +-------------------------+----+-----------+-----+-----------+
+    |           Name          | LUT| Input Size| Bits| Total Bits|
+    +-------------------------+----+-----------+-----+-----------+
+    |Wt_V_fu_144              |   9|          2|   32|         64|
+    |ap_done_int              |   9|          2|    1|          2|
+    |ap_enable_reg_pp0_iter1  |   9|          2|    1|          2|
+    |ap_enable_reg_pp0_iter2  |   9|          2|    1|          2|
+    |lhs_V_1_fu_136           |   9|          2|   32|         64|
+    |lhs_V_fu_84              |   9|          2|   32|         64|
+    |p_0_0_095_10323_fu_132   |   9|          2|   32|         64|
+    |p_0_0_095_13325_fu_140   |   9|          2|   32|         64|
+    |p_0_0_095_2316_fu_104    |   9|          2|   32|         64|
+    |p_0_0_095_3317_fu_108    |   9|          2|   32|         64|
+    |p_0_0_095_4318_fu_112    |   9|          2|   32|         64|
+    |p_0_0_095_5319_fu_116    |   9|          2|   32|         64|
+    |p_0_0_095_8321_fu_124    |   9|          2|   32|         64|
+    |p_0_0_095_9322_fu_128    |   9|          2|   32|         64|
+    |rhs_V_1_fu_92            |   9|          2|   32|         64|
+    |rhs_V_2_fu_96            |   9|          2|   32|         64|
+    |rhs_V_3_fu_100           |   9|          2|   32|         64|
+    |rhs_V_4_fu_120           |   9|          2|   32|         64|
+    |rhs_V_fu_88              |   9|          2|   32|         64|
+    |t_V_1_fu_80              |   9|          2|    7|         14|
+    |w_strm10_blk_n           |   9|          2|    1|          2|
+    +-------------------------+----+-----------+-----+-----------+
+    |Total                    | 189|         42|  523|       1046|
+    +-------------------------+----+-----------+-----+-----------+
+
+    * Register: 
+    +-------------------------+----+----+-----+-----------+
+    |           Name          | FF | LUT| Bits| Const Bits|
+    +-------------------------+----+----+-----+-----------+
+    |Wt_V_fu_144              |  32|   0|   32|          0|
+    |ap_CS_fsm                |   1|   0|    1|          0|
+    |ap_done_reg              |   1|   0|    1|          0|
+    |ap_enable_reg_pp0_iter1  |   1|   0|    1|          0|
+    |ap_enable_reg_pp0_iter2  |   1|   0|    1|          0|
+    |lhs_V_1_fu_136           |  32|   0|   32|          0|
+    |lhs_V_fu_84              |  32|   0|   32|          0|
+    |p_0_0_095_10323_fu_132   |  32|   0|   32|          0|
+    |p_0_0_095_13325_fu_140   |  32|   0|   32|          0|
+    |p_0_0_095_2316_fu_104    |  32|   0|   32|          0|
+    |p_0_0_095_3317_fu_108    |  32|   0|   32|          0|
+    |p_0_0_095_4318_fu_112    |  32|   0|   32|          0|
+    |p_0_0_095_5319_fu_116    |  32|   0|   32|          0|
+    |p_0_0_095_8321_fu_124    |  32|   0|   32|          0|
+    |p_0_0_095_9322_fu_128    |  32|   0|   32|          0|
+    |ret_V_1_reg_644          |  32|   0|   32|          0|
+    |rhs_V_1_fu_92            |  32|   0|   32|          0|
+    |rhs_V_2_fu_96            |  32|   0|   32|          0|
+    |rhs_V_3_fu_100           |  32|   0|   32|          0|
+    |rhs_V_4_fu_120           |  32|   0|   32|          0|
+    |rhs_V_fu_88              |  32|   0|   32|          0|
+    |t_V_1_fu_80              |   7|   0|    7|          0|
+    +-------------------------+----+----+-----+-----------+
+    |Total                    | 555|   0|  555|          0|
+    +-------------------------+----+----+-----+-----------+
+
+
+
+================================================================
+== Interface
+================================================================
+* Summary: 
++-------------------------+-----+-----+------------+------------------------------------------------------+--------------+
+|        RTL Ports        | Dir | Bits|  Protocol  |                     Source Object                    |    C Type    |
++-------------------------+-----+-----+------------+------------------------------------------------------+--------------+
+|ap_clk                   |   in|    1|  ap_ctrl_hs|  generateMsgSchedule<32u>_Pipeline_LOOP_SHA1_GEN_WT64|  return value|
+|ap_rst                   |   in|    1|  ap_ctrl_hs|  generateMsgSchedule<32u>_Pipeline_LOOP_SHA1_GEN_WT64|  return value|
+|ap_start                 |   in|    1|  ap_ctrl_hs|  generateMsgSchedule<32u>_Pipeline_LOOP_SHA1_GEN_WT64|  return value|
+|ap_done                  |  out|    1|  ap_ctrl_hs|  generateMsgSchedule<32u>_Pipeline_LOOP_SHA1_GEN_WT64|  return value|
+|ap_idle                  |  out|    1|  ap_ctrl_hs|  generateMsgSchedule<32u>_Pipeline_LOOP_SHA1_GEN_WT64|  return value|
+|ap_ready                 |  out|    1|  ap_ctrl_hs|  generateMsgSchedule<32u>_Pipeline_LOOP_SHA1_GEN_WT64|  return value|
+|w_strm10_din             |  out|   32|     ap_fifo|                                              w_strm10|       pointer|
+|w_strm10_num_data_valid  |   in|   10|     ap_fifo|                                              w_strm10|       pointer|
+|w_strm10_fifo_cap        |   in|   10|     ap_fifo|                                              w_strm10|       pointer|
+|w_strm10_full_n          |   in|    1|     ap_fifo|                                              w_strm10|       pointer|
+|w_strm10_write           |  out|    1|     ap_fifo|                                              w_strm10|       pointer|
+|W_V_reload               |   in|   32|     ap_none|                                            W_V_reload|        scalar|
+|W_V_1_reload             |   in|   32|     ap_none|                                          W_V_1_reload|        scalar|
+|W_V_3_reload             |   in|   32|     ap_none|                                          W_V_3_reload|        scalar|
+|W_V_4_reload             |   in|   32|     ap_none|                                          W_V_4_reload|        scalar|
+|W_V_5_reload             |   in|   32|     ap_none|                                          W_V_5_reload|        scalar|
+|W_V_6_reload             |   in|   32|     ap_none|                                          W_V_6_reload|        scalar|
+|W_V_8_reload             |   in|   32|     ap_none|                                          W_V_8_reload|        scalar|
+|W_V_9_reload             |   in|   32|     ap_none|                                          W_V_9_reload|        scalar|
+|W_V_10_reload            |   in|   32|     ap_none|                                         W_V_10_reload|        scalar|
+|W_V_11_reload            |   in|   32|     ap_none|                                         W_V_11_reload|        scalar|
+|W_V_12_reload            |   in|   32|     ap_none|                                         W_V_12_reload|        scalar|
+|W_V_14_reload            |   in|   32|     ap_none|                                         W_V_14_reload|        scalar|
+|W_V_15_reload            |   in|   32|     ap_none|                                         W_V_15_reload|        scalar|
+|W_V_13_reload            |   in|   32|     ap_none|                                         W_V_13_reload|        scalar|
+|W_V_7_reload             |   in|   32|     ap_none|                                          W_V_7_reload|        scalar|
+|W_V_2_reload             |   in|   32|     ap_none|                                          W_V_2_reload|        scalar|
++-------------------------+-----+-----+------------+------------------------------------------------------+--------------+
+

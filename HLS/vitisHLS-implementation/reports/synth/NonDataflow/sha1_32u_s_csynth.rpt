@@ -1,0 +1,152 @@
+
+
+================================================================
+== Vitis HLS Report for 'sha1_32u_s'
+================================================================
+* Date:           Tue Oct  3 13:43:52 2023
+
+* Version:        2022.2 (Build 3670227 on Oct 13 2022)
+* Project:        Dedup
+* Solution:       solution1 (Vivado IP Flow Target)
+* Product family: zynquplus
+* Target device:  xczu9eg-ffvb1156-2-e
+
+
+================================================================
+== Performance Estimates
+================================================================
++ Timing: 
+    * Summary: 
+    +--------+----------+----------+------------+
+    |  Clock |  Target  | Estimated| Uncertainty|
+    +--------+----------+----------+------------+
+    |ap_clk  |  10.00 ns|  6.368 ns|     2.70 ns|
+    +--------+----------+----------+------------+
+
++ Latency: 
+    * Summary: 
+    +---------+---------+----------+----------+-----+-----+----------+
+    |  Latency (cycles) |  Latency (absolute) |  Interval | Pipeline |
+    |   min   |   max   |    min   |    max   | min | max |   Type   |
+    +---------+---------+----------+----------+-----+-----+----------+
+    |      922|      922|  9.220 us|  9.220 us|  904|  904|  dataflow|
+    +---------+---------+----------+----------+-----+-----+----------+
+
+    + Detail: 
+        * Instance: 
+        +----------------------------+---------------------------+---------+---------+-----------+----------+-----+-----+---------+
+        |                            |                           |  Latency (cycles) |  Latency (absolute)  |  Interval | Pipeline|
+        |          Instance          |           Module          |   min   |   max   |    min    |    max   | min | max |   Type  |
+        +----------------------------+---------------------------+---------+---------+-----------+----------+-----+-----+---------+
+        |preProcessing_U0            |preProcessing              |        8|       43|  80.000 ns|  0.430 us|    8|   43|       no|
+        |generateMsgSchedule_32u_U0  |generateMsgSchedule_32u_s  |      903|      903|   9.030 us|  9.030 us|  903|  903|       no|
+        |SHA1Digest_32u_U0           |SHA1Digest_32u_s           |      808|      808|   8.080 us|  8.080 us|  808|  808|       no|
+        +----------------------------+---------------------------+---------+---------+-----------+----------+-----+-----+---------+
+
+        * Loop: 
+        N/A
+
+
+
+================================================================
+== Utilization Estimates
+================================================================
+* Summary: 
++-----------------+---------+------+--------+--------+-----+
+|       Name      | BRAM_18K|  DSP |   FF   |   LUT  | URAM|
++-----------------+---------+------+--------+--------+-----+
+|DSP              |        -|     -|       -|       -|    -|
+|Expression       |        -|     -|       0|       2|    -|
+|FIFO             |        2|     -|     660|     402|    -|
+|Instance         |        -|     3|    4254|    5013|    -|
+|Memory           |        -|     -|       -|       -|    -|
+|Multiplexer      |        -|     -|       -|       -|    -|
+|Register         |        -|     -|       -|       -|    -|
++-----------------+---------+------+--------+--------+-----+
+|Total            |        2|     3|    4914|    5417|    0|
++-----------------+---------+------+--------+--------+-----+
+|Available        |     1824|  2520|  548160|  274080|    0|
++-----------------+---------+------+--------+--------+-----+
+|Utilization (%)  |       ~0|    ~0|      ~0|       1|    0|
++-----------------+---------+------+--------+--------+-----+
+
++ Detail: 
+    * Instance: 
+    +----------------------------+---------------------------+---------+----+------+------+-----+
+    |          Instance          |           Module          | BRAM_18K| DSP|  FF  |  LUT | URAM|
+    +----------------------------+---------------------------+---------+----+------+------+-----+
+    |SHA1Digest_32u_U0           |SHA1Digest_32u_s           |        0|   3|   643|  1544|    0|
+    |generateMsgSchedule_32u_U0  |generateMsgSchedule_32u_s  |        0|   0|  1824|   699|    0|
+    |preProcessing_U0            |preProcessing              |        0|   0|  1787|  2770|    0|
+    +----------------------------+---------------------------+---------+----+------+------+-----+
+    |Total                       |                           |        0|   3|  4254|  5013|    0|
+    +----------------------------+---------------------------+---------+----+------+------+-----+
+
+    * DSP: 
+    N/A
+
+    * Memory: 
+    N/A
+
+    * FIFO: 
+    +------------------+---------+-----+----+-----+------+-----+---------+
+    |       Name       | BRAM_18K|  FF | LUT| URAM| Depth| Bits| Size:D*B|
+    +------------------+---------+-----+----+-----+------+-----+---------+
+    |blk_strm_U        |        0|   99|   0|    -|     4|  512|     2048|
+    |end_nblk_strm1_U  |        0|   99|   0|    -|     4|    1|        4|
+    |end_nblk_strm2_U  |        0|   99|   0|    -|     4|    1|        4|
+    |nblk_strm1_U      |        0|   99|   0|    -|     4|   64|      256|
+    |nblk_strm2_U      |        0|   99|   0|    -|     4|   64|      256|
+    |w_strm_U          |        2|  165|   0|    -|   320|   32|    10240|
+    +------------------+---------+-----+----+-----+------+-----+---------+
+    |Total             |        2|  660|   0|    0|   340|  674|    12808|
+    +------------------+---------+-----+----+-----+------+-----+---------+
+
+    * Expression: 
+    +--------------+----------+----+---+----+------------+------------+
+    | Variable Name| Operation| DSP| FF| LUT| Bitwidth P0| Bitwidth P1|
+    +--------------+----------+----+---+----+------------+------------+
+    |ap_idle       |       and|   0|  0|   2|           1|           1|
+    +--------------+----------+----+---+----+------------+------------+
+    |Total         |          |   0|  0|   2|           1|           1|
+    +--------------+----------+----+---+----+------------+------------+
+
+    * Multiplexer: 
+    N/A
+
+    * Register: 
+    N/A
+
+
+
+================================================================
+== Interface
+================================================================
+* Summary: 
++---------------------------+-----+-----+------------+--------------------+--------------+
+|         RTL Ports         | Dir | Bits|  Protocol  |    Source Object   |    C Type    |
++---------------------------+-----+-----+------------+--------------------+--------------+
+|sha1_msg143_dout           |   in|   32|     ap_fifo|         sha1_msg143|       pointer|
+|sha1_msg143_empty_n        |   in|    1|     ap_fifo|         sha1_msg143|       pointer|
+|sha1_msg143_read           |  out|    1|     ap_fifo|         sha1_msg143|       pointer|
+|sha1_len146_dout           |   in|   64|     ap_fifo|         sha1_len146|       pointer|
+|sha1_len146_empty_n        |   in|    1|     ap_fifo|         sha1_len146|       pointer|
+|sha1_len146_read           |  out|    1|     ap_fifo|         sha1_len146|       pointer|
+|sha1_end_len149_dout       |   in|    1|     ap_fifo|     sha1_end_len149|       pointer|
+|sha1_end_len149_empty_n    |   in|    1|     ap_fifo|     sha1_end_len149|       pointer|
+|sha1_end_len149_read       |  out|    1|     ap_fifo|     sha1_end_len149|       pointer|
+|sha1_digest152_din         |  out|  160|     ap_fifo|      sha1_digest152|       pointer|
+|sha1_digest152_full_n      |   in|    1|     ap_fifo|      sha1_digest152|       pointer|
+|sha1_digest152_write       |  out|    1|     ap_fifo|      sha1_digest152|       pointer|
+|sha1_end_digest155_din     |  out|    1|     ap_fifo|  sha1_end_digest155|       pointer|
+|sha1_end_digest155_full_n  |   in|    1|     ap_fifo|  sha1_end_digest155|       pointer|
+|sha1_end_digest155_write   |  out|    1|     ap_fifo|  sha1_end_digest155|       pointer|
+|ap_clk                     |   in|    1|  ap_ctrl_hs|           sha1<32u>|  return value|
+|ap_rst                     |   in|    1|  ap_ctrl_hs|           sha1<32u>|  return value|
+|ap_start                   |   in|    1|  ap_ctrl_hs|           sha1<32u>|  return value|
+|ap_done                    |  out|    1|  ap_ctrl_hs|           sha1<32u>|  return value|
+|ap_ready                   |  out|    1|  ap_ctrl_hs|           sha1<32u>|  return value|
+|ap_idle                    |  out|    1|  ap_ctrl_hs|           sha1<32u>|  return value|
+|ap_continue                |   in|    1|  ap_ctrl_hs|           sha1<32u>|  return value|
++---------------------------+-----+-----+------------+--------------------+--------------+
+
