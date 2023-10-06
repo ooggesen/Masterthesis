@@ -1,0 +1,238 @@
+
+
+================================================================
+== Vitis HLS Report for 'check_input'
+================================================================
+* Date:           Fri Oct  6 09:59:38 2023
+
+* Version:        2022.2 (Build 3670227 on Oct 13 2022)
+* Project:        Dedup
+* Solution:       solution1 (Vivado IP Flow Target)
+* Product family: zynquplus
+* Target device:  xczu9eg-ffvb1156-2-e
+
+
+================================================================
+== Performance Estimates
+================================================================
++ Timing: 
+    * Summary: 
+    +--------+----------+----------+------------+
+    |  Clock |  Target  | Estimated| Uncertainty|
+    +--------+----------+----------+------------+
+    |ap_clk  |  10.00 ns|  7.042 ns|     2.70 ns|
+    +--------+----------+----------+------------+
+
++ Latency: 
+    * Summary: 
+    +---------+---------+-----------+-----------+-----+------+---------+
+    |  Latency (cycles) |   Latency (absolute)  |  Interval  | Pipeline|
+    |   min   |   max   |    min    |    max    | min |  max |   Type  |
+    +---------+---------+-----------+-----------+-----+------+---------+
+    |        1|     1426|  10.000 ns|  14.260 us|    1|  1426|       no|
+    +---------+---------+-----------+-----------+-----+------+---------+
+
+    + Detail: 
+        * Instance: 
+        +----------------------------------------------+-----------------------------------+---------+---------+-----------+-----------+-----+------+---------+
+        |                                              |                                   |  Latency (cycles) |   Latency (absolute)  |  Interval  | Pipeline|
+        |                   Instance                   |               Module              |   min   |   max   |    min    |    max    | min |  max |   Type  |
+        +----------------------------------------------+-----------------------------------+---------+---------+-----------+-----------+-----+------+---------+
+        |grp_check_input_Pipeline_read_in_data_fu_461  |check_input_Pipeline_read_in_data  |       88|       88|   0.880 us|   0.880 us|   88|    88|       no|
+        |grp_write_out_fu_551                          |write_out                          |        5|     1319|  50.000 ns|  13.190 us|    5|  1319|       no|
+        +----------------------------------------------+-----------------------------------+---------+---------+-----------+-----------+-----+------+---------+
+
+        * Loop: 
+        N/A
+
+
+
+================================================================
+== Utilization Estimates
+================================================================
+* Summary: 
++-----------------+---------+------+--------+--------+-----+
+|       Name      | BRAM_18K|  DSP |   FF   |   LUT  | URAM|
++-----------------+---------+------+--------+--------+-----+
+|DSP              |        -|     -|       -|       -|    -|
+|Expression       |        -|     -|       0|    1014|    -|
+|FIFO             |        -|     -|       -|       -|    -|
+|Instance         |        2|     -|   84939|    9984|    -|
+|Memory           |        -|     -|       -|       -|    -|
+|Multiplexer      |        -|     -|       -|     321|    -|
+|Register         |        -|     -|     696|       -|    -|
++-----------------+---------+------+--------+--------+-----+
+|Total            |        2|     0|   85635|   11319|    0|
++-----------------+---------+------+--------+--------+-----+
+|Available        |     1824|  2520|  548160|  274080|    0|
++-----------------+---------+------+--------+--------+-----+
+|Utilization (%)  |       ~0|     0|      15|       4|    0|
++-----------------+---------+------+--------+--------+-----+
+
++ Detail: 
+    * Instance: 
+    +----------------------------------------------+-----------------------------------+---------+----+-------+------+-----+
+    |                   Instance                   |               Module              | BRAM_18K| DSP|   FF  |  LUT | URAM|
+    +----------------------------------------------+-----------------------------------+---------+----+-------+------+-----+
+    |grp_check_input_Pipeline_read_in_data_fu_461  |check_input_Pipeline_read_in_data  |        0|   0|  83232|  1278|    0|
+    |grp_write_out_fu_551                          |write_out                          |        2|   0|   1707|  8706|    0|
+    +----------------------------------------------+-----------------------------------+---------+----+-------+------+-----+
+    |Total                                         |                                   |        2|   0|  84939|  9984|    0|
+    +----------------------------------------------+-----------------------------------+---------+----+-------+------+-----+
+
+    * DSP: 
+    N/A
+
+    * Memory: 
+    N/A
+
+    * FIFO: 
+    N/A
+
+    * Expression: 
+    +----------------------------------+----------+----+---+----+------------+------------+
+    |           Variable Name          | Operation| DSP| FF| LUT| Bitwidth P0| Bitwidth P1|
+    +----------------------------------+----------+----+---+----+------------+------------+
+    |add_ln840_5_fu_689_p2             |         +|   0|  0|  64|          64|           5|
+    |add_ln840_6_fu_695_p2             |         +|   0|  0|  64|          64|          64|
+    |add_ln840_7_fu_727_p2             |         +|   0|  0|  71|          64|          64|
+    |add_ln840_fu_683_p2               |         +|   0|  0|  71|          64|           6|
+    |data_V_8_fu_866_p2                |         +|   0|  0|  71|          64|          64|
+    |ret_V_fu_717_p2                   |         -|   0|  0|  10|           1|           3|
+    |and_ln1023_fu_747_p2              |       and|   0|  0|   2|           1|           1|
+    |and_ln1035_fu_976_p2              |       and|   0|  0|   2|           1|           1|
+    |and_ln21_8_fu_942_p2              |       and|   0|  0|   2|           1|           1|
+    |and_ln21_fu_838_p2                |       and|   0|  0|   2|           1|           1|
+    |ap_block_state20_on_subcall_done  |       and|   0|  0|   2|           1|           1|
+    |ap_predicate_op111_read_state1    |       and|   0|  0|   2|           1|           1|
+    |ap_predicate_op272_call_state20   |       and|   0|  0|   2|           1|           1|
+    |tmp_nbreadreq_fu_428_p3           |       and|   0|  0|   2|           1|           0|
+    |xs_sig_V_28_fu_917_p2             |       and|   0|  0|  52|          52|          52|
+    |icmp_ln1019_8_fu_833_p2           |      icmp|   0|  0|  11|          11|           1|
+    |icmp_ln1019_fu_828_p2             |      icmp|   0|  0|  24|          52|           1|
+    |icmp_ln1023_fu_711_p2             |      icmp|   0|  0|   8|           3|           1|
+    |icmp_ln1035_8_fu_823_p2           |      icmp|   0|  0|  11|          11|          11|
+    |icmp_ln1035_fu_818_p2             |      icmp|   0|  0|  11|          11|          10|
+    |icmp_ln67_fu_1004_p2              |      icmp|   0|  0|  24|          52|           1|
+    |ap_block_state1                   |        or|   0|  0|   2|           1|           1|
+    |or_ln1035_fu_956_p2               |        or|   0|  0|   2|           1|           1|
+    |or_ln21_fu_937_p2                 |        or|   0|  0|   2|           1|           1|
+    |or_ln779_fu_886_p2                |        or|   0|  0|  64|          64|          64|
+    |select_ln1023_fu_753_p3           |    select|   0|  0|  64|           1|          64|
+    |select_ln1035_8_fu_982_p3         |    select|   0|  0|  64|           1|          64|
+    |select_ln1035_fu_962_p3           |    select|   0|  0|  64|           1|          64|
+    |select_ln21_fu_948_p3             |    select|   0|  0|  64|           1|          64|
+    |select_ln63_fu_733_p3             |    select|   0|  0|  64|           1|          64|
+    |xs_exp_V_22_fu_899_p3             |    select|   0|  0|  10|           1|          11|
+    |xs_sig_V_25_fu_905_p3             |    select|   0|  0|  50|           1|          52|
+    |xor_ln1035_fu_970_p2              |       xor|   0|  0|   2|           1|           2|
+    |xor_ln1497_fu_911_p2              |       xor|   0|  0|  52|          52|           2|
+    |xor_ln63_fu_741_p2                |       xor|   0|  0|   2|           1|           2|
+    +----------------------------------+----------+----+---+----+------------+------------+
+    |Total                             |          |   0|  0|1014|         649|         746|
+    +----------------------------------+----------+----+---+----+------------+------------+
+
+    * Multiplexer: 
+    +--------------------------------+-----+-----------+-----+-----------+
+    |              Name              | LUT | Input Size| Bits| Total Bits|
+    +--------------------------------+-----+-----------+-----+-----------+
+    |ap_NS_fsm                       |  106|         21|    1|         21|
+    |file_length_V_o                 |    9|          2|   64|        128|
+    |grp_fu_2145_ce                  |   14|          3|    1|          3|
+    |grp_fu_2145_opcode              |   14|          3|    5|         15|
+    |grp_fu_2145_p0                  |   14|          3|   64|        192|
+    |grp_fu_2145_p1                  |   14|          3|   64|        192|
+    |grp_fu_2149_ce                  |   14|          3|    1|          3|
+    |grp_fu_2149_p0                  |   14|          3|   64|        192|
+    |grp_fu_643_ce                   |    9|          2|    1|          2|
+    |grp_fu_643_p0                   |   20|          4|   64|        256|
+    |grp_fu_643_p1                   |   20|          4|   64|        256|
+    |grp_fu_649_ce                   |    9|          2|    1|          2|
+    |grp_fu_649_p0                   |   14|          3|   64|        192|
+    |mask_table_address0             |   14|          3|    6|         18|
+    |out_buffer78_write              |    9|          2|    1|          2|
+    |pre_reorder_data_buffer83_read  |    9|          2|    1|          2|
+    |pre_reorder_end_buffer84_blk_n  |    9|          2|    1|          2|
+    |pre_reorder_meta_buffer_blk_n   |    9|          2|    1|          2|
+    +--------------------------------+-----+-----------+-----+-----------+
+    |Total                           |  321|         67|  468|       1480|
+    +--------------------------------+-----+-----------+-----+-----------+
+
+    * Register: 
+    +-----------------------------------------------------------+-----+----+-----+-----------+
+    |                            Name                           |  FF | LUT| Bits| Const Bits|
+    +-----------------------------------------------------------+-----+----+-----+-----------+
+    |ap_CS_fsm                                                  |   20|   0|   20|          0|
+    |conv3_i1_reg_1845                                          |   64|   0|   64|          0|
+    |data_V_reg_1850                                            |   64|   0|   64|          0|
+    |grp_check_input_Pipeline_read_in_data_fu_461_ap_start_reg  |    1|   0|    1|          0|
+    |grp_write_out_fu_551_ap_start_reg                          |    1|   0|    1|          0|
+    |icmp_ln67_reg_1897                                         |    1|   0|    1|          0|
+    |meta_hash_V_reg_1829                                       |  160|   0|  160|          0|
+    |meta_is_duplicate_reg_1834                                 |    1|   0|    1|          0|
+    |meta_size_V_reg_1839                                       |   64|   0|   64|          0|
+    |p_Result_s_reg_1855                                        |    1|   0|    1|          0|
+    |pre_reorder_end_buffer84_read_reg_1825                     |    1|   0|    1|          0|
+    |reg_652                                                    |   64|   0|   64|          0|
+    |select_ln1035_8_reg_1887                                   |   64|   0|   64|          0|
+    |tmp_reg_1821                                               |    1|   0|    1|          0|
+    |trunc_ln368_reg_1882                                       |   63|   0|   63|          0|
+    |trunc_ln67_reg_1892                                        |   63|   0|   63|          0|
+    |xs_exp_V_21_reg_1863                                       |   11|   0|   11|          0|
+    |xs_sig_V_27_reg_1871                                       |   52|   0|   52|          0|
+    +-----------------------------------------------------------+-----+----+-----+-----------+
+    |Total                                                      |  696|   0|  696|          0|
+    +-----------------------------------------------------------+-----+----+-----+-----------+
+
+
+
+================================================================
+== Interface
+================================================================
+* Summary: 
++-----------------------------------+-----+------+------------+---------------------------+--------------+
+|             RTL Ports             | Dir | Bits |  Protocol  |       Source Object       |    C Type    |
++-----------------------------------+-----+------+------------+---------------------------+--------------+
+|ap_clk                             |   in|     1|  ap_ctrl_hs|                check_input|  return value|
+|ap_rst                             |   in|     1|  ap_ctrl_hs|                check_input|  return value|
+|ap_start                           |   in|     1|  ap_ctrl_hs|                check_input|  return value|
+|ap_done                            |  out|     1|  ap_ctrl_hs|                check_input|  return value|
+|ap_idle                            |  out|     1|  ap_ctrl_hs|                check_input|  return value|
+|ap_ready                           |  out|     1|  ap_ctrl_hs|                check_input|  return value|
+|grp_fu_2964_p_din0                 |  out|    64|  ap_ctrl_hs|                check_input|  return value|
+|grp_fu_2964_p_din1                 |  out|    64|  ap_ctrl_hs|                check_input|  return value|
+|grp_fu_2964_p_opcode               |  out|     5|  ap_ctrl_hs|                check_input|  return value|
+|grp_fu_2964_p_dout0                |   in|     1|  ap_ctrl_hs|                check_input|  return value|
+|grp_fu_2964_p_ce                   |  out|     1|  ap_ctrl_hs|                check_input|  return value|
+|grp_fu_4250_p_din0                 |  out|    64|  ap_ctrl_hs|                check_input|  return value|
+|grp_fu_4250_p_dout0                |   in|    64|  ap_ctrl_hs|                check_input|  return value|
+|grp_fu_4250_p_ce                   |  out|     1|  ap_ctrl_hs|                check_input|  return value|
+|grp_fu_2958_p_din0                 |  out|    64|  ap_ctrl_hs|                check_input|  return value|
+|grp_fu_2958_p_din1                 |  out|    64|  ap_ctrl_hs|                check_input|  return value|
+|grp_fu_2958_p_dout0                |   in|    64|  ap_ctrl_hs|                check_input|  return value|
+|grp_fu_2958_p_ce                   |  out|     1|  ap_ctrl_hs|                check_input|  return value|
+|grp_fu_2968_p_din0                 |  out|    64|  ap_ctrl_hs|                check_input|  return value|
+|grp_fu_2968_p_dout0                |   in|    64|  ap_ctrl_hs|                check_input|  return value|
+|grp_fu_2968_p_ce                   |  out|     1|  ap_ctrl_hs|                check_input|  return value|
+|pre_reorder_meta_buffer_dout       |   in|   258|     ap_fifo|    pre_reorder_meta_buffer|       pointer|
+|pre_reorder_meta_buffer_empty_n    |   in|     1|     ap_fifo|    pre_reorder_meta_buffer|       pointer|
+|pre_reorder_meta_buffer_read       |  out|     1|     ap_fifo|    pre_reorder_meta_buffer|       pointer|
+|pre_reorder_data_buffer83_dout     |   in|  1024|     ap_fifo|  pre_reorder_data_buffer83|       pointer|
+|pre_reorder_data_buffer83_empty_n  |   in|     1|     ap_fifo|  pre_reorder_data_buffer83|       pointer|
+|pre_reorder_data_buffer83_read     |  out|     1|     ap_fifo|  pre_reorder_data_buffer83|       pointer|
+|pre_reorder_end_buffer84_dout      |   in|     1|     ap_fifo|   pre_reorder_end_buffer84|       pointer|
+|pre_reorder_end_buffer84_empty_n   |   in|     1|     ap_fifo|   pre_reorder_end_buffer84|       pointer|
+|pre_reorder_end_buffer84_read      |  out|     1|     ap_fifo|   pre_reorder_end_buffer84|       pointer|
+|out_buffer78_din                   |  out|    64|     ap_fifo|               out_buffer78|       pointer|
+|out_buffer78_full_n                |   in|     1|     ap_fifo|               out_buffer78|       pointer|
+|out_buffer78_write                 |  out|     1|     ap_fifo|               out_buffer78|       pointer|
+|mask_table_address0                |  out|     6|   ap_memory|                 mask_table|         array|
+|mask_table_ce0                     |  out|     1|   ap_memory|                 mask_table|         array|
+|mask_table_q0                      |   in|    52|   ap_memory|                 mask_table|         array|
+|file_length_V_i                    |   in|    64|     ap_ovld|              file_length_V|       pointer|
+|file_length_V_o                    |  out|    64|     ap_ovld|              file_length_V|       pointer|
+|file_length_V_o_ap_vld             |  out|     1|     ap_ovld|              file_length_V|       pointer|
+|end_r                              |  out|     1|      ap_vld|                      end_r|       pointer|
+|end_r_ap_vld                       |  out|     1|      ap_vld|                      end_r|       pointer|
++-----------------------------------+-----+------+------------+---------------------------+--------------+
+
