@@ -1,0 +1,183 @@
+
+
+================================================================
+== Vitis HLS Report for 'write_out_1_Pipeline_convert_to_c_data_t'
+================================================================
+* Date:           Thu Oct  5 15:01:47 2023
+
+* Version:        2022.2 (Build 3670227 on Oct 13 2022)
+* Project:        Dedup
+* Solution:       solution1 (Vivado IP Flow Target)
+* Product family: zynquplus
+* Target device:  xczu9eg-ffvb1156-2-e
+
+
+================================================================
+== Performance Estimates
+================================================================
++ Timing: 
+    * Summary: 
+    +--------+----------+----------+------------+
+    |  Clock |  Target  | Estimated| Uncertainty|
+    +--------+----------+----------+------------+
+    |ap_clk  |  10.00 ns|  3.797 ns|     2.70 ns|
+    +--------+----------+----------+------------+
+
++ Latency: 
+    * Summary: 
+    +---------+---------+----------+----------+-----+-----+---------+
+    |  Latency (cycles) |  Latency (absolute) |  Interval | Pipeline|
+    |   min   |   max   |    min   |    max   | min | max |   Type  |
+    +---------+---------+----------+----------+-----+-----+---------+
+    |      130|      130|  1.300 us|  1.300 us|  130|  130|       no|
+    +---------+---------+----------+----------+-----+-----+---------+
+
+    + Detail: 
+        * Instance: 
+        N/A
+
+        * Loop: 
+        +-----------------------+---------+---------+----------+-----------+-----------+------+----------+
+        |                       |  Latency (cycles) | Iteration|  Initiation Interval  | Trip |          |
+        |       Loop Name       |   min   |   max   |  Latency |  achieved |   target  | Count| Pipelined|
+        +-----------------------+---------+---------+----------+-----------+-----------+------+----------+
+        |- convert_to_c_data_t  |      128|      128|         2|          1|          1|   128|       yes|
+        +-----------------------+---------+---------+----------+-----------+-----------+------+----------+
+
+
+
+================================================================
+== Utilization Estimates
+================================================================
+* Summary: 
++-----------------+---------+------+--------+--------+-----+
+|       Name      | BRAM_18K|  DSP |   FF   |   LUT  | URAM|
++-----------------+---------+------+--------+--------+-----+
+|DSP              |        -|     -|       -|       -|    -|
+|Expression       |        -|     -|       0|   22327|    -|
+|FIFO             |        -|     -|       -|       -|    -|
+|Instance         |        -|     -|       -|       -|    -|
+|Memory           |        -|     -|       -|       -|    -|
+|Multiplexer      |        -|     -|       -|      54|    -|
+|Register         |        -|     -|    1044|       -|    -|
++-----------------+---------+------+--------+--------+-----+
+|Total            |        0|     0|    1044|   22381|    0|
++-----------------+---------+------+--------+--------+-----+
+|Available        |     1824|  2520|  548160|  274080|    0|
++-----------------+---------+------+--------+--------+-----+
+|Utilization (%)  |        0|     0|      ~0|       8|    0|
++-----------------+---------+------+--------+--------+-----+
+
++ Detail: 
+    * Instance: 
+    N/A
+
+    * DSP: 
+    N/A
+
+    * Memory: 
+    N/A
+
+    * FIFO: 
+    N/A
+
+    * Expression: 
+    +----------------------------------+----------+----+---+------+------------+------------+
+    |           Variable Name          | Operation| DSP| FF|  LUT | Bitwidth P0| Bitwidth P1|
+    +----------------------------------+----------+----+---+------+------------+------------+
+    |j_V_fu_107_p2                     |         +|   0|  0|    15|           8|           1|
+    |ret_V_fu_117_p2                   |         +|   0|  0|    23|          16|          16|
+    |and_ln345_3_fu_226_p2             |       and|   0|  0|  1024|        1024|        1024|
+    |and_ln345_4_fu_232_p2             |       and|   0|  0|  1024|           1|        1024|
+    |and_ln345_fu_214_p2               |       and|   0|  0|  1024|        1024|        1024|
+    |and_ln368_3_fu_372_p2             |       and|   0|  0|  1024|        1024|        1024|
+    |and_ln368_4_fu_378_p2             |       and|   0|  0|  1024|        1024|        1024|
+    |and_ln368_fu_360_p2               |       and|   0|  0|  1024|        1024|        1024|
+    |ap_block_pp0_stage0_01001         |       and|   0|  0|     2|           1|           1|
+    |ap_block_state2_pp0_stage0_iter1  |       and|   0|  0|     2|           1|           1|
+    |ap_condition_82                   |       and|   0|  0|     2|           1|           1|
+    |icmp_ln1027_fu_101_p2             |      icmp|   0|  0|    11|           8|           9|
+    |icmp_ln1035_fu_127_p2             |      icmp|   0|  0|    29|          64|          64|
+    |icmp_ln345_fu_158_p2              |      icmp|   0|  0|    11|          10|          10|
+    |icmp_ln368_fu_270_p2              |      icmp|   0|  0|    11|          10|          10|
+    |lshr_ln345_fu_208_p2              |      lshr|   0|  0|  2171|           2|        1024|
+    |lshr_ln368_fu_354_p2              |      lshr|   0|  0|  2171|           2|        1024|
+    |Hi_2_fu_152_p2                    |        or|   0|  0|    10|           3|          10|
+    |Hi_fu_260_p2                      |        or|   0|  0|    10|           3|          10|
+    |p_Result_5_fu_238_p2              |        or|   0|  0|  1024|           1|        1024|
+    |p_Result_s_fu_384_p2              |        or|   0|  0|  1024|        1024|        1024|
+    |select_ln345_3_fu_172_p3          |    select|   0|  0|    10|           1|          10|
+    |select_ln345_4_fu_194_p3          |    select|   0|  0|     2|           1|           1|
+    |select_ln345_fu_164_p3            |    select|   0|  0|    10|           1|          10|
+    |select_ln368_4_fu_290_p3          |    select|   0|  0|    10|           1|          10|
+    |select_ln368_5_fu_298_p3          |    select|   0|  0|    10|           1|          10|
+    |select_ln368_6_fu_340_p3          |    select|   0|  0|  1022|           1|        1024|
+    |select_ln368_fu_282_p3            |    select|   0|  0|    10|           1|          10|
+    |shl_ln345_fu_202_p2               |       shl|   0|  0|  2171|           2|        1024|
+    |shl_ln368_2_fu_348_p2             |       shl|   0|  0|  2171|           2|        1024|
+    |shl_ln368_fu_324_p2               |       shl|   0|  0|  2171|        1024|        1024|
+    |ap_enable_pp0                     |       xor|   0|  0|     2|           1|           2|
+    |xor_ln345_2_fu_220_p2             |       xor|   0|  0|  1024|           2|        1024|
+    |xor_ln345_fu_180_p2               |       xor|   0|  0|    10|          10|           2|
+    |xor_ln368_3_fu_306_p2             |       xor|   0|  0|    10|          10|           2|
+    |xor_ln368_4_fu_366_p2             |       xor|   0|  0|  1024|           2|        1024|
+    |xor_ln368_fu_276_p2               |       xor|   0|  0|    10|           2|          10|
+    +----------------------------------+----------+----+---+------+------------+------------+
+    |Total                             |          |   0|  0| 22327|        7337|       16584|
+    +----------------------------------+----------+----+---+------+------------+------------+
+
+    * Multiplexer: 
+    +-------------------------+----+-----------+------+-----------+
+    |           Name          | LUT| Input Size| Bits | Total Bits|
+    +-------------------------+----+-----------+------+-----------+
+    |ap_done_int              |   9|          2|     1|          2|
+    |ap_enable_reg_pp0_iter1  |   9|          2|     1|          2|
+    |ap_sig_allocacmp_j_V_2   |   9|          2|     8|         16|
+    |p_Val2_s_fu_60           |   9|          2|  1024|       2048|
+    |rhs_fu_64                |   9|          2|     8|         16|
+    |write_data32_blk_n       |   9|          2|     1|          2|
+    +-------------------------+----+-----------+------+-----------+
+    |Total                    |  54|         12|  1043|       2086|
+    +-------------------------+----+-----------+------+-----------+
+
+    * Register: 
+    +-------------------------+------+----+------+-----------+
+    |           Name          |  FF  | LUT| Bits | Const Bits|
+    +-------------------------+------+----+------+-----------+
+    |ap_CS_fsm                |     1|   0|     1|          0|
+    |ap_done_reg              |     1|   0|     1|          0|
+    |ap_enable_reg_pp0_iter1  |     1|   0|     1|          0|
+    |icmp_ln1035_reg_423      |     1|   0|     1|          0|
+    |j_V_2_reg_414            |     8|   0|     8|          0|
+    |p_Val2_s_fu_60           |  1024|   0|  1024|          0|
+    |rhs_fu_64                |     8|   0|     8|          0|
+    +-------------------------+------+----+------+-----------+
+    |Total                    |  1044|   0|  1044|          0|
+    +-------------------------+------+----+------+-----------+
+
+
+
+================================================================
+== Interface
+================================================================
+* Summary: 
++-----------------------------+-----+------+------------+------------------------------------------+--------------+
+|          RTL Ports          | Dir | Bits |  Protocol  |               Source Object              |    C Type    |
++-----------------------------+-----+------+------------+------------------------------------------+--------------+
+|ap_clk                       |   in|     1|  ap_ctrl_hs|  write_out.1_Pipeline_convert_to_c_data_t|  return value|
+|ap_rst                       |   in|     1|  ap_ctrl_hs|  write_out.1_Pipeline_convert_to_c_data_t|  return value|
+|ap_start                     |   in|     1|  ap_ctrl_hs|  write_out.1_Pipeline_convert_to_c_data_t|  return value|
+|ap_done                      |  out|     1|  ap_ctrl_hs|  write_out.1_Pipeline_convert_to_c_data_t|  return value|
+|ap_idle                      |  out|     1|  ap_ctrl_hs|  write_out.1_Pipeline_convert_to_c_data_t|  return value|
+|ap_ready                     |  out|     1|  ap_ctrl_hs|  write_out.1_Pipeline_convert_to_c_data_t|  return value|
+|write_data32_dout            |   in|     8|     ap_fifo|                              write_data32|       pointer|
+|write_data32_num_data_valid  |   in|    17|     ap_fifo|                              write_data32|       pointer|
+|write_data32_fifo_cap        |   in|    17|     ap_fifo|                              write_data32|       pointer|
+|write_data32_empty_n         |   in|     1|     ap_fifo|                              write_data32|       pointer|
+|write_data32_read            |  out|     1|     ap_fifo|                              write_data32|       pointer|
+|i_op_assign                  |   in|    16|     ap_none|                               i_op_assign|        scalar|
+|chunk_length_V               |   in|    64|     ap_none|                            chunk_length_V|        scalar|
+|buffer_V_6_out               |  out|  1024|      ap_vld|                            buffer_V_6_out|       pointer|
+|buffer_V_6_out_ap_vld        |  out|     1|      ap_vld|                            buffer_V_6_out|       pointer|
++-----------------------------+-----+------+------------+------------------------------------------+--------------+
+

@@ -1,0 +1,139 @@
+
+
+================================================================
+== Vitis HLS Report for 'write_out_Pipeline_VITIS_LOOP_69_1'
+================================================================
+* Date:           Thu Oct  5 15:02:14 2023
+
+* Version:        2022.2 (Build 3670227 on Oct 13 2022)
+* Project:        Dedup
+* Solution:       solution1 (Vivado IP Flow Target)
+* Product family: zynquplus
+* Target device:  xczu9eg-ffvb1156-2-e
+
+
+================================================================
+== Performance Estimates
+================================================================
++ Timing: 
+    * Summary: 
+    +--------+----------+----------+------------+
+    |  Clock |  Target  | Estimated| Uncertainty|
+    +--------+----------+----------+------------+
+    |ap_clk  |  10.00 ns|      0 ns|     2.70 ns|
+    +--------+----------+----------+------------+
+
++ Latency: 
+    * Summary: 
+    +---------+---------+----------+----------+-----+-----+---------+
+    |  Latency (cycles) |  Latency (absolute) |  Interval | Pipeline|
+    |   min   |   max   |    min   |    max   | min | max |   Type  |
+    +---------+---------+----------+----------+-----+-----+---------+
+    |        ?|        ?|         ?|         ?|    ?|    ?|       no|
+    +---------+---------+----------+----------+-----+-----+---------+
+
+    + Detail: 
+        * Instance: 
+        N/A
+
+        * Loop: 
+        +-------------------+---------+---------+----------+-----------+-----------+------+----------+
+        |                   |  Latency (cycles) | Iteration|  Initiation Interval  | Trip |          |
+        |     Loop Name     |   min   |   max   |  Latency |  achieved |   target  | Count| Pipelined|
+        +-------------------+---------+---------+----------+-----------+-----------+------+----------+
+        |- VITIS_LOOP_69_1  |        ?|        ?|         1|          1|          1|     ?|       yes|
+        +-------------------+---------+---------+----------+-----------+-----------+------+----------+
+
+
+
+================================================================
+== Utilization Estimates
+================================================================
+* Summary: 
++-----------------+---------+------+--------+--------+-----+
+|       Name      | BRAM_18K|  DSP |   FF   |   LUT  | URAM|
++-----------------+---------+------+--------+--------+-----+
+|DSP              |        -|     -|       -|       -|    -|
+|Expression       |        -|     -|       0|       4|    -|
+|FIFO             |        -|     -|       -|       -|    -|
+|Instance         |        -|     -|       -|       -|    -|
+|Memory           |        -|     -|       -|       -|    -|
+|Multiplexer      |        -|     -|       -|       9|    -|
+|Register         |        -|     -|       2|       -|    -|
++-----------------+---------+------+--------+--------+-----+
+|Total            |        0|     0|       2|      13|    0|
++-----------------+---------+------+--------+--------+-----+
+|Available        |     1824|  2520|  548160|  274080|    0|
++-----------------+---------+------+--------+--------+-----+
+|Utilization (%)  |        0|     0|      ~0|      ~0|    0|
++-----------------+---------+------+--------+--------+-----+
+
++ Detail: 
+    * Instance: 
+    N/A
+
+    * DSP: 
+    N/A
+
+    * Memory: 
+    N/A
+
+    * FIFO: 
+    N/A
+
+    * Expression: 
+    +--------------------------+----------+----+---+----+------------+------------+
+    |       Variable Name      | Operation| DSP| FF| LUT| Bitwidth P0| Bitwidth P1|
+    +--------------------------+----------+----+---+----+------------+------------+
+    |tmp_nbreadreq_fu_26_p3    |       and|   0|  0|   2|           1|           0|
+    |tmp_s_nbreadreq_fu_34_p3  |       and|   0|  0|   2|           1|           0|
+    +--------------------------+----------+----+---+----+------------+------------+
+    |Total                     |          |   0|  0|   4|           2|           0|
+    +--------------------------+----------+----+---+----+------------+------------+
+
+    * Multiplexer: 
+    +-------------+----+-----------+-----+-----------+
+    |     Name    | LUT| Input Size| Bits| Total Bits|
+    +-------------+----+-----------+-----+-----------+
+    |ap_done_int  |   9|          2|    1|          2|
+    +-------------+----+-----------+-----+-----------+
+    |Total        |   9|          2|    1|          2|
+    +-------------+----+-----------+-----+-----------+
+
+    * Register: 
+    +-------------+---+----+-----+-----------+
+    |     Name    | FF| LUT| Bits| Const Bits|
+    +-------------+---+----+-----+-----------+
+    |ap_CS_fsm    |  1|   0|    1|          0|
+    |ap_done_reg  |  1|   0|    1|          0|
+    +-------------+---+----+-----+-----------+
+    |Total        |  2|   0|    2|          0|
+    +-------------+---+----+-----+-----------+
+
+
+
+================================================================
+== Interface
+================================================================
+* Summary: 
++----------------------------------+-----+-----+------------+------------------------------------+--------------+
+|             RTL Ports            | Dir | Bits|  Protocol  |            Source Object           |    C Type    |
++----------------------------------+-----+-----+------------+------------------------------------+--------------+
+|ap_clk                            |   in|    1|  ap_ctrl_hs|  write_out_Pipeline_VITIS_LOOP_69_1|  return value|
+|ap_rst                            |   in|    1|  ap_ctrl_hs|  write_out_Pipeline_VITIS_LOOP_69_1|  return value|
+|ap_start                          |   in|    1|  ap_ctrl_hs|  write_out_Pipeline_VITIS_LOOP_69_1|  return value|
+|ap_done                           |  out|    1|  ap_ctrl_hs|  write_out_Pipeline_VITIS_LOOP_69_1|  return value|
+|ap_idle                           |  out|    1|  ap_ctrl_hs|  write_out_Pipeline_VITIS_LOOP_69_1|  return value|
+|ap_ready                          |  out|    1|  ap_ctrl_hs|  write_out_Pipeline_VITIS_LOOP_69_1|  return value|
+|out_buffer77_dout                 |   in|   64|     ap_fifo|                        out_buffer77|       pointer|
+|out_buffer77_num_data_valid       |   in|    6|     ap_fifo|                        out_buffer77|       pointer|
+|out_buffer77_fifo_cap             |   in|    6|     ap_fifo|                        out_buffer77|       pointer|
+|out_buffer77_empty_n              |   in|    1|     ap_fifo|                        out_buffer77|       pointer|
+|out_buffer77_read                 |  out|    1|     ap_fifo|                        out_buffer77|       pointer|
+|size_out_buffer78_dout            |   in|   64|     ap_fifo|                   size_out_buffer78|       pointer|
+|size_out_buffer78_num_data_valid  |   in|    2|     ap_fifo|                   size_out_buffer78|       pointer|
+|size_out_buffer78_fifo_cap        |   in|    2|     ap_fifo|                   size_out_buffer78|       pointer|
+|size_out_buffer78_empty_n         |   in|    1|     ap_fifo|                   size_out_buffer78|       pointer|
+|size_out_buffer78_read            |  out|    1|     ap_fifo|                   size_out_buffer78|       pointer|
++----------------------------------+-----+-----+------------+------------------------------------+--------------+
+

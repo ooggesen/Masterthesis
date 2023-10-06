@@ -1,0 +1,156 @@
+
+
+================================================================
+== Vitis HLS Report for 'write_out_Pipeline_write_rest_data'
+================================================================
+* Date:           Thu Oct  5 15:02:14 2023
+
+* Version:        2022.2 (Build 3670227 on Oct 13 2022)
+* Project:        Dedup
+* Solution:       solution1 (Vivado IP Flow Target)
+* Product family: zynquplus
+* Target device:  xczu9eg-ffvb1156-2-e
+
+
+================================================================
+== Performance Estimates
+================================================================
++ Timing: 
+    * Summary: 
+    +--------+----------+----------+------------+
+    |  Clock |  Target  | Estimated| Uncertainty|
+    +--------+----------+----------+------------+
+    |ap_clk  |  10.00 ns|  3.534 ns|     2.70 ns|
+    +--------+----------+----------+------------+
+
++ Latency: 
+    * Summary: 
+    +---------+---------+----------+----------+-----+-----+---------+
+    |  Latency (cycles) |  Latency (absolute) |  Interval | Pipeline|
+    |   min   |   max   |    min   |    max   | min | max |   Type  |
+    +---------+---------+----------+----------+-----+-----+---------+
+    |        ?|        ?|         ?|         ?|    ?|    ?|       no|
+    +---------+---------+----------+----------+-----+-----+---------+
+
+    + Detail: 
+        * Instance: 
+        N/A
+
+        * Loop: 
+        +-------------------+---------+---------+----------+-----------+-----------+------+----------+
+        |                   |  Latency (cycles) | Iteration|  Initiation Interval  | Trip |          |
+        |     Loop Name     |   min   |   max   |  Latency |  achieved |   target  | Count| Pipelined|
+        +-------------------+---------+---------+----------+-----------+-----------+------+----------+
+        |- write_rest_data  |        ?|        ?|         2|          1|          1|     ?|       yes|
+        +-------------------+---------+---------+----------+-----------+-----------+------+----------+
+
+
+
+================================================================
+== Utilization Estimates
+================================================================
+* Summary: 
++-----------------+---------+------+--------+--------+-----+
+|       Name      | BRAM_18K|  DSP |   FF   |   LUT  | URAM|
++-----------------+---------+------+--------+--------+-----+
+|DSP              |        -|     -|       -|       -|    -|
+|Expression       |        -|     -|       0|      82|    -|
+|FIFO             |        -|     -|       -|       -|    -|
+|Instance         |        -|     -|       -|       -|    -|
+|Memory           |        -|     -|       -|       -|    -|
+|Multiplexer      |        -|     -|       -|      77|    -|
+|Register         |        -|     -|      25|       -|    -|
++-----------------+---------+------+--------+--------+-----+
+|Total            |        0|     0|      25|     159|    0|
++-----------------+---------+------+--------+--------+-----+
+|Available        |     1824|  2520|  548160|  274080|    0|
++-----------------+---------+------+--------+--------+-----+
+|Utilization (%)  |        0|     0|      ~0|      ~0|    0|
++-----------------+---------+------+--------+--------+-----+
+
++ Detail: 
+    * Instance: 
+    N/A
+
+    * DSP: 
+    N/A
+
+    * Memory: 
+    N/A
+
+    * FIFO: 
+    N/A
+
+    * Expression: 
+    +----------------------------------+----------+----+---+----+------------+------------+
+    |           Variable Name          | Operation| DSP| FF| LUT| Bitwidth P0| Bitwidth P1|
+    +----------------------------------+----------+----+---+----+------------+------------+
+    |written_V_3_fu_109_p2             |         +|   0|  0|  28|          21|           4|
+    |ap_block_pp0_stage0_01001         |       and|   0|  0|   2|           1|           1|
+    |ap_condition_167                  |       and|   0|  0|   2|           1|           1|
+    |ap_condition_89                   |       and|   0|  0|   2|           1|           1|
+    |icmp_ln1027_fu_93_p2              |      icmp|   0|  0|  15|          21|          18|
+    |icmp_ln1031_fu_103_p2             |      icmp|   0|  0|  29|          64|          64|
+    |ap_block_state2_pp0_stage0_iter1  |        or|   0|  0|   2|           1|           1|
+    |ap_enable_pp0                     |       xor|   0|  0|   2|           1|           2|
+    +----------------------------------+----------+----+---+----+------------+------------+
+    |Total                             |          |   0|  0|  82|         111|          92|
+    +----------------------------------+----------+----+---+----+------------+------------+
+
+    * Multiplexer: 
+    +-------------------------------+----+-----------+-----+-----------+
+    |              Name             | LUT| Input Size| Bits| Total Bits|
+    +-------------------------------+----+-----------+-----+-----------+
+    |ap_done_int                    |   9|          2|    1|          2|
+    |ap_enable_reg_pp0_iter1        |   9|          2|    1|          2|
+    |ap_phi_mux_merge_phi_fu_77_p4  |  14|          3|    1|          3|
+    |ap_return                      |   9|          2|    1|          2|
+    |ap_sig_allocacmp_written_V_2   |   9|          2|   21|         42|
+    |out_buffer77_blk_n             |   9|          2|    1|          2|
+    |out_r_blk_n                    |   9|          2|    1|          2|
+    |written_V_1_fu_44              |   9|          2|   21|         42|
+    +-------------------------------+----+-----------+-----+-----------+
+    |Total                          |  77|         17|   48|         97|
+    +-------------------------------+----+-----------+-----+-----------+
+
+    * Register: 
+    +-------------------------+----+----+-----+-----------+
+    |           Name          | FF | LUT| Bits| Const Bits|
+    +-------------------------+----+----+-----+-----------+
+    |ap_CS_fsm                |   1|   0|    1|          0|
+    |ap_done_reg              |   1|   0|    1|          0|
+    |ap_enable_reg_pp0_iter1  |   1|   0|    1|          0|
+    |ap_return_preg           |   1|   0|    1|          0|
+    |written_V_1_fu_44        |  21|   0|   21|          0|
+    +-------------------------+----+----+-----+-----------+
+    |Total                    |  25|   0|   25|          0|
+    +-------------------------+----+----+-----+-----------+
+
+
+
+================================================================
+== Interface
+================================================================
+* Summary: 
++-----------------------------+-----+-----+------------+------------------------------------+--------------+
+|          RTL Ports          | Dir | Bits|  Protocol  |            Source Object           |    C Type    |
++-----------------------------+-----+-----+------------+------------------------------------+--------------+
+|ap_clk                       |   in|    1|  ap_ctrl_hs|  write_out_Pipeline_write_rest_data|  return value|
+|ap_rst                       |   in|    1|  ap_ctrl_hs|  write_out_Pipeline_write_rest_data|  return value|
+|ap_start                     |   in|    1|  ap_ctrl_hs|  write_out_Pipeline_write_rest_data|  return value|
+|ap_done                      |  out|    1|  ap_ctrl_hs|  write_out_Pipeline_write_rest_data|  return value|
+|ap_idle                      |  out|    1|  ap_ctrl_hs|  write_out_Pipeline_write_rest_data|  return value|
+|ap_ready                     |  out|    1|  ap_ctrl_hs|  write_out_Pipeline_write_rest_data|  return value|
+|ap_return                    |  out|    1|  ap_ctrl_hs|  write_out_Pipeline_write_rest_data|  return value|
+|out_buffer77_dout            |   in|   64|     ap_fifo|                        out_buffer77|       pointer|
+|out_buffer77_num_data_valid  |   in|    6|     ap_fifo|                        out_buffer77|       pointer|
+|out_buffer77_fifo_cap        |   in|    6|     ap_fifo|                        out_buffer77|       pointer|
+|out_buffer77_empty_n         |   in|    1|     ap_fifo|                        out_buffer77|       pointer|
+|out_buffer77_read            |  out|    1|     ap_fifo|                        out_buffer77|       pointer|
+|out_r_din                    |  out|   64|     ap_fifo|                               out_r|       pointer|
+|out_r_full_n                 |   in|    1|     ap_fifo|                               out_r|       pointer|
+|out_r_write                  |  out|    1|     ap_fifo|                               out_r|       pointer|
+|written_V                    |   in|   21|     ap_none|                           written_V|        scalar|
+|size_V                       |   in|   64|     ap_none|                              size_V|        scalar|
++-----------------------------+-----+-----+------------+------------------------------------+--------------+
+

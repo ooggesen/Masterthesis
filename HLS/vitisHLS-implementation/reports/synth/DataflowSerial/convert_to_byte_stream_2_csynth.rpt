@@ -1,0 +1,201 @@
+
+
+================================================================
+== Vitis HLS Report for 'convert_to_byte_stream_2'
+================================================================
+* Date:           Thu Oct  5 15:01:49 2023
+
+* Version:        2022.2 (Build 3670227 on Oct 13 2022)
+* Project:        Dedup
+* Solution:       solution1 (Vivado IP Flow Target)
+* Product family: zynquplus
+* Target device:  xczu9eg-ffvb1156-2-e
+
+
+================================================================
+== Performance Estimates
+================================================================
++ Timing: 
+    * Summary: 
+    +--------+----------+----------+------------+
+    |  Clock |  Target  | Estimated| Uncertainty|
+    +--------+----------+----------+------------+
+    |ap_clk  |  10.00 ns|  3.676 ns|     2.70 ns|
+    +--------+----------+----------+------------+
+
++ Latency: 
+    * Summary: 
+    +---------+---------+----------+-----------+-----+---------+---------+
+    |  Latency (cycles) |  Latency (absolute)  |    Interval   | Pipeline|
+    |   min   |   max   |    min   |    max    | min |   max   |   Type  |
+    +---------+---------+----------+-----------+-----+---------+---------+
+    |      136|  5720067|  1.360 us|  57.201 ms|  136|  5720067|       no|
+    +---------+---------+----------+-----------+-----+---------+---------+
+
+    + Detail: 
+        * Instance: 
+        +--------------------------------------------------------------+---------------------------------------------------+---------+---------+----------+----------+-----+-----+---------+
+        |                                                              |                                                   |  Latency (cycles) |  Latency (absolute) |  Interval | Pipeline|
+        |                           Instance                           |                       Module                      |   min   |   max   |    min   |    max   | min | max |   Type  |
+        +--------------------------------------------------------------+---------------------------------------------------+---------+---------+----------+----------+-----+-----+---------+
+        |grp_convert_to_byte_stream_2_Pipeline_convert_to_byte_fu_119  |convert_to_byte_stream_2_Pipeline_convert_to_byte  |      130|      130|  1.300 us|  1.300 us|  130|  130|       no|
+        +--------------------------------------------------------------+---------------------------------------------------+---------+---------+----------+----------+-----+-----+---------+
+
+        * Loop: 
+        +--------------------+---------+---------+---------------+-----------+-----------+-----------+----------+
+        |                    |  Latency (cycles) |   Iteration   |  Initiation Interval  |    Trip   |          |
+        |      Loop Name     |   min   |   max   |    Latency    |  achieved |   target  |   Count   | Pipelined|
+        +--------------------+---------+---------+---------------+-----------+-----------+-----------+----------+
+        |- VITIS_LOOP_119_1  |      135|  5720066|  135 ~ 5720066|          -|          -|          1|        no|
+        | + read_data        |      133|  5720064|            133|          -|          -|  1 ~ 43008|        no|
+        +--------------------+---------+---------+---------------+-----------+-----------+-----------+----------+
+
+
+
+================================================================
+== Utilization Estimates
+================================================================
+* Summary: 
++-----------------+---------+------+--------+--------+-----+
+|       Name      | BRAM_18K|  DSP |   FF   |   LUT  | URAM|
++-----------------+---------+------+--------+--------+-----+
+|DSP              |        -|     -|       -|       -|    -|
+|Expression       |        -|     -|       0|      77|    -|
+|FIFO             |        -|     -|       -|       -|    -|
+|Instance         |        -|     -|      20|    2306|    -|
+|Memory           |        -|     -|       -|       -|    -|
+|Multiplexer      |        -|     -|       -|     126|    -|
+|Register         |        -|     -|    1208|       -|    -|
++-----------------+---------+------+--------+--------+-----+
+|Total            |        0|     0|    1228|    2509|    0|
++-----------------+---------+------+--------+--------+-----+
+|Available        |     1824|  2520|  548160|  274080|    0|
++-----------------+---------+------+--------+--------+-----+
+|Utilization (%)  |        0|     0|      ~0|      ~0|    0|
++-----------------+---------+------+--------+--------+-----+
+
++ Detail: 
+    * Instance: 
+    +--------------------------------------------------------------+---------------------------------------------------+---------+----+----+------+-----+
+    |                           Instance                           |                       Module                      | BRAM_18K| DSP| FF |  LUT | URAM|
+    +--------------------------------------------------------------+---------------------------------------------------+---------+----+----+------+-----+
+    |grp_convert_to_byte_stream_2_Pipeline_convert_to_byte_fu_119  |convert_to_byte_stream_2_Pipeline_convert_to_byte  |        0|   0|  20|  2306|    0|
+    +--------------------------------------------------------------+---------------------------------------------------+---------+----+----+------+-----+
+    |Total                                                         |                                                   |        0|   0|  20|  2306|    0|
+    +--------------------------------------------------------------+---------------------------------------------------+---------+----+----+------+-----+
+
+    * DSP: 
+    N/A
+
+    * Memory: 
+    N/A
+
+    * FIFO: 
+    N/A
+
+    * Expression: 
+    +-------------------------------+----------+----+---+----+------------+------------+
+    |         Variable Name         | Operation| DSP| FF| LUT| Bitwidth P0| Bitwidth P1|
+    +-------------------------------+----------+----+---+----+------------+------------+
+    |i_V_fu_142_p2                  |         +|   0|  0|  23|          16|           1|
+    |ap_condition_179               |       and|   0|  0|   2|           1|           1|
+    |ap_predicate_op36_read_state3  |       and|   0|  0|   2|           1|           1|
+    |icmp_ln1027_fu_136_p2          |      icmp|   0|  0|  13|          16|          16|
+    |icmp_ln1031_fu_160_p2          |      icmp|   0|  0|  29|          64|          64|
+    |ap_block_state1                |        or|   0|  0|   2|           1|           1|
+    |ap_block_state2                |        or|   0|  0|   2|           1|           1|
+    |ap_block_state3                |        or|   0|  0|   2|           1|           1|
+    |ap_predicate_op37_read_state3  |        or|   0|  0|   2|           1|           1|
+    +-------------------------------+----------+----+---+----+------------+------------+
+    |Total                          |          |   0|  0|  77|         102|          87|
+    +-------------------------------+----------+----+---+----+------------+------------+
+
+    * Multiplexer: 
+    +-----------------------------------+----+-----------+-----+-----------+
+    |                Name               | LUT| Input Size| Bits| Total Bits|
+    +-----------------------------------+----+-----------+-----+-----------+
+    |ap_NS_fsm                          |  31|          6|    1|          6|
+    |ap_done                            |   9|          2|    1|          2|
+    |i_V_8_reg_108                      |   9|          2|   16|         32|
+    |post_fragment_data_buffer80_blk_n  |   9|          2|    1|          2|
+    |post_fragment_end_buffer81_blk_n   |   9|          2|    1|          2|
+    |post_fragment_meta_buffer_blk_n    |   9|          2|    1|          2|
+    |real_start                         |   9|          2|    1|          2|
+    |segment_data29_write               |   9|          2|    1|          2|
+    |segment_end30_blk_n                |   9|          2|    1|          2|
+    |segment_end30_din                  |  14|          3|    1|          3|
+    |segment_meta_blk_n                 |   9|          2|    1|          2|
+    +-----------------------------------+----+-----------+-----+-----------+
+    |Total                              | 126|         27|   26|         57|
+    +-----------------------------------+----+-----------+-----+-----------+
+
+    * Register: 
+    +---------------------------------------------------------------------------+------+----+------+-----------+
+    |                                    Name                                   |  FF  | LUT| Bits | Const Bits|
+    +---------------------------------------------------------------------------+------+----+------+-----------+
+    |ap_CS_fsm                                                                  |     5|   0|     5|          0|
+    |ap_done_reg                                                                |     1|   0|     1|          0|
+    |bc_meta_size_V_reg_170                                                     |    64|   0|    64|          0|
+    |current_data_V_reg_196                                                     |  1024|   0|  1024|          0|
+    |end_15_reg_99                                                              |     1|   0|     1|          0|
+    |grp_convert_to_byte_stream_2_Pipeline_convert_to_byte_fu_119_ap_start_reg  |     1|   0|     1|          0|
+    |i_V_8_reg_108                                                              |    16|   0|    16|          0|
+    |i_V_reg_183                                                                |    16|   0|    16|          0|
+    |ret_V_5_reg_188                                                            |    16|   0|    23|          7|
+    |start_once_reg                                                             |     1|   0|     1|          0|
+    |trunc_ln122_1_reg_175                                                      |    63|   0|    63|          0|
+    +---------------------------------------------------------------------------+------+----+------+-----------+
+    |Total                                                                      |  1208|   0|  1215|          7|
+    +---------------------------------------------------------------------------+------+----+------+-----------+
+
+
+
+================================================================
+== Interface
+================================================================
+* Summary: 
++--------------------------------------------+-----+------+------------+-----------------------------+--------------+
+|                  RTL Ports                 | Dir | Bits |  Protocol  |        Source Object        |    C Type    |
++--------------------------------------------+-----+------+------------+-----------------------------+--------------+
+|ap_clk                                      |   in|     1|  ap_ctrl_hs|     convert_to_byte_stream.2|  return value|
+|ap_rst                                      |   in|     1|  ap_ctrl_hs|     convert_to_byte_stream.2|  return value|
+|ap_start                                    |   in|     1|  ap_ctrl_hs|     convert_to_byte_stream.2|  return value|
+|start_full_n                                |   in|     1|  ap_ctrl_hs|     convert_to_byte_stream.2|  return value|
+|ap_done                                     |  out|     1|  ap_ctrl_hs|     convert_to_byte_stream.2|  return value|
+|ap_continue                                 |   in|     1|  ap_ctrl_hs|     convert_to_byte_stream.2|  return value|
+|ap_idle                                     |  out|     1|  ap_ctrl_hs|     convert_to_byte_stream.2|  return value|
+|ap_ready                                    |  out|     1|  ap_ctrl_hs|     convert_to_byte_stream.2|  return value|
+|start_out                                   |  out|     1|  ap_ctrl_hs|     convert_to_byte_stream.2|  return value|
+|start_write                                 |  out|     1|  ap_ctrl_hs|     convert_to_byte_stream.2|  return value|
+|post_fragment_meta_buffer_dout              |   in|    80|     ap_fifo|    post_fragment_meta_buffer|       pointer|
+|post_fragment_meta_buffer_num_data_valid    |   in|     2|     ap_fifo|    post_fragment_meta_buffer|       pointer|
+|post_fragment_meta_buffer_fifo_cap          |   in|     2|     ap_fifo|    post_fragment_meta_buffer|       pointer|
+|post_fragment_meta_buffer_empty_n           |   in|     1|     ap_fifo|    post_fragment_meta_buffer|       pointer|
+|post_fragment_meta_buffer_read              |  out|     1|     ap_fifo|    post_fragment_meta_buffer|       pointer|
+|post_fragment_data_buffer80_dout            |   in|  1024|     ap_fifo|  post_fragment_data_buffer80|       pointer|
+|post_fragment_data_buffer80_num_data_valid  |   in|     4|     ap_fifo|  post_fragment_data_buffer80|       pointer|
+|post_fragment_data_buffer80_fifo_cap        |   in|     4|     ap_fifo|  post_fragment_data_buffer80|       pointer|
+|post_fragment_data_buffer80_empty_n         |   in|     1|     ap_fifo|  post_fragment_data_buffer80|       pointer|
+|post_fragment_data_buffer80_read            |  out|     1|     ap_fifo|  post_fragment_data_buffer80|       pointer|
+|post_fragment_end_buffer81_dout             |   in|     1|     ap_fifo|   post_fragment_end_buffer81|       pointer|
+|post_fragment_end_buffer81_num_data_valid   |   in|     2|     ap_fifo|   post_fragment_end_buffer81|       pointer|
+|post_fragment_end_buffer81_fifo_cap         |   in|     2|     ap_fifo|   post_fragment_end_buffer81|       pointer|
+|post_fragment_end_buffer81_empty_n          |   in|     1|     ap_fifo|   post_fragment_end_buffer81|       pointer|
+|post_fragment_end_buffer81_read             |  out|     1|     ap_fifo|   post_fragment_end_buffer81|       pointer|
+|segment_meta_din                            |  out|    80|     ap_fifo|                 segment_meta|       pointer|
+|segment_meta_num_data_valid                 |   in|     2|     ap_fifo|                 segment_meta|       pointer|
+|segment_meta_fifo_cap                       |   in|     2|     ap_fifo|                 segment_meta|       pointer|
+|segment_meta_full_n                         |   in|     1|     ap_fifo|                 segment_meta|       pointer|
+|segment_meta_write                          |  out|     1|     ap_fifo|                 segment_meta|       pointer|
+|segment_data29_din                          |  out|     8|     ap_fifo|               segment_data29|       pointer|
+|segment_data29_num_data_valid               |   in|    17|     ap_fifo|               segment_data29|       pointer|
+|segment_data29_fifo_cap                     |   in|    17|     ap_fifo|               segment_data29|       pointer|
+|segment_data29_full_n                       |   in|     1|     ap_fifo|               segment_data29|       pointer|
+|segment_data29_write                        |  out|     1|     ap_fifo|               segment_data29|       pointer|
+|segment_end30_din                           |  out|     1|     ap_fifo|                segment_end30|       pointer|
+|segment_end30_num_data_valid                |   in|     2|     ap_fifo|                segment_end30|       pointer|
+|segment_end30_fifo_cap                      |   in|     2|     ap_fifo|                segment_end30|       pointer|
+|segment_end30_full_n                        |   in|     1|     ap_fifo|                segment_end30|       pointer|
+|segment_end30_write                         |  out|     1|     ap_fifo|                segment_end30|       pointer|
++--------------------------------------------+-----+------+------------+-----------------------------+--------------+
+

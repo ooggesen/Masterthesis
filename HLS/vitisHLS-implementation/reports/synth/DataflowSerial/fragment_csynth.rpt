@@ -1,0 +1,170 @@
+
+
+================================================================
+== Vitis HLS Report for 'fragment'
+================================================================
+* Date:           Thu Oct  5 15:01:48 2023
+
+* Version:        2022.2 (Build 3670227 on Oct 13 2022)
+* Project:        Dedup
+* Solution:       solution1 (Vivado IP Flow Target)
+* Product family: zynquplus
+* Target device:  xczu9eg-ffvb1156-2-e
+
+
+================================================================
+== Performance Estimates
+================================================================
++ Timing: 
+    * Summary: 
+    +--------+----------+----------+------------+
+    |  Clock |  Target  | Estimated| Uncertainty|
+    +--------+----------+----------+------------+
+    |ap_clk  |  10.00 ns|  7.042 ns|     2.70 ns|
+    +--------+----------+----------+------------+
+
++ Latency: 
+    * Summary: 
+    +---------+---------+----------+----------+-----+-----+----------+
+    |  Latency (cycles) |  Latency (absolute) |  Interval | Pipeline |
+    |   min   |   max   |    min   |    max   | min | max |   Type   |
+    +---------+---------+----------+----------+-----+-----+----------+
+    |        ?|        ?|         ?|         ?|    ?|    ?|  dataflow|
+    +---------+---------+----------+----------+-----+-----+----------+
+
+    + Detail: 
+        * Instance: 
+        +---------------------------+------------------------+---------+---------+----------+-----------+-----+---------+---------+
+        |                           |                        |  Latency (cycles) |  Latency (absolute)  |    Interval   | Pipeline|
+        |          Instance         |         Module         |   min   |   max   |    min   |    max    | min |   max   |   Type  |
+        +---------------------------+------------------------+---------+---------+----------+-----------+-----+---------+---------+
+        |convert_to_byte_stream_U0  |convert_to_byte_stream  |       15|  2000007|  0.150 us|  20.000 ms|   15|  2000007|       no|
+        |segment_bc_packet_U0       |segment_bc_packet       |        ?|        ?|         ?|          ?|    ?|        ?|       no|
+        |write_out_1_U0             |write_out_1             |      157|    46531|  1.570 us|   0.465 ms|  157|    46531|       no|
+        +---------------------------+------------------------+---------+---------+----------+-----------+-----+---------+---------+
+
+        * Loop: 
+        N/A
+
+
+
+================================================================
+== Utilization Estimates
+================================================================
+* Summary: 
++-----------------+---------+------+--------+--------+-----+
+|       Name      | BRAM_18K|  DSP |   FF   |   LUT  | URAM|
++-----------------+---------+------+--------+--------+-----+
+|DSP              |        -|     -|       -|       -|    -|
+|Expression       |        -|     -|       0|       2|    -|
+|FIFO             |       48|     -|     722|     392|    -|
+|Instance         |        4|    11|    3385|   25968|    -|
+|Memory           |        -|     -|       -|       -|    -|
+|Multiplexer      |        -|     -|       -|       9|    -|
+|Register         |        -|     -|       1|       -|    -|
++-----------------+---------+------+--------+--------+-----+
+|Total            |       52|    11|    4108|   26371|    0|
++-----------------+---------+------+--------+--------+-----+
+|Available        |     1824|  2520|  548160|  274080|    0|
++-----------------+---------+------+--------+--------+-----+
+|Utilization (%)  |        2|    ~0|      ~0|       9|    0|
++-----------------+---------+------+--------+--------+-----+
+
++ Detail: 
+    * Instance: 
+    +---------------------------+------------------------+---------+----+------+-------+-----+
+    |          Instance         |         Module         | BRAM_18K| DSP|  FF  |  LUT  | URAM|
+    +---------------------------+------------------------+---------+----+------+-------+-----+
+    |convert_to_byte_stream_U0  |convert_to_byte_stream  |        0|   0|   167|    760|    0|
+    |segment_bc_packet_U0       |segment_bc_packet       |        2|   0|  1207|   1654|    0|
+    |write_out_1_U0             |write_out_1             |        2|  11|  2011|  23554|    0|
+    +---------------------------+------------------------+---------+----+------+-------+-----+
+    |Total                      |                        |        4|  11|  3385|  25968|    0|
+    +---------------------------+------------------------+---------+----+------+-------+-----+
+
+    * DSP: 
+    N/A
+
+    * Memory: 
+    N/A
+
+    * FIFO: 
+    +----------------+---------+-----+----+-----+-------+-----+---------+
+    |      Name      | BRAM_18K|  FF | LUT| URAM| Depth | Bits| Size:D*B|
+    +----------------+---------+-----+----+-----+-------+-----+---------+
+    |segment_data_U  |       24|  163|   0|    -|  43009|    8|   344072|
+    |segment_end_U   |        0|   99|   0|    -|      2|    1|        2|
+    |segment_size_U  |        0|   99|   0|    -|      2|   64|      128|
+    |write_data_U    |       24|  163|   0|    -|  43009|    8|   344072|
+    |write_end_U     |        0|   99|   0|    -|      2|    1|        2|
+    |write_size_U    |        0|   99|   0|    -|      2|   64|      128|
+    +----------------+---------+-----+----+-----+-------+-----+---------+
+    |Total           |       48|  722|   0|    0|  86026|  146|   688404|
+    +----------------+---------+-----+----+-----+-------+-----+---------+
+
+    * Expression: 
+    +--------------+----------+----+---+----+------------+------------+
+    | Variable Name| Operation| DSP| FF| LUT| Bitwidth P0| Bitwidth P1|
+    +--------------+----------+----+---+----+------------+------------+
+    |ap_idle       |       and|   0|  0|   2|           1|           1|
+    +--------------+----------+----+---+----+------------+------------+
+    |Total         |          |   0|  0|   2|           1|           1|
+    +--------------+----------+----+---+----+------------+------------+
+
+    * Multiplexer: 
+    +------------+----+-----------+-----+-----------+
+    |    Name    | LUT| Input Size| Bits| Total Bits|
+    +------------+----+-----------+-----+-----------+
+    |real_start  |   9|          2|    1|          2|
+    +------------+----+-----------+-----+-----------+
+    |Total       |   9|          2|    1|          2|
+    +------------+----+-----------+-----+-----------+
+
+    * Register: 
+    +----------------+---+----+-----+-----------+
+    |      Name      | FF| LUT| Bits| Const Bits|
+    +----------------+---+----+-----+-----------+
+    |start_once_reg  |  1|   0|    1|          0|
+    +----------------+---+----+-----+-----------+
+    |Total           |  1|   0|    1|          0|
+    +----------------+---+----+-----+-----------+
+
+
+
+================================================================
+== Interface
+================================================================
+* Summary: 
++------------------------------------+-----+------+------------+-----------------------------+--------------+
+|              RTL Ports             | Dir | Bits |  Protocol  |        Source Object        |    C Type    |
++------------------------------------+-----+------+------------+-----------------------------+--------------+
+|ap_start                            |   in|     1|  ap_ctrl_hs|                     fragment|  return value|
+|start_full_n                        |   in|     1|  ap_ctrl_hs|                     fragment|  return value|
+|start_out                           |  out|     1|  ap_ctrl_hs|                     fragment|  return value|
+|start_write                         |  out|     1|  ap_ctrl_hs|                     fragment|  return value|
+|ap_clk                              |   in|     1|  ap_ctrl_hs|                     fragment|  return value|
+|ap_rst                              |   in|     1|  ap_ctrl_hs|                     fragment|  return value|
+|ap_done                             |  out|     1|  ap_ctrl_hs|                     fragment|  return value|
+|ap_ready                            |  out|     1|  ap_ctrl_hs|                     fragment|  return value|
+|ap_idle                             |  out|     1|  ap_ctrl_hs|                     fragment|  return value|
+|ap_continue                         |   in|     1|  ap_ctrl_hs|                     fragment|  return value|
+|in_buffer74_dout                    |   in|    64|     ap_fifo|                  in_buffer74|       pointer|
+|in_buffer74_empty_n                 |   in|     1|     ap_fifo|                  in_buffer74|       pointer|
+|in_buffer74_read                    |  out|     1|     ap_fifo|                  in_buffer74|       pointer|
+|size_in_buffer75_dout               |   in|    64|     ap_fifo|             size_in_buffer75|       pointer|
+|size_in_buffer75_empty_n            |   in|     1|     ap_fifo|             size_in_buffer75|       pointer|
+|size_in_buffer75_read               |  out|     1|     ap_fifo|             size_in_buffer75|       pointer|
+|end_in_buffer76_dout                |   in|     1|     ap_fifo|              end_in_buffer76|       pointer|
+|end_in_buffer76_empty_n             |   in|     1|     ap_fifo|              end_in_buffer76|       pointer|
+|end_in_buffer76_read                |  out|     1|     ap_fifo|              end_in_buffer76|       pointer|
+|post_fragment_meta_buffer_din       |  out|    80|     ap_fifo|    post_fragment_meta_buffer|       pointer|
+|post_fragment_meta_buffer_full_n    |   in|     1|     ap_fifo|    post_fragment_meta_buffer|       pointer|
+|post_fragment_meta_buffer_write     |  out|     1|     ap_fifo|    post_fragment_meta_buffer|       pointer|
+|post_fragment_data_buffer80_din     |  out|  1024|     ap_fifo|  post_fragment_data_buffer80|       pointer|
+|post_fragment_data_buffer80_full_n  |   in|     1|     ap_fifo|  post_fragment_data_buffer80|       pointer|
+|post_fragment_data_buffer80_write   |  out|     1|     ap_fifo|  post_fragment_data_buffer80|       pointer|
+|post_fragment_end_buffer81_din      |  out|     1|     ap_fifo|   post_fragment_end_buffer81|       pointer|
+|post_fragment_end_buffer81_full_n   |   in|     1|     ap_fifo|   post_fragment_end_buffer81|       pointer|
+|post_fragment_end_buffer81_write    |  out|     1|     ap_fifo|   post_fragment_end_buffer81|       pointer|
++------------------------------------+-----+------+------------+-----------------------------+--------------+
+
