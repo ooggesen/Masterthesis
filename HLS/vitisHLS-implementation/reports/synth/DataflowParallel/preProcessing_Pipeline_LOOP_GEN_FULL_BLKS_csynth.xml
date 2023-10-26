@@ -145,8 +145,8 @@
 <Attribute>control</Attribute>
 </RtlPorts>
 <RtlPorts>
-<name>sha1_msg143_dout</name>
-<Object>sha1_msg143</Object>
+<name>sha1_msg85_dout</name>
+<Object>sha1_msg85</Object>
 <Type>pointer</Type>
 <Scope></Scope>
 <IOProtocol>ap_fifo</IOProtocol>
@@ -156,8 +156,8 @@
 <Attribute>control</Attribute>
 </RtlPorts>
 <RtlPorts>
-<name>sha1_msg143_empty_n</name>
-<Object>sha1_msg143</Object>
+<name>sha1_msg85_empty_n</name>
+<Object>sha1_msg85</Object>
 <Type>pointer</Type>
 <Scope></Scope>
 <IOProtocol>ap_fifo</IOProtocol>
@@ -167,8 +167,8 @@
 <Attribute>control</Attribute>
 </RtlPorts>
 <RtlPorts>
-<name>sha1_msg143_read</name>
-<Object>sha1_msg143</Object>
+<name>sha1_msg85_read</name>
+<Object>sha1_msg85</Object>
 <Type>pointer</Type>
 <Scope></Scope>
 <IOProtocol>ap_fifo</IOProtocol>

@@ -3,7 +3,7 @@
 ================================================================
 == Vitis HLS Report for 'preProcessing_Pipeline_LOOP_GEN_FULL_BLKS'
 ================================================================
-* Date:           Fri Oct  6 09:59:17 2023
+* Date:           Thu Oct 26 14:39:22 2023
 
 * Version:        2022.2 (Build 3670227 on Oct 13 2022)
 * Project:        Dedup
@@ -85,7 +85,7 @@
     +-----------------------------------+----------+----+---+----+------------+------------+
     |           Variable Name           | Operation| DSP| FF| LUT| Bitwidth P0| Bitwidth P1|
     +-----------------------------------+----------+----+---+----+------------+------------+
-    |j_V_4_fu_130_p2                    |         +|   0|  0|  65|          58|           1|
+    |j_V_5_fu_130_p2                    |         +|   0|  0|  65|          58|           1|
     |ap_block_pp0_stage0_11001          |       and|   0|  0|   2|           1|           1|
     |ap_block_pp0_stage10_11001         |       and|   0|  0|   2|           1|           1|
     |ap_block_pp0_stage1_01001          |       and|   0|  0|   2|           1|           1|
@@ -108,7 +108,7 @@
     |ap_enable_reg_pp0_iter1      |   9|          2|    1|          2|
     |blk_strm_blk_n               |   9|          2|    1|          2|
     |j_V_fu_64                    |   9|          2|   58|        116|
-    |sha1_msg143_blk_n            |   9|          2|    1|          2|
+    |sha1_msg85_blk_n             |   9|          2|    1|          2|
     +-----------------------------+----+-----------+-----+-----------+
     |Total                        | 144|         31|   65|        145|
     +-----------------------------+----+-----------+-----+-----------+
@@ -121,20 +121,20 @@
     |ap_done_reg                  |   1|   0|    1|          0|
     |ap_enable_reg_pp0_iter0_reg  |   1|   0|    1|          0|
     |ap_enable_reg_pp0_iter1      |   1|   0|    1|          0|
-    |empty_124_reg_314            |   8|   0|    8|          0|
-    |empty_125_reg_334            |   8|   0|    8|          0|
-    |empty_126_reg_354            |   8|   0|    8|          0|
-    |empty_127_reg_374            |   8|   0|    8|          0|
-    |empty_128_reg_394            |   8|   0|    8|          0|
-    |empty_129_reg_414            |   8|   0|    8|          0|
-    |empty_130_reg_434            |   8|   0|    8|          0|
-    |empty_131_reg_454            |   8|   0|    8|          0|
-    |empty_132_reg_474            |   8|   0|    8|          0|
-    |empty_133_reg_494            |   8|   0|    8|          0|
-    |empty_134_reg_514            |   8|   0|    8|          0|
-    |empty_135_reg_534            |   8|   0|    8|          0|
-    |empty_136_reg_554            |   8|   0|    8|          0|
-    |empty_137_reg_574            |   8|   0|    8|          0|
+    |empty_149_reg_314            |   8|   0|    8|          0|
+    |empty_150_reg_334            |   8|   0|    8|          0|
+    |empty_151_reg_354            |   8|   0|    8|          0|
+    |empty_152_reg_374            |   8|   0|    8|          0|
+    |empty_153_reg_394            |   8|   0|    8|          0|
+    |empty_154_reg_414            |   8|   0|    8|          0|
+    |empty_155_reg_434            |   8|   0|    8|          0|
+    |empty_156_reg_454            |   8|   0|    8|          0|
+    |empty_157_reg_474            |   8|   0|    8|          0|
+    |empty_158_reg_494            |   8|   0|    8|          0|
+    |empty_159_reg_514            |   8|   0|    8|          0|
+    |empty_160_reg_534            |   8|   0|    8|          0|
+    |empty_161_reg_554            |   8|   0|    8|          0|
+    |empty_162_reg_574            |   8|   0|    8|          0|
     |empty_reg_294                |   8|   0|    8|          0|
     |icmp_ln1027_reg_290          |   1|   0|    1|          0|
     |j_V_fu_64                    |  58|   0|   58|          0|
@@ -202,9 +202,9 @@
 |ap_done                  |  out|    1|  ap_ctrl_hs|  preProcessing_Pipeline_LOOP_GEN_FULL_BLKS|  return value|
 |ap_idle                  |  out|    1|  ap_ctrl_hs|  preProcessing_Pipeline_LOOP_GEN_FULL_BLKS|  return value|
 |ap_ready                 |  out|    1|  ap_ctrl_hs|  preProcessing_Pipeline_LOOP_GEN_FULL_BLKS|  return value|
-|sha1_msg143_dout         |   in|   32|     ap_fifo|                                sha1_msg143|       pointer|
-|sha1_msg143_empty_n      |   in|    1|     ap_fifo|                                sha1_msg143|       pointer|
-|sha1_msg143_read         |  out|    1|     ap_fifo|                                sha1_msg143|       pointer|
+|sha1_msg85_dout          |   in|   32|     ap_fifo|                                 sha1_msg85|       pointer|
+|sha1_msg85_empty_n       |   in|    1|     ap_fifo|                                 sha1_msg85|       pointer|
+|sha1_msg85_read          |  out|    1|     ap_fifo|                                 sha1_msg85|       pointer|
 |blk_strm_din             |  out|  512|     ap_fifo|                                   blk_strm|       pointer|
 |blk_strm_num_data_valid  |   in|    3|     ap_fifo|                                   blk_strm|       pointer|
 |blk_strm_fifo_cap        |   in|    3|     ap_fifo|                                   blk_strm|       pointer|

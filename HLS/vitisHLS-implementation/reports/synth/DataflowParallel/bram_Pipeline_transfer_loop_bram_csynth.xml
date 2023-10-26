@@ -218,8 +218,8 @@
 <Attribute>data</Attribute>
 </RtlPorts>
 <RtlPorts>
-<name>trunc_ln9_reload</name>
-<Object>trunc_ln9_reload</Object>
+<name>trunc_ln12_reload</name>
+<Object>trunc_ln12_reload</Object>
 <Type>scalar</Type>
 <Scope></Scope>
 <IOProtocol>ap_none</IOProtocol>
@@ -229,8 +229,8 @@
 <Attribute>data</Attribute>
 </RtlPorts>
 <RtlPorts>
-<name>packet_w_data_address0</name>
-<Object>packet_w_data</Object>
+<name>packet_w_data_V_address0</name>
+<Object>packet_w_data_V</Object>
 <Type>array</Type>
 <Scope></Scope>
 <IOProtocol>ap_memory</IOProtocol>
@@ -240,8 +240,8 @@
 <Attribute>address</Attribute>
 </RtlPorts>
 <RtlPorts>
-<name>packet_w_data_ce0</name>
-<Object>packet_w_data</Object>
+<name>packet_w_data_V_ce0</name>
+<Object>packet_w_data_V</Object>
 <Type>array</Type>
 <Scope></Scope>
 <IOProtocol>ap_memory</IOProtocol>
@@ -251,8 +251,8 @@
 <Attribute>control</Attribute>
 </RtlPorts>
 <RtlPorts>
-<name>packet_w_data_q0</name>
-<Object>packet_w_data</Object>
+<name>packet_w_data_V_q0</name>
+<Object>packet_w_data_V</Object>
 <Type>array</Type>
 <Scope></Scope>
 <IOProtocol>ap_memory</IOProtocol>

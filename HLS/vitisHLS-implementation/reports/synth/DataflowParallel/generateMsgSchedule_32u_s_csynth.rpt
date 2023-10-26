@@ -3,7 +3,7 @@
 ================================================================
 == Vitis HLS Report for 'generateMsgSchedule_32u_s'
 ================================================================
-* Date:           Fri Oct  6 09:59:18 2023
+* Date:           Thu Oct 26 14:39:23 2023
 
 * Version:        2022.2 (Build 3670227 on Oct 13 2022)
 * Project:        Dedup
@@ -99,7 +99,7 @@
     +-----------------------+----------+----+---+----+------------+------------+
     |     Variable Name     | Operation| DSP| FF| LUT| Bitwidth P0| Bitwidth P1|
     +-----------------------+----------+----+---+----+------------+------------+
-    |i_V_7_fu_307_p2        |         +|   0|  0|  71|          64|           1|
+    |i_V_5_fu_307_p2        |         +|   0|  0|  71|          64|           1|
     |icmp_ln1027_fu_302_p2  |      icmp|   0|  0|  29|          64|          64|
     |ap_block_state1        |        or|   0|  0|   2|           1|           1|
     |ap_block_state2        |        or|   0|  0|   2|           1|           1|
@@ -152,7 +152,7 @@
     |end_1_reg_222                                                                |   1|   0|    1|          0|
     |grp_generateMsgSchedule_32u_Pipeline_LOOP_SHA1_GEN_WT16_fu_242_ap_start_reg  |   1|   0|    1|          0|
     |grp_generateMsgSchedule_32u_Pipeline_LOOP_SHA1_GEN_WT64_fu_280_ap_start_reg  |   1|   0|    1|          0|
-    |i_V_7_reg_640                                                                |  64|   0|   64|          0|
+    |i_V_5_reg_640                                                                |  64|   0|   64|          0|
     |i_V_reg_231                                                                  |  64|   0|   64|          0|
     |numBlk_V_reg_632                                                             |  64|   0|   64|          0|
     |start_once_reg                                                               |   1|   0|    1|          0|

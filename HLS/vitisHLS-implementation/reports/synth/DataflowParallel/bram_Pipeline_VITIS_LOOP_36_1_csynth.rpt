@@ -3,7 +3,7 @@
 ================================================================
 == Vitis HLS Report for 'bram_Pipeline_VITIS_LOOP_36_1'
 ================================================================
-* Date:           Fri Oct  6 09:59:24 2023
+* Date:           Thu Oct 26 14:39:31 2023
 
 * Version:        2022.2 (Build 3670227 on Oct 13 2022)
 * Project:        Dedup
@@ -138,18 +138,6 @@
 |ap_done                                                                |  out|    1|  ap_ctrl_hs|                                 bram_Pipeline_VITIS_LOOP_36_1|  return value|
 |ap_idle                                                                |  out|    1|  ap_ctrl_hs|                                 bram_Pipeline_VITIS_LOOP_36_1|  return value|
 |ap_ready                                                               |  out|    1|  ap_ctrl_hs|                                 bram_Pipeline_VITIS_LOOP_36_1|  return value|
-|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_312_address1  |  out|    7|   ap_memory|  bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_312|         array|
-|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_312_ce1       |  out|    1|   ap_memory|  bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_312|         array|
-|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_312_we1       |  out|    1|   ap_memory|  bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_312|         array|
-|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_312_d1        |  out|  160|   ap_memory|  bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_312|         array|
-|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_311_address1  |  out|    7|   ap_memory|  bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_311|         array|
-|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_311_ce1       |  out|    1|   ap_memory|  bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_311|         array|
-|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_311_we1       |  out|    1|   ap_memory|  bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_311|         array|
-|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_311_d1        |  out|  160|   ap_memory|  bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_311|         array|
-|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_310_address1  |  out|    7|   ap_memory|  bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_310|         array|
-|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_310_ce1       |  out|    1|   ap_memory|  bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_310|         array|
-|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_310_we1       |  out|    1|   ap_memory|  bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_310|         array|
-|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_310_d1        |  out|  160|   ap_memory|  bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_310|         array|
 |bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_309_address1  |  out|    7|   ap_memory|  bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_309|         array|
 |bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_309_ce1       |  out|    1|   ap_memory|  bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_309|         array|
 |bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_309_we1       |  out|    1|   ap_memory|  bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_309|         array|
@@ -990,6 +978,10 @@
 |bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_100_ce1       |  out|    1|   ap_memory|  bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_100|         array|
 |bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_100_we1       |  out|    1|   ap_memory|  bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_100|         array|
 |bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_100_d1        |  out|  160|   ap_memory|  bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_100|         array|
+|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_47_address1   |  out|    7|   ap_memory|   bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_47|         array|
+|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_47_ce1        |  out|    1|   ap_memory|   bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_47|         array|
+|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_47_we1        |  out|    1|   ap_memory|   bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_47|         array|
+|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_47_d1         |  out|  160|   ap_memory|   bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_47|         array|
 |bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_46_address1   |  out|    7|   ap_memory|   bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_46|         array|
 |bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_46_ce1        |  out|    1|   ap_memory|   bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_46|         array|
 |bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_46_we1        |  out|    1|   ap_memory|   bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_46|         array|
@@ -1138,6 +1130,14 @@
 |bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_10_ce1        |  out|    1|   ap_memory|   bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_10|         array|
 |bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_10_we1        |  out|    1|   ap_memory|   bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_10|         array|
 |bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_10_d1         |  out|  160|   ap_memory|   bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_10|         array|
+|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_7_address1    |  out|    7|   ap_memory|    bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_7|         array|
+|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_7_ce1         |  out|    1|   ap_memory|    bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_7|         array|
+|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_7_we1         |  out|    1|   ap_memory|    bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_7|         array|
+|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_7_d1          |  out|  160|   ap_memory|    bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_7|         array|
+|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_6_address1    |  out|    7|   ap_memory|    bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_6|         array|
+|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_6_ce1         |  out|    1|   ap_memory|    bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_6|         array|
+|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_6_we1         |  out|    1|   ap_memory|    bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_6|         array|
+|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_6_d1          |  out|  160|   ap_memory|    bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_6|         array|
 |bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_5_address1    |  out|    7|   ap_memory|    bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_5|         array|
 |bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_5_ce1         |  out|    1|   ap_memory|    bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_5|         array|
 |bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_5_we1         |  out|    1|   ap_memory|    bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_5|         array|

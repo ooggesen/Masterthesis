@@ -53,8 +53,8 @@
 
 <InterfaceSummary>
 <RtlPorts>
-<name>sha1_msg143_dout</name>
-<Object>sha1_msg143</Object>
+<name>sha1_msg85_dout</name>
+<Object>sha1_msg85</Object>
 <Type>pointer</Type>
 <Scope></Scope>
 <IOProtocol>ap_fifo</IOProtocol>
@@ -64,8 +64,8 @@
 <Attribute>control</Attribute>
 </RtlPorts>
 <RtlPorts>
-<name>sha1_msg143_empty_n</name>
-<Object>sha1_msg143</Object>
+<name>sha1_msg85_empty_n</name>
+<Object>sha1_msg85</Object>
 <Type>pointer</Type>
 <Scope></Scope>
 <IOProtocol>ap_fifo</IOProtocol>
@@ -75,8 +75,8 @@
 <Attribute>control</Attribute>
 </RtlPorts>
 <RtlPorts>
-<name>sha1_msg143_read</name>
-<Object>sha1_msg143</Object>
+<name>sha1_msg85_read</name>
+<Object>sha1_msg85</Object>
 <Type>pointer</Type>
 <Scope></Scope>
 <IOProtocol>ap_fifo</IOProtocol>
@@ -86,8 +86,8 @@
 <Attribute>control</Attribute>
 </RtlPorts>
 <RtlPorts>
-<name>sha1_len146_dout</name>
-<Object>sha1_len146</Object>
+<name>sha1_len86_dout</name>
+<Object>sha1_len86</Object>
 <Type>pointer</Type>
 <Scope></Scope>
 <IOProtocol>ap_fifo</IOProtocol>
@@ -97,8 +97,8 @@
 <Attribute>control</Attribute>
 </RtlPorts>
 <RtlPorts>
-<name>sha1_len146_empty_n</name>
-<Object>sha1_len146</Object>
+<name>sha1_len86_empty_n</name>
+<Object>sha1_len86</Object>
 <Type>pointer</Type>
 <Scope></Scope>
 <IOProtocol>ap_fifo</IOProtocol>
@@ -108,8 +108,8 @@
 <Attribute>control</Attribute>
 </RtlPorts>
 <RtlPorts>
-<name>sha1_len146_read</name>
-<Object>sha1_len146</Object>
+<name>sha1_len86_read</name>
+<Object>sha1_len86</Object>
 <Type>pointer</Type>
 <Scope></Scope>
 <IOProtocol>ap_fifo</IOProtocol>
@@ -119,8 +119,8 @@
 <Attribute>control</Attribute>
 </RtlPorts>
 <RtlPorts>
-<name>sha1_end_len149_dout</name>
-<Object>sha1_end_len149</Object>
+<name>sha1_end_len87_dout</name>
+<Object>sha1_end_len87</Object>
 <Type>pointer</Type>
 <Scope></Scope>
 <IOProtocol>ap_fifo</IOProtocol>
@@ -130,8 +130,8 @@
 <Attribute>control</Attribute>
 </RtlPorts>
 <RtlPorts>
-<name>sha1_end_len149_empty_n</name>
-<Object>sha1_end_len149</Object>
+<name>sha1_end_len87_empty_n</name>
+<Object>sha1_end_len87</Object>
 <Type>pointer</Type>
 <Scope></Scope>
 <IOProtocol>ap_fifo</IOProtocol>
@@ -141,8 +141,8 @@
 <Attribute>control</Attribute>
 </RtlPorts>
 <RtlPorts>
-<name>sha1_end_len149_read</name>
-<Object>sha1_end_len149</Object>
+<name>sha1_end_len87_read</name>
+<Object>sha1_end_len87</Object>
 <Type>pointer</Type>
 <Scope></Scope>
 <IOProtocol>ap_fifo</IOProtocol>
@@ -152,8 +152,8 @@
 <Attribute>control</Attribute>
 </RtlPorts>
 <RtlPorts>
-<name>sha1_digest152_din</name>
-<Object>sha1_digest152</Object>
+<name>sha1_digest88_din</name>
+<Object>sha1_digest88</Object>
 <Type>pointer</Type>
 <Scope></Scope>
 <IOProtocol>ap_fifo</IOProtocol>
@@ -163,8 +163,8 @@
 <Attribute>control</Attribute>
 </RtlPorts>
 <RtlPorts>
-<name>sha1_digest152_full_n</name>
-<Object>sha1_digest152</Object>
+<name>sha1_digest88_full_n</name>
+<Object>sha1_digest88</Object>
 <Type>pointer</Type>
 <Scope></Scope>
 <IOProtocol>ap_fifo</IOProtocol>
@@ -174,8 +174,8 @@
 <Attribute>control</Attribute>
 </RtlPorts>
 <RtlPorts>
-<name>sha1_digest152_write</name>
-<Object>sha1_digest152</Object>
+<name>sha1_digest88_write</name>
+<Object>sha1_digest88</Object>
 <Type>pointer</Type>
 <Scope></Scope>
 <IOProtocol>ap_fifo</IOProtocol>
@@ -185,8 +185,8 @@
 <Attribute>control</Attribute>
 </RtlPorts>
 <RtlPorts>
-<name>sha1_end_digest155_din</name>
-<Object>sha1_end_digest155</Object>
+<name>sha1_end_digest89_din</name>
+<Object>sha1_end_digest89</Object>
 <Type>pointer</Type>
 <Scope></Scope>
 <IOProtocol>ap_fifo</IOProtocol>
@@ -196,8 +196,8 @@
 <Attribute>control</Attribute>
 </RtlPorts>
 <RtlPorts>
-<name>sha1_end_digest155_full_n</name>
-<Object>sha1_end_digest155</Object>
+<name>sha1_end_digest89_full_n</name>
+<Object>sha1_end_digest89</Object>
 <Type>pointer</Type>
 <Scope></Scope>
 <IOProtocol>ap_fifo</IOProtocol>
@@ -207,8 +207,8 @@
 <Attribute>control</Attribute>
 </RtlPorts>
 <RtlPorts>
-<name>sha1_end_digest155_write</name>
-<Object>sha1_end_digest155</Object>
+<name>sha1_end_digest89_write</name>
+<Object>sha1_end_digest89</Object>
 <Type>pointer</Type>
 <Scope></Scope>
 <IOProtocol>ap_fifo</IOProtocol>

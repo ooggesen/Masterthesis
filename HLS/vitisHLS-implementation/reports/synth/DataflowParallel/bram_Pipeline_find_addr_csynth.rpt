@@ -3,7 +3,7 @@
 ================================================================
 == Vitis HLS Report for 'bram_Pipeline_find_addr'
 ================================================================
-* Date:           Fri Oct  6 09:59:20 2023
+* Date:           Thu Oct 26 14:39:25 2023
 
 * Version:        2022.2 (Build 3670227 on Oct 13 2022)
 * Project:        Dedup
@@ -73,9 +73,9 @@
     +----------------------------+-----------------------+---------+----+------+------+-----+
     |          Instance          |         Module        | BRAM_18K| DSP|  FF  |  LUT | URAM|
     +----------------------------+-----------------------+---------+----+------+------+-----+
-    |mul_64ns_66ns_79_1_1_U493   |mul_64ns_66ns_79_1_1   |        0|  13|     0|    51|    0|
-    |mux_2568_160_1_1_U494       |mux_2568_160_1_1       |        0|   0|     0|  1362|    0|
-    |urem_64ns_8ns_64_68_1_U492  |urem_64ns_8ns_64_68_1  |        0|   0|  8651|  6607|    0|
+    |mul_64ns_66ns_79_1_1_U632   |mul_64ns_66ns_79_1_1   |        0|  13|     0|    51|    0|
+    |mux_2568_160_1_1_U633       |mux_2568_160_1_1       |        0|   0|     0|  1362|    0|
+    |urem_64ns_8ns_64_68_1_U631  |urem_64ns_8ns_64_68_1  |        0|   0|  8651|  6607|    0|
     +----------------------------+-----------------------+---------+----+------+------+-----+
     |Total                       |                       |        0|  13|  8651|  8020|    0|
     +----------------------------+-----------------------+---------+----+------+------+-----+
@@ -129,7 +129,7 @@
     |ap_enable_reg_pp0_iter0_reg  |   1|   0|    1|          0|
     |ap_enable_reg_pp0_iter1      |   1|   0|    1|          0|
     |trunc_ln1023_reg_4810        |   7|   0|    7|          0|
-    |trunc_ln9_reg_6095           |   8|   0|    8|          0|
+    |trunc_ln_reg_6095            |   8|   0|    8|          0|
     +-----------------------------+----+----+-----+-----------+
     |Total                        | 215|   0|  215|          0|
     +-----------------------------+----+----+-----+-----------+
@@ -150,22 +150,6 @@
 |ap_idle                                                                |  out|    1|  ap_ctrl_hs|                                       bram_Pipeline_find_addr|  return value|
 |ap_ready                                                               |  out|    1|  ap_ctrl_hs|                                       bram_Pipeline_find_addr|  return value|
 |addr_1                                                                 |   in|   64|     ap_none|                                                        addr_1|        scalar|
-|hash_V                                                                 |   in|  160|     ap_none|                                                        hash_V|        scalar|
-|urem_ln1023_out                                                        |  out|    7|      ap_vld|                                               urem_ln1023_out|       pointer|
-|urem_ln1023_out_ap_vld                                                 |  out|    1|      ap_vld|                                               urem_ln1023_out|       pointer|
-|trunc_ln9_out                                                          |  out|    8|      ap_vld|                                                 trunc_ln9_out|       pointer|
-|trunc_ln9_out_ap_vld                                                   |  out|    1|      ap_vld|                                                 trunc_ln9_out|       pointer|
-|addr_3_out                                                             |  out|   64|      ap_vld|                                                    addr_3_out|       pointer|
-|addr_3_out_ap_vld                                                      |  out|    1|      ap_vld|                                                    addr_3_out|       pointer|
-|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_312_address0  |  out|    7|   ap_memory|  bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_312|         array|
-|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_312_ce0       |  out|    1|   ap_memory|  bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_312|         array|
-|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_312_q0        |   in|  160|   ap_memory|  bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_312|         array|
-|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_311_address0  |  out|    7|   ap_memory|  bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_311|         array|
-|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_311_ce0       |  out|    1|   ap_memory|  bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_311|         array|
-|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_311_q0        |   in|  160|   ap_memory|  bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_311|         array|
-|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_310_address0  |  out|    7|   ap_memory|  bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_310|         array|
-|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_310_ce0       |  out|    1|   ap_memory|  bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_310|         array|
-|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_310_q0        |   in|  160|   ap_memory|  bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_310|         array|
 |bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_309_address0  |  out|    7|   ap_memory|  bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_309|         array|
 |bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_309_ce0       |  out|    1|   ap_memory|  bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_309|         array|
 |bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_309_q0        |   in|  160|   ap_memory|  bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_309|         array|
@@ -796,6 +780,9 @@
 |bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_100_address0  |  out|    7|   ap_memory|  bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_100|         array|
 |bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_100_ce0       |  out|    1|   ap_memory|  bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_100|         array|
 |bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_100_q0        |   in|  160|   ap_memory|  bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_100|         array|
+|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_47_address0   |  out|    7|   ap_memory|   bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_47|         array|
+|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_47_ce0        |  out|    1|   ap_memory|   bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_47|         array|
+|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_47_q0         |   in|  160|   ap_memory|   bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_47|         array|
 |bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_46_address0   |  out|    7|   ap_memory|   bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_46|         array|
 |bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_46_ce0        |  out|    1|   ap_memory|   bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_46|         array|
 |bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_46_q0         |   in|  160|   ap_memory|   bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_46|         array|
@@ -907,6 +894,12 @@
 |bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_10_address0   |  out|    7|   ap_memory|   bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_10|         array|
 |bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_10_ce0        |  out|    1|   ap_memory|   bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_10|         array|
 |bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_10_q0         |   in|  160|   ap_memory|   bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_10|         array|
+|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_7_address0    |  out|    7|   ap_memory|    bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_7|         array|
+|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_7_ce0         |  out|    1|   ap_memory|    bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_7|         array|
+|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_7_q0          |   in|  160|   ap_memory|    bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_7|         array|
+|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_6_address0    |  out|    7|   ap_memory|    bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_6|         array|
+|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_6_ce0         |  out|    1|   ap_memory|    bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_6|         array|
+|bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_6_q0          |   in|  160|   ap_memory|    bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_6|         array|
 |bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_5_address0    |  out|    7|   ap_memory|    bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_5|         array|
 |bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_5_ce0         |  out|    1|   ap_memory|    bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_5|         array|
 |bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_5_q0          |   in|  160|   ap_memory|    bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_5|         array|
@@ -925,5 +918,12 @@
 |bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_address0      |  out|    7|   ap_memory|      bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer|         array|
 |bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_ce0           |  out|    1|   ap_memory|      bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer|         array|
 |bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer_q0            |   in|  160|   ap_memory|      bram_bool_bool_bram_packet_bram_packet_ap_uint_64_buffer|         array|
+|hash_V                                                                 |   in|  160|     ap_none|                                                        hash_V|        scalar|
+|urem_ln1023_out                                                        |  out|    7|      ap_vld|                                               urem_ln1023_out|       pointer|
+|urem_ln1023_out_ap_vld                                                 |  out|    1|      ap_vld|                                               urem_ln1023_out|       pointer|
+|trunc_ln12_out                                                         |  out|    8|      ap_vld|                                                trunc_ln12_out|       pointer|
+|trunc_ln12_out_ap_vld                                                  |  out|    1|      ap_vld|                                                trunc_ln12_out|       pointer|
+|addr_3_out                                                             |  out|   64|      ap_vld|                                                    addr_3_out|       pointer|
+|addr_3_out_ap_vld                                                      |  out|    1|      ap_vld|                                                    addr_3_out|       pointer|
 +-----------------------------------------------------------------------+-----+-----+------------+--------------------------------------------------------------+--------------+
 

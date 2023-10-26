@@ -305,8 +305,8 @@
 <Attribute>control</Attribute>
 </RtlPorts>
 <RtlPorts>
-<name>sha1_digest152_din</name>
-<Object>sha1_digest152</Object>
+<name>sha1_digest88_din</name>
+<Object>sha1_digest88</Object>
 <Type>pointer</Type>
 <Scope></Scope>
 <IOProtocol>ap_fifo</IOProtocol>
@@ -316,8 +316,8 @@
 <Attribute>control</Attribute>
 </RtlPorts>
 <RtlPorts>
-<name>sha1_digest152_full_n</name>
-<Object>sha1_digest152</Object>
+<name>sha1_digest88_full_n</name>
+<Object>sha1_digest88</Object>
 <Type>pointer</Type>
 <Scope></Scope>
 <IOProtocol>ap_fifo</IOProtocol>
@@ -327,8 +327,8 @@
 <Attribute>control</Attribute>
 </RtlPorts>
 <RtlPorts>
-<name>sha1_digest152_write</name>
-<Object>sha1_digest152</Object>
+<name>sha1_digest88_write</name>
+<Object>sha1_digest88</Object>
 <Type>pointer</Type>
 <Scope></Scope>
 <IOProtocol>ap_fifo</IOProtocol>
@@ -338,8 +338,8 @@
 <Attribute>control</Attribute>
 </RtlPorts>
 <RtlPorts>
-<name>sha1_end_digest155_din</name>
-<Object>sha1_end_digest155</Object>
+<name>sha1_end_digest89_din</name>
+<Object>sha1_end_digest89</Object>
 <Type>pointer</Type>
 <Scope></Scope>
 <IOProtocol>ap_fifo</IOProtocol>
@@ -349,8 +349,8 @@
 <Attribute>control</Attribute>
 </RtlPorts>
 <RtlPorts>
-<name>sha1_end_digest155_full_n</name>
-<Object>sha1_end_digest155</Object>
+<name>sha1_end_digest89_full_n</name>
+<Object>sha1_end_digest89</Object>
 <Type>pointer</Type>
 <Scope></Scope>
 <IOProtocol>ap_fifo</IOProtocol>
@@ -360,8 +360,8 @@
 <Attribute>control</Attribute>
 </RtlPorts>
 <RtlPorts>
-<name>sha1_end_digest155_write</name>
-<Object>sha1_end_digest155</Object>
+<name>sha1_end_digest89_write</name>
+<Object>sha1_end_digest89</Object>
 <Type>pointer</Type>
 <Scope></Scope>
 <IOProtocol>ap_fifo</IOProtocol>
