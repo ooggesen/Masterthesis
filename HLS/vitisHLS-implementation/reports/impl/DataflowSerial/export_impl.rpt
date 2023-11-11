@@ -1,0 +1,430 @@
+================================================================
+== Vivado Place & Route Results
+================================================================
++ General Information:
+    * Date:            Fri Nov 10 13:23:15 CET 2023
+    * Version:         2022.2 (Build 3670227 on Oct 13 2022)
+    * Project:         Dedup
+    * Solution:        solution1 (Vivado IP Flow Target)
+    * Product family:  zynquplus
+    * Target device:   xczu9eg-ffvb1156-2-e
+
+
+================================================================
+== Run Constraints & Options
+================================================================
++ Design Constraints & Options:
+    * Place & Route target clock:  10 ns
+    * C-Synthesis target clock:    10 ns
+    * C-Synthesis uncertainty:     27%
+
++ RTL Synthesis Options:
+    * config_export -vivado_synth_strategy:     default
+    * config_export -vivado_synth_design_args:  -directive sdx_optimization_effort_high
+
++ Place & Route Options:
+    * config_export -vivado_impl_strategy:  default
+    * config_export -vivado_phys_opt:       none
+
++ Reporting Options:
+    * config_export -vivado_report_level:      2
+    * config_export -vivado_max_timing_paths:  10
+
+
+================================================================
+== Place & Route Resource Summary
+================================================================
+LUT:              58079
+FF:               116771
+DSP:              41
+BRAM:             992
+URAM:             0
+SRL:              16
+
+
+================================================================
+== Place & Route Timing Summary
+================================================================
+* Timing was met
++----------------+-------------+
+| Timing         | Period (ns) |
++----------------+-------------+
+| Target         | 10.000      |
+| Post-Synthesis | 4.638       |
+| Post-Route     | 9.696       |
++----------------+-------------+
+
+
+================================================================
+== Place & Route Resources
+================================================================
++-------------------------------------------------------------------------------------------------+-------+--------+-----+------+------+-----+--------+--------+---------+---------------------------+-----------------------------+
+| Name                                                                                            | LUT   | FF     | DSP | BRAM | URAM | SRL | Pragma | Impl   | Latency | Variable                  | Source                      |
++-------------------------------------------------------------------------------------------------+-------+--------+-----+------+------+-----+--------+--------+---------+---------------------------+-----------------------------+
+| inst                                                                                            | 58079 | 116771 | 41  | 992  |      |     |        |        |         |                           |                             |
+|   (inst)                                                                                        |       |        |     | 8    |      |     |        |        |         |                           |                             |
+|   dedup_U0                                                                                      | 22200 | 21106  | 17  | 850  |      |     |        |        |         |                           |                             |
+|     (dedup_U0)                                                                                  | 133   | 1746   |     |      |      |     |        |        |         |                           |                             |
+|     bram_data_fifo_U                                                                            | 26    | 32     |     | 29   |      |     |        |        |         |                           |                             |
+|       bind_storage fifo                                                                         |       |        |     |      |      |     |        | memory | 0       | bram_data                 | src/dedup.cpp:148           |
+|     bram_meta_fifo_U                                                                            | 69    | 132    |     |      |      |     |        |        |         |                           |                             |
+|       bind_storage fifo                                                                         |       |        |     |      |      |     |        | srl    | 0       | bram_meta                 |                             |
+|     buffer_hash_V_U                                                                             | 300   | 420    |     | 5    |      |     |        |        |         |                           |                             |
+|       bind_storage ram_2p                                                                       |       |        |     |      |      |     | pragma | bram   | 1       | buffer_hash_V             | src/bram.cpp:32             |
+|     dcmp_64ns_64ns_1_2_no_dsp_1_U325                                                            | 96    | 132    |     |      |      |     |        |        |         |                           |                             |
+|       (dcmp_64ns_64ns_1_2_no_dsp_1_U325)                                                        | 1     | 132    |     |      |      |     |        |        |         |                           |                             |
+|     dmul_64ns_64ns_64_5_max_dsp_1_U324                                                          | 143   | 186    | 8   |      |      |     |        |        |         |                           |                             |
+|       bind_op dmul                                                                              |       |        |     |      |      |     |        | maxdsp | 4       | mul_i                     | src/dedup.cpp:28            |
+|       bind_op dmul                                                                              |       |        |     |      |      |     |        | maxdsp | 4       | dc                        | src/dedup.cpp:28            |
+|       bind_op dmul                                                                              |       |        |     |      |      |     |        | maxdsp | 4       | mul_i1                    | src/dedup.cpp:122           |
+|       bind_op dmul                                                                              |       |        |     |      |      |     |        | maxdsp | 4       | dc_1                      | src/dedup.cpp:122           |
+|     grp_check_duplicate_fu_332                                                                  | 16145 | 11945  | 8   | 776  |      |     |        |        |         |                           |                             |
+|       (grp_check_duplicate_fu_332)                                                              | 297   | 597    |     |      |      |     |        |        |         |                           |                             |
+|       agg_tmp15_0_i_U                                                                           | 1103  |        |     | 57   |      |     |        |        |         |                           |                             |
+|         bind_storage ram_t2p                                                                    |       |        |     |      |      |     |        | auto   | 1       | agg_tmp15_0_i             |                             |
+|       agg_tmp_0_i_U                                                                             | 80    |        |     | 57   |      |     |        |        |         |                           |                             |
+|         bind_storage ram_t2p                                                                    |       |        |     |      |      |     |        | auto   | 1       | agg_tmp_0_i               |                             |
+|       grp_bram_fu_2334                                                                          | 13616 | 10868  | 8   | 574  |      |     |        |        |         |                           |                             |
+|         (grp_bram_fu_2334)                                                                      | 479   | 788    |     |      |      |     |        |        |         |                           |                             |
+|         dmul_64ns_64ns_64_5_max_dsp_1_U283                                                      | 117   | 186    | 8   |      |      |     |        |        |         |                           |                             |
+|           bind_op dmul                                                                          |       |        |     |      |      |     |        | maxdsp | 4       | mul_i                     |                             |
+|           bind_op dmul                                                                          |       |        |     |      |      |     |        | maxdsp | 4       | dc                        |                             |
+|         grp_bram_Pipeline_VITIS_LOOP_36_1_fu_1749                                               | 31    | 11     |     |      |      |     |        |        |         |                           |                             |
+|           (grp_bram_Pipeline_VITIS_LOOP_36_1_fu_1749)                                           |       | 9      |     |      |      |     |        |        |         |                           |                             |
+|         grp_bram_Pipeline_find_addr_fu_1755                                                     | 139   | 146    |     |      |      |     |        |        |         |                           |                             |
+|           (grp_bram_Pipeline_find_addr_fu_1755)                                                 | 70    | 144    |     |      |      |     |        |        |         |                           |                             |
+|         grp_bram_Pipeline_transfer_loop_bram_fu_1765                                            | 11892 | 8597   |     | 517  |      |     |        |        |         |                           |                             |
+|           (grp_bram_Pipeline_transfer_loop_bram_fu_1765)                                        | 2     | 172    |     |      |      |     |        |        |         |                           |                             |
+|           buffer_data_V_U                                                                       | 11825 | 8423   |     | 517  |      |     |        |        |         |                           |                             |
+|             bind_storage ram_2p                                                                 |       |        |     |      |      |     | pragma | bram   | 1       | buffer_data_V             | :0                          |
+|           flow_control_loop_pipe_sequential_init_U                                              | 65    | 2      |     |      |      |     |        |        |         |                           |                             |
+|         packet_w_data_V_U                                                                       | 66    |        |     | 57   |      |     |        |        |         |                           |                             |
+|           bind_storage ram_s2p                                                                  |       |        |     |      |      |     |        | auto   | 1       | packet_w_data_V           | src/dedup.cpp:82            |
+|           bind_storage ram_t2p                                                                  |       |        |     |      |      |     |        | auto   | 1       | packet_w_data_V           | src/bram.cpp:26             |
+|         sitodp_64ns_64_4_no_dsp_1_U285                                                          | 318   | 198    |     |      |      |     |        |        |         |                           |                             |
+|           (sitodp_64ns_64_4_no_dsp_1_U285)                                                      | 2     | 64     |     |      |      |     |        |        |         |                           |                             |
+|         urem_160ns_10ns_9_164_seq_1_U286                                                        | 488   | 814    |     |      |      |     |        |        |         |                           |                             |
+|           (urem_160ns_10ns_9_164_seq_1_U286)                                                    | 7     | 170    |     |      |      |     |        |        |         |                           |                             |
+|       grp_check_duplicate_Pipeline_check_equality_sc_fu_2355                                    | 220   | 272    |     |      |      |     |        |        |         |                           |                             |
+|         (grp_check_duplicate_Pipeline_check_equality_sc_fu_2355)                                | 63    | 153    |     |      |      |     |        |        |         |                           |                             |
+|         flow_control_loop_pipe_sequential_init_U                                                | 8     | 2      |     |      |      |     |        |        |         |                           |                             |
+|         sitodp_32ns_64_4_no_dsp_1_U298                                                          | 150   | 117    |     |      |      |     |        |        |         |                           |                             |
+|           (sitodp_32ns_64_4_no_dsp_1_U298)                                                      |       | 32     |     |      |      |     |        |        |         |                           |                             |
+|       grp_check_duplicate_Pipeline_copy_to_bram_fu_2322                                         | 186   | 208    |     |      |      |     |        |        |         |                           |                             |
+|         (grp_check_duplicate_Pipeline_copy_to_bram_fu_2322)                                     | 51    | 76     |     |      |      |     |        |        |         |                           |                             |
+|         flow_control_loop_pipe_sequential_init_U                                                | 10    | 2      |     |      |      |     |        |        |         |                           |                             |
+|         sitodp_32ns_64_4_no_dsp_1_U262                                                          | 126   | 130    |     |      |      |     |        |        |         |                           |                             |
+|           (sitodp_32ns_64_4_no_dsp_1_U262)                                                      | 25    | 51     |     |      |      |     |        |        |         |                           |                             |
+|       mask_table_U                                                                              | 173   |        |     | 2    |      |     |        |        |         |                           |                             |
+|         bind_storage rom_1p                                                                     |       |        |     |      |      |     |        | auto   | 1       | mask_table                |                             |
+|         bind_storage rom_1p                                                                     |       |        |     |      |      |     |        | auto   | 1       | mask_table                |                             |
+|         bind_storage rom_1p                                                                     |       |        |     |      |      |     |        | auto   | 1       | mask_table                |                             |
+|         bind_storage rom_1p                                                                     |       |        |     |      |      |     |        | auto   | 1       | mask_table                |                             |
+|         bind_storage rom_1p                                                                     |       |        |     |      |      |     |        | auto   | 1       | mask_table                |                             |
+|         bind_storage rom_1p                                                                     |       |        |     |      |      |     |        | auto   | 1       | mask_table                |                             |
+|       packet_r_data_V_U                                                                         | 2     |        |     | 29   |      |     |        |        |         |                           |                             |
+|         bind_storage ram_1p                                                                     |       |        |     |      |      |     |        | auto   | 1       | packet_r_data_V           | src/dedup.cpp:82            |
+|       packet_w_data_V_U                                                                         | 475   |        |     | 57   |      |     |        |        |         |                           |                             |
+|         bind_storage ram_s2p                                                                    |       |        |     |      |      |     |        | auto   | 1       | packet_w_data_V           | src/dedup.cpp:82            |
+|         bind_storage ram_t2p                                                                    |       |        |     |      |      |     |        | auto   | 1       | packet_w_data_V           | src/bram.cpp:26             |
+|     grp_dedup_Pipeline_VITIS_LOOP_36_1_fu_308                                                   | 466   | 11     |     |      |      |     |        |        |         |                           |                             |
+|       (grp_dedup_Pipeline_VITIS_LOOP_36_1_fu_308)                                               |       | 9      |     |      |      |     |        |        |         |                           |                             |
+|       flow_control_loop_pipe_sequential_init_U                                                  | 466   | 2      |     |      |      |     |        |        |         |                           |                             |
+|     grp_dedup_Pipeline_write_fu_348                                                             | 160   | 168    |     |      |      |     |        |        |         |                           |                             |
+|       (grp_dedup_Pipeline_write_fu_348)                                                         | 91    | 66     |     |      |      |     |        |        |         |                           |                             |
+|       flow_control_loop_pipe_sequential_init_U                                                  | 12    | 2      |     |      |      |     |        |        |         |                           |                             |
+|       uitodp_32ns_64_4_no_dsp_1_U317                                                            | 59    | 100    |     |      |      |     |        |        |         |                           |                             |
+|         (uitodp_32ns_64_4_no_dsp_1_U317)                                                        | 25    | 48     |     |      |      |     |        |        |         |                           |                             |
+|     grp_dedup_Pipeline_write_to_sha1_buff_fu_314                                                | 376   | 42     |     |      |      |     |        |        |         |                           |                             |
+|       (grp_dedup_Pipeline_write_to_sha1_buff_fu_314)                                            | 323   | 40     |     |      |      |     |        |        |         |                           |                             |
+|       flow_control_loop_pipe_sequential_init_U                                                  | 53    | 2      |     |      |      |     |        |        |         |                           |                             |
+|     grp_sha1_32u_s_fu_323                                                                       | 2761  | 4892   | 1   | 1    |      |     |        |        |         |                           |                             |
+|       SHA1Digest_32u_U0                                                                         | 679   | 637    | 1   |      |      |     |        |        |         |                           |                             |
+|         (SHA1Digest_32u_U0)                                                                     | 16    | 233    |     |      |      |     |        |        |         |                           |                             |
+|         grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129     | 600   | 404    | 1   |      |      |     |        |        |         |                           |                             |
+|           (grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129) | 526   | 402    |     |      |      |     |        |        |         |                           |                             |
+|           flow_control_loop_pipe_sequential_init_U                                              | 7     | 2      |     |      |      |     |        |        |         |                           |                             |
+|           mul_7ns_9ns_15_1_1_U230                                                               | 68    |        | 1   |      |      |     |        |        |         |                           |                             |
+|             bind_op mul                                                                         |       |        |     |      |      |     |        | auto   | 0       | mul                       | src/sha1.hpp:484            |
+|         mul_64ns_8ns_71_1_1_U241                                                                | 63    |        |     |      |      |     |        |        |         |                           |                             |
+|           bind_op mul                                                                           |       |        |     |      |      |     |        | auto   | 0       | mul_ln475                 | src/sha1.hpp:475            |
+|       blk_strm_U                                                                                | 305   | 524    |     |      |      |     |        |        |         |                           |                             |
+|         bind_storage fifo                                                                       |       |        |     |      |      |     | yes    | lutram | 0       | blk_strm                  |                             |
+|       end_nblk_strm1_U                                                                          | 12    | 13     |     |      |      |     |        |        |         |                           |                             |
+|         bind_storage fifo                                                                       |       |        |     |      |      |     | yes    | lutram | 0       | end_nblk_strm1            | src/sha1.hpp:609            |
+|       end_nblk_strm2_U                                                                          | 10    | 13     |     |      |      |     |        |        |         |                           |                             |
+|         bind_storage fifo                                                                       |       |        |     |      |      |     | yes    | lutram | 0       | end_nblk_strm2            | src/sha1.hpp:612            |
+|       generateMsgSchedule_32u_U0                                                                | 553   | 1819   |     |      |      |     |        |        |         |                           |                             |
+|         (generateMsgSchedule_32u_U0)                                                            | 37    | 712    |     |      |      |     |        |        |         |                           |                             |
+|       nblk_strm1_U                                                                              | 46    | 72     |     |      |      |     |        |        |         |                           |                             |
+|         bind_storage fifo                                                                       |       |        |     |      |      |     | yes    | lutram | 0       | nblk_strm1                | src/sha1.hpp:601            |
+|       nblk_strm2_U                                                                              | 46    | 72     |     |      |      |     |        |        |         |                           |                             |
+|         bind_storage fifo                                                                       |       |        |     |      |      |     | yes    | lutram | 0       | nblk_strm2                | src/sha1.hpp:604            |
+|       preProcessing_U0                                                                          | 1072  | 1694   |     |      |      |     |        |        |         |                           |                             |
+|         (preProcessing_U0)                                                                      | 202   | 674    |     |      |      |     |        |        |         |                           |                             |
+|       start_for_SHA1Digest_32u_U0_U                                                             | 3     | 4      |     |      |      |     |        |        |         |                           |                             |
+|       start_for_generateMsgSchedule_32u_U0_U                                                    | 2     | 4      |     |      |      |     |        |        |         |                           |                             |
+|       w_strm_U                                                                                  | 40    | 40     |     | 1    |      |     |        |        |         |                           |                             |
+|         bind_storage fifo                                                                       |       |        |     |      |      |     | yes    | bram   | 0       | w_strm                    | src/sha1.hpp:617            |
+|     mask_table_U                                                                                | 348   |        |     | 2    |      |     |        |        |         |                           |                             |
+|       bind_storage rom_1p                                                                       |       |        |     |      |      |     |        | auto   | 1       | mask_table                |                             |
+|       bind_storage rom_1p                                                                       |       |        |     |      |      |     |        | auto   | 1       | mask_table                |                             |
+|       bind_storage rom_1p                                                                       |       |        |     |      |      |     |        | auto   | 1       | mask_table                |                             |
+|       bind_storage rom_1p                                                                       |       |        |     |      |      |     |        | auto   | 1       | mask_table                |                             |
+|       bind_storage rom_1p                                                                       |       |        |     |      |      |     |        | auto   | 1       | mask_table                |                             |
+|       bind_storage rom_1p                                                                       |       |        |     |      |      |     |        | auto   | 1       | mask_table                |                             |
+|     sha1_digest_fifo_U                                                                          | 163   | 324    |     |      |      |     |        |        |         |                           |                             |
+|       bind_storage fifo                                                                         |       |        |     |      |      |     |        | srl    | 0       | sha1_digest               | src/dedup.cpp:155           |
+|     sha1_end_digest_fifo_U                                                                      | 5     | 6      |     |      |      |     |        |        |         |                           |                             |
+|       bind_storage fifo                                                                         |       |        |     |      |      |     |        | srl    | 0       | sha1_end_digest           | src/dedup.cpp:156           |
+|     sha1_end_len_fifo_U                                                                         | 14    | 6      |     |      |      |     |        |        |         |                           |                             |
+|       bind_storage fifo                                                                         |       |        |     |      |      |     |        | srl    | 0       | sha1_end_len              | src/dedup.cpp:154           |
+|     sha1_len_fifo_U                                                                             | 126   | 132    |     |      |      |     |        |        |         |                           |                             |
+|       bind_storage fifo                                                                         |       |        |     |      |      |     |        | srl    | 0       | sha1_len                  | src/dedup.cpp:153           |
+|     sha1_msg_fifo_U                                                                             | 45    | 52     |     | 8    |      |     |        |        |         |                           |                             |
+|       bind_storage fifo                                                                         |       |        |     |      |      |     |        | memory | 0       | sha1_msg                  | src/dedup.cpp:152           |
+|     sitodp_64ns_64_4_no_dsp_1_U327                                                              | 316   | 198    |     |      |      |     |        |        |         |                           |                             |
+|       (sitodp_64ns_64_4_no_dsp_1_U327)                                                          |       | 64     |     |      |      |     |        |        |         |                           |                             |
+|     uitodp_64ns_64_4_no_dsp_1_U326                                                              | 256   | 196    |     |      |      |     |        |        |         |                           |                             |
+|       (uitodp_64ns_64_4_no_dsp_1_U326)                                                          | 4     | 64     |     |      |      |     |        |        |         |                           |                             |
+|     write_out_data_fifo_U                                                                       | 26    | 32     |     | 29   |      |     |        |        |         |                           |                             |
+|       bind_storage fifo                                                                         |       |        |     |      |      |     |        | memory | 0       | write_out_data            | src/dedup.cpp:149           |
+|     write_out_meta_fifo_U                                                                       | 233   | 454    |     |      |      |     |        |        |         |                           |                             |
+|       bind_storage fifo                                                                         |       |        |     |      |      |     |        | srl    | 0       | write_out_meta            |                             |
+|   end_in_buffer_U                                                                               | 4     | 6      |     |      |      |     |        |        |         |                           |                             |
+|     bind_storage fifo                                                                           |       |        |     |      |      |     |        | srl    | 0       | end_in_buffer             | src/top.cpp:109             |
+|   end_out_buffer_U                                                                              | 4     | 6      |     |      |      |     |        |        |         |                           |                             |
+|     bind_storage fifo                                                                           |       |        |     |      |      |     |        | srl    | 0       | end_out_buffer            | src/top.cpp:113             |
+|   fragment_U0                                                                                   | 3382  | 3710   | 8   | 46   |      |     |        |        |         |                           |                             |
+|     (fragment_U0)                                                                               |       | 1      |     |      |      |     |        |        |         |                           |                             |
+|       buffer_fifo_U                                                                             | 27    | 8      |     |      |      |     |        |        |         |                           |                             |
+|         bind_storage fifo                                                                       |       |        |     |      |      |     |        | srl    | 0       | buffer                    | src/parsec/rabin.cpp:79     |
+|         bind_storage fifo                                                                       |       |        |     |      |      |     |        | srl    | 0       | buffer                    | src/parsec/rabin.cpp:79     |
+|       grp_segment_bc_packet_Pipeline_init_buffer_fu_248                                         | 140   | 131    |     |      |      |     |        |        |         |                           |                             |
+|         (grp_segment_bc_packet_Pipeline_init_buffer_fu_248)                                     | 51    | 129    |     |      |      |     |        |        |         |                           |                             |
+|       grp_segment_bc_packet_Pipeline_segment_stream_fu_264                                      | 283   | 366    |     | 1    |      |     |        |        |         |                           |                             |
+|         (grp_segment_bc_packet_Pipeline_segment_stream_fu_264)                                  | 250   | 366    |     |      |      |     |        |        |         |                           |                             |
+|         rabinwintab_U                                                                           | 34    |        |     | 1    |      |     |        |        |         |                           |                             |
+|           bind_storage rom_1p                                                                   |       |        |     |      |      |     | pragma | auto   | 1       | rabinwintab               | :0                          |
+|       rabintab_U                                                                                |       |        |     | 1    |      |     |        |        |         |                           |                             |
+|         bind_storage rom_1p                                                                     |       |        |     |      |      |     | pragma | auto   | 1       | rabintab                  | src/fragment.cpp:104        |
+|     segment_data_U                                                                              | 75    | 70     |     | 22   |      |     |        |        |         |                           |                             |
+|       bind_storage fifo                                                                         |       |        |     |      |      |     |        | memory | 0       | segment_data              | src/fragment.cpp:180        |
+|       bind_storage fifo                                                                         |       |        |     |      |      |     |        | memory | 0       | segment_data              | src/fragment_refine.cpp:156 |
+|     segment_end_U                                                                               | 4     | 6      |     |      |      |     |        |        |         |                           |                             |
+|       bind_storage fifo                                                                         |       |        |     |      |      |     |        | srl    | 0       | segment_end               | src/fragment.cpp:182        |
+|       bind_storage fifo                                                                         |       |        |     |      |      |     |        | srl    | 0       | segment_end               | src/fragment_refine.cpp:157 |
+|     segment_size_U                                                                              | 69    | 132    |     |      |      |     |        |        |         |                           |                             |
+|       bind_storage fifo                                                                         |       |        |     |      |      |     |        | srl    | 0       | segment_size              | src/fragment.cpp:181        |
+|     start_for_segment_bc_packet_U0_U                                                            | 7     | 4      |     |      |      |     |        |        |         |                           |                             |
+|     start_for_write_out_1_U0_U                                                                  | 5     | 4      |     |      |      |     |        |        |         |                           |                             |
+|     write_data_U                                                                                | 102   | 70     |     | 22   |      |     |        |        |         |                           |                             |
+|       bind_storage fifo                                                                         |       |        |     |      |      |     |        | memory | 0       | write_data                | src/fragment.cpp:184        |
+|       bind_storage fifo                                                                         |       |        |     |      |      |     |        | memory | 0       | write_data                | src/fragment_refine.cpp:160 |
+|     write_end_U                                                                                 | 4     | 6      |     |      |      |     |        |        |         |                           |                             |
+|       bind_storage fifo                                                                         |       |        |     |      |      |     |        | srl    | 0       | write_end                 | src/fragment.cpp:186        |
+|       bind_storage fifo                                                                         |       |        |     |      |      |     |        | srl    | 0       | write_end                 | src/fragment_refine.cpp:161 |
+|     write_out_1_U0                                                                              | 2078  | 2008   | 8   |      |      |     |        |        |         |                           |                             |
+|       (write_out_1_U0)                                                                          | 234   | 444    |     |      |      |     |        |        |         |                           |                             |
+|       dmul_64ns_64ns_64_5_max_dsp_1_U50                                                         | 117   | 186    | 8   |      |      |     |        |        |         |                           |                             |
+|         bind_op dmul                                                                            |       |        |     |      |      |     |        | maxdsp | 4       | mul                       | src/fragment.cpp:42         |
+|         bind_op dmul                                                                            |       |        |     |      |      |     |        | maxdsp | 4       | dc                        | src/fragment.cpp:42         |
+|       grp_write_out_1_Pipeline_convert_to_c_data_t_fu_191                                       | 1317  | 1050   |     |      |      |     |        |        |         |                           |                             |
+|         (grp_write_out_1_Pipeline_convert_to_c_data_t_fu_191)                                   | 1280  | 1048   |     |      |      |     |        |        |         |                           |                             |
+|       sitodp_64ns_64_4_no_dsp_1_U52                                                             | 321   | 198    |     |      |      |     |        |        |         |                           |                             |
+|         (sitodp_64ns_64_4_no_dsp_1_U52)                                                         | 5     | 64     |     |      |      |     |        |        |         |                           |                             |
+|     write_size_U                                                                                | 69    | 132    |     |      |      |     |        |        |         |                           |                             |
+|       bind_storage fifo                                                                         |       |        |     |      |      |     |        | srl    | 0       | write_size                | src/fragment.cpp:185        |
+|   fragment_refine_U0                                                                            | 3332  | 4484   | 8   | 30   |      |     |        |        |         |                           |                             |
+|     (fragment_refine_U0)                                                                        |       | 1      |     |      |      |     |        |        |         |                           |                             |
+|     convert_to_byte_stream_2_U0                                                                 | 413   | 1164   |     |      |      |     |        |        |         |                           |                             |
+|       (convert_to_byte_stream_2_U0)                                                             | 52    | 1144   |     |      |      |     |        |        |         |                           |                             |
+|       grp_convert_to_byte_stream_2_Pipeline_convert_to_byte_fu_119                              | 361   | 20     |     |      |      |     |        |        |         |                           |                             |
+|         (grp_convert_to_byte_stream_2_Pipeline_convert_to_byte_fu_119)                          | 59    | 18     |     |      |      |     |        |        |         |                           |                             |
+|         flow_control_loop_pipe_sequential_init_U                                                | 303   | 2      |     |      |      |     |        |        |         |                           |                             |
+|     segment_data_U                                                                              | 94    | 70     |     | 22   |      |     |        |        |         |                           |                             |
+|       bind_storage fifo                                                                         |       |        |     |      |      |     |        | memory | 0       | segment_data              | src/fragment.cpp:180        |
+|       bind_storage fifo                                                                         |       |        |     |      |      |     |        | memory | 0       | segment_data              | src/fragment_refine.cpp:156 |
+|     segment_end_U                                                                               | 4     | 6      |     |      |      |     |        |        |         |                           |                             |
+|       bind_storage fifo                                                                         |       |        |     |      |      |     |        | srl    | 0       | segment_end               | src/fragment.cpp:182        |
+|       bind_storage fifo                                                                         |       |        |     |      |      |     |        | srl    | 0       | segment_end               | src/fragment_refine.cpp:157 |
+|     segment_meta_U                                                                              | 69    | 132    |     |      |      |     |        |        |         |                           |                             |
+|       bind_storage fifo                                                                         |       |        |     |      |      |     |        | srl    | 0       | segment_meta              |                             |
+|     segment_sc_packet_U0                                                                        | 531   | 896    |     | 2    |      |     |        |        |         |                           |                             |
+|       (segment_sc_packet_U0)                                                                    | 92    | 383    |     |      |      |     |        |        |         |                           |                             |
+|       buffer_fifo_U                                                                             | 22    | 8      |     |      |      |     |        |        |         |                           |                             |
+|         bind_storage fifo                                                                       |       |        |     |      |      |     |        | srl    | 0       | buffer                    | src/parsec/rabin.cpp:79     |
+|         bind_storage fifo                                                                       |       |        |     |      |      |     |        | srl    | 0       | buffer                    | src/parsec/rabin.cpp:79     |
+|       grp_segment_sc_packet_Pipeline_VITIS_LOOP_128_1_fu_204                                    | 12    | 8      |     |      |      |     |        |        |         |                           |                             |
+|         (grp_segment_sc_packet_Pipeline_VITIS_LOOP_128_1_fu_204)                                |       | 6      |     |      |      |     |        |        |         |                           |                             |
+|       grp_segment_sc_packet_Pipeline_init_buffer_fu_169                                         | 140   | 131    |     |      |      |     |        |        |         |                           |                             |
+|         (grp_segment_sc_packet_Pipeline_init_buffer_fu_169)                                     | 51    | 129    |     |      |      |     |        |        |         |                           |                             |
+|       grp_segment_sc_packet_Pipeline_segment_stream_fu_185                                      | 266   | 366    |     | 1    |      |     |        |        |         |                           |                             |
+|         (grp_segment_sc_packet_Pipeline_segment_stream_fu_185)                                  | 233   | 366    |     |      |      |     |        |        |         |                           |                             |
+|         rabinwintab_2_U                                                                         | 34    |        |     | 1    |      |     |        |        |         |                           |                             |
+|           bind_storage rom_1p                                                                   |       |        |     |      |      |     |        | auto   | 1       | rabinwintab_2             |                             |
+|       rabintab_1_U                                                                              |       |        |     | 1    |      |     |        |        |         |                           |                             |
+|         bind_storage rom_1p                                                                     |       |        |     |      |      |     |        | auto   | 1       | rabintab_1                |                             |
+|     start_for_segment_sc_packet_U0_U                                                            | 7     | 4      |     |      |      |     |        |        |         |                           |                             |
+|     start_for_write_out_3_U0_U                                                                  | 5     | 4      |     |      |      |     |        |        |         |                           |                             |
+|     write_data_U                                                                                | 61    | 60     |     | 6    |      |     |        |        |         |                           |                             |
+|       bind_storage fifo                                                                         |       |        |     |      |      |     |        | memory | 0       | write_data                | src/fragment.cpp:184        |
+|       bind_storage fifo                                                                         |       |        |     |      |      |     |        | memory | 0       | write_data                | src/fragment_refine.cpp:160 |
+|     write_end_U                                                                                 | 4     | 6      |     |      |      |     |        |        |         |                           |                             |
+|       bind_storage fifo                                                                         |       |        |     |      |      |     |        | srl    | 0       | write_end                 | src/fragment.cpp:186        |
+|       bind_storage fifo                                                                         |       |        |     |      |      |     |        | srl    | 0       | write_end                 | src/fragment_refine.cpp:161 |
+|     write_meta_U                                                                                | 69    | 132    |     |      |      |     |        |        |         |                           |                             |
+|       bind_storage fifo                                                                         |       |        |     |      |      |     |        | srl    | 0       | write_meta                |                             |
+|     write_out_3_U0                                                                              | 2077  | 2009   | 8   |      |      |     |        |        |         |                           |                             |
+|       (write_out_3_U0)                                                                          | 235   | 438    |     |      |      |     |        |        |         |                           |                             |
+|       dmul_64ns_64ns_64_5_max_dsp_1_U118                                                        | 117   | 186    | 8   |      |      |     |        |        |         |                           |                             |
+|         bind_op dmul                                                                            |       |        |     |      |      |     |        | maxdsp | 4       | mul                       | src/fragment_refine.cpp:28  |
+|         bind_op dmul                                                                            |       |        |     |      |      |     |        | maxdsp | 4       | dc                        | src/fragment_refine.cpp:28  |
+|       grp_write_out_3_Pipeline_convert_to_c_data_t_fu_184                                       | 1317  | 1057   |     |      |      |     |        |        |         |                           |                             |
+|         (grp_write_out_3_Pipeline_convert_to_c_data_t_fu_184)                                   | 1276  | 1055   |     |      |      |     |        |        |         |                           |                             |
+|       sitodp_64ns_64_4_no_dsp_1_U120                                                            | 320   | 198    |     |      |      |     |        |        |         |                           |                             |
+|         (sitodp_64ns_64_4_no_dsp_1_U120)                                                        | 4     | 64     |     |      |      |     |        |        |         |                           |                             |
+|   in_buffer_U                                                                                   | 61    | 88     |     |      |      |     |        |        |         |                           |                             |
+|     bind_storage fifo                                                                           |       |        |     |      |      |     |        | memory | 0       | in_buffer                 | src/top.cpp:107             |
+|   out_buffer_U                                                                                  | 62    | 88     |     |      |      |     |        |        |         |                           |                             |
+|     bind_storage fifo                                                                           |       |        |     |      |      |     |        | memory | 0       | out_buffer                | src/top.cpp:111             |
+|   post_fragment_data_buffer_U                                                                   | 598   | 1040   |     |      |      |     |        |        |         |                           |                             |
+|     bind_storage fifo                                                                           |       |        |     |      |      |     |        | memory | 0       | post_fragment_data_buffer | src/top.cpp:116             |
+|   post_fragment_end_buffer_U                                                                    | 5     | 6      |     |      |      |     |        |        |         |                           |                             |
+|     bind_storage fifo                                                                           |       |        |     |      |      |     |        | srl    | 0       | post_fragment_end_buffer  | src/top.cpp:117             |
+|   post_fragment_meta_buffer_U                                                                   | 69    | 132    |     |      |      |     |        |        |         |                           |                             |
+|     bind_storage fifo                                                                           |       |        |     |      |      |     |        | srl    | 0       | post_fragment_meta_buffer |                             |
+|   post_refine_data_buffer_U                                                                     | 37    | 32     |     | 29   |      |     |        |        |         |                           |                             |
+|     bind_storage fifo                                                                           |       |        |     |      |      |     |        | memory | 0       | post_refine_data_buffer   | src/top.cpp:124             |
+|   post_refine_end_buffer_U                                                                      | 6     | 6      |     |      |      |     |        |        |         |                           |                             |
+|     bind_storage fifo                                                                           |       |        |     |      |      |     |        | srl    | 0       | post_refine_end_buffer    | src/top.cpp:125             |
+|   post_refine_meta_buffer_U                                                                     | 69    | 132    |     |      |      |     |        |        |         |                           |                             |
+|     bind_storage fifo                                                                           |       |        |     |      |      |     |        | srl    | 0       | post_refine_meta_buffer   |                             |
+|   pre_reorder_data_buffer_U                                                                     | 543   | 32     |     | 29   |      |     |        |        |         |                           |                             |
+|     bind_storage fifo                                                                           |       |        |     |      |      |     |        | memory | 0       | pre_reorder_data_buffer   | src/top.cpp:120             |
+|   pre_reorder_end_buffer_U                                                                      | 6     | 6      |     |      |      |     |        |        |         |                           |                             |
+|     bind_storage fifo                                                                           |       |        |     |      |      |     |        | srl    | 0       | pre_reorder_end_buffer    | src/top.cpp:121             |
+|   pre_reorder_meta_buffer_U                                                                     | 231   | 454    |     |      |      |     |        |        |         |                           |                             |
+|     bind_storage fifo                                                                           |       |        |     |      |      |     |        | srl    | 0       | pre_reorder_meta_buffer   |                             |
+|   read_in_U0                                                                                    | 70    | 88     |     |      |      |     |        |        |         |                           |                             |
+|     (read_in_U0)                                                                                | 10    | 72     |     |      |      |     |        |        |         |                           |                             |
+|   reorder_U0                                                                                    | 27145 | 84962  | 8   |      |      |     |        |        |         |                           |                             |
+|     (reorder_U0)                                                                                | 4     | 135    |     |      |      |     |        |        |         |                           |                             |
+|       dmul_64ns_64ns_64_5_max_dsp_1_U345                                                        | 117   | 186    | 8   |      |      |     |        |        |         |                           |                             |
+|         bind_op dmul                                                                            |       |        |     |      |      |     |        | maxdsp | 4       | mul_i                     | src/reorder.cpp:62          |
+|         bind_op dmul                                                                            |       |        |     |      |      |     |        | maxdsp | 4       | dc                        | src/reorder.cpp:62          |
+|       sitodp_64ns_64_4_no_dsp_1_U347                                                            | 393   | 263    |     |      |      |     |        |        |         |                           |                             |
+|         (sitodp_64ns_64_4_no_dsp_1_U347)                                                        | 75    | 129    |     |      |      |     |        |        |         |                           |                             |
+|   size_in_buffer_U                                                                              | 68    | 132    |     |      |      |     |        |        |         |                           |                             |
+|     bind_storage fifo                                                                           |       |        |     |      |      |     |        | srl    | 0       | size_in_buffer            | src/top.cpp:108             |
+|   size_out_buffer_U                                                                             | 70    | 132    |     |      |      |     |        |        |         |                           |                             |
+|     bind_storage fifo                                                                           |       |        |     |      |      |     |        | srl    | 0       | size_out_buffer           | src/top.cpp:112             |
+|   start_for_dedup_U0_U                                                                          | 7     | 4      |     |      |      |     |        |        |         |                           |                             |
+|   start_for_fragment_U0_U                                                                       | 6     | 4      |     |      |      |     |        |        |         |                           |                             |
+|   start_for_fragment_refine_U0_U                                                                | 5     | 4      |     |      |      |     |        |        |         |                           |                             |
+|   start_for_reorder_U0_U                                                                        | 6     | 4      |     |      |      |     |        |        |         |                           |                             |
+|   start_for_write_out_U0_U                                                                      | 7     | 4      |     |      |      |     |        |        |         |                           |                             |
+|   write_out_U0                                                                                  | 99    | 109    |     |      |      |     |        |        |         |                           |                             |
+|     (write_out_U0)                                                                              | 14    | 89     |     |      |      |     |        |        |         |                           |                             |
++-------------------------------------------------------------------------------------------------+-------+--------+-----+------+------+-----+--------+--------+---------+---------------------------+-----------------------------+
+
+
+================================================================
+== Place & Route Fail Fast
+================================================================
++-----------------------------------------------------------+-----------+--------+--------+
+| Criteria                                                  | Guideline | Actual | Status |
++-----------------------------------------------------------+-----------+--------+--------+
+| LUT                                                       | 70%       | 21.19% | OK     |
+| FD                                                        | 50%       | 21.30% | OK     |
+| LUTRAM+SRL                                                | 25%       | 0.73%  | OK     |
+| CARRY8                                                    | 25%       | 2.09%  | OK     |
+| MUXF7                                                     | 15%       | 7.92%  | OK     |
+| DSP                                                       | 80%       | 1.63%  | OK     |
+| RAMB/FIFO                                                 | 80%       | 54.39% | OK     |
+| DSP+RAMB+URAM (Avg)                                       | 70%       | 28.01% | OK     |
+| BUFGCE* + BUFGCTRL                                        | 24        | 0      | OK     |
+| DONT_TOUCH (cells/nets)                                   | 0         | 0      | OK     |
+| MARK_DEBUG (nets)                                         | 0         | 0      | OK     |
+| Control Sets                                              | 5139      | 561    | OK     |
+| Average Fanout for modules > 100k cells                   | 4         | 2.88   | OK     |
+| Non-FD high fanout nets > 10k loads                       | 0         | 0      | OK     |
++-----------------------------------------------------------+-----------+--------+--------+
+| TIMING-6 (No common primary clock between related clocks) | 0         | 0      | OK     |
+| TIMING-7 (No common node between related clocks)          | 0         | 0      | OK     |
+| TIMING-8 (No common period between related clocks)        | 0         | 0      | OK     |
+| TIMING-14 (LUT on the clock tree)                         | 0         | 0      | OK     |
+| TIMING-35 (No common node in paths with the same clock)   | 0         | 0      | OK     |
++-----------------------------------------------------------+-----------+--------+--------+
+| Number of paths above max LUT budgeting (0.300ns)         | 0         | 0      | OK     |
+| Number of paths above max Net budgeting (0.208ns)         | 0         | 0      | OK     |
++-----------------------------------------------------------+-----------+--------+--------+
+
+
+================================================================
+== Place & Route Timing Paths
+================================================================
+* Timing was met
++-------+-------+----------------------------------------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+------------+----------------+----------------+--------------+
+| Path  | SLACK | STARTPOINT PIN                                                                                                       | ENDPOINT PIN                                                                                                                                                                                                              | LOGIC LEVELS | MAX FANOUT | DATAPATH DELAY | DATAPATH LOGIC | DATAPATH NET |
+|       |       |                                                                                                                      |                                                                                                                                                                                                                           |              |            |                |          DELAY |        DELAY |
++-------+-------+----------------------------------------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+------------+----------------+----------------+--------------+
+| Path1 | 0.304 | dedup_U0/grp_check_duplicate_fu_332/grp_bram_fu_2334/grp_bram_Pipeline_transfer_loop_bram_fu_1765_ap_start_reg_reg/C | dedup_U0/grp_check_duplicate_fu_332/grp_bram_fu_2334/grp_bram_Pipeline_transfer_loop_bram_fu_1765/buffer_data_V_U/top_bram_Pipeline_transfer_loop_bram_buffer_data_V_RAM_2P_BRAM_1R1W_ram_u/ram_reg_bram_164/CASDOMUXEN_B |            0 |        252 |          9.571 |          0.076 |        9.495 |
+| Path2 | 0.315 | dedup_U0/grp_check_duplicate_fu_332/grp_bram_fu_2334/grp_bram_Pipeline_transfer_loop_bram_fu_1765_ap_start_reg_reg/C | dedup_U0/grp_check_duplicate_fu_332/grp_bram_fu_2334/grp_bram_Pipeline_transfer_loop_bram_fu_1765/buffer_data_V_U/top_bram_Pipeline_transfer_loop_bram_buffer_data_V_RAM_2P_BRAM_1R1W_ram_u/ram_reg_bram_176/CASDOMUXEN_B |            0 |        252 |          9.561 |          0.076 |        9.485 |
+| Path3 | 0.328 | dedup_U0/grp_check_duplicate_fu_332/grp_bram_fu_2334/grp_bram_Pipeline_transfer_loop_bram_fu_1765_ap_start_reg_reg/C | dedup_U0/grp_check_duplicate_fu_332/grp_bram_fu_2334/grp_bram_Pipeline_transfer_loop_bram_fu_1765/buffer_data_V_U/top_bram_Pipeline_transfer_loop_bram_buffer_data_V_RAM_2P_BRAM_1R1W_ram_u/ram_reg_bram_163/CASDOMUXEN_B |            0 |        252 |          9.547 |          0.076 |        9.471 |
+| Path4 | 0.707 | dedup_U0/grp_check_duplicate_fu_332/grp_bram_fu_2334/grp_bram_Pipeline_transfer_loop_bram_fu_1765_ap_start_reg_reg/C | dedup_U0/grp_check_duplicate_fu_332/grp_bram_fu_2334/grp_bram_Pipeline_transfer_loop_bram_fu_1765/buffer_data_V_U/top_bram_Pipeline_transfer_loop_bram_buffer_data_V_RAM_2P_BRAM_1R1W_ram_u/ram_reg_bram_165/CASDOMUXEN_B |            0 |        252 |          9.169 |          0.076 |        9.093 |
+| Path5 | 0.890 | dedup_U0/grp_check_duplicate_fu_332/grp_bram_fu_2334/grp_bram_Pipeline_transfer_loop_bram_fu_1765_ap_start_reg_reg/C | dedup_U0/grp_check_duplicate_fu_332/grp_bram_fu_2334/grp_bram_Pipeline_transfer_loop_bram_fu_1765/buffer_data_V_U/top_bram_Pipeline_transfer_loop_bram_buffer_data_V_RAM_2P_BRAM_1R1W_ram_u/ram_reg_bram_178/CASDOMUXEN_B |            0 |        252 |          8.986 |          0.076 |        8.910 |
++-------+-------+----------------------------------------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+------------+----------------+----------------+--------------+
+
+    +--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------------------------+
+    | Path1 Cells                                                                                                                                                                                                  | Primitive Type         |
+    +--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------------------------+
+    | dedup_U0/grp_check_duplicate_fu_332/grp_bram_fu_2334/grp_bram_Pipeline_transfer_loop_bram_fu_1765_ap_start_reg_reg                                                                                           | REGISTER.SDR.FDRE      |
+    | dedup_U0/grp_check_duplicate_fu_332/grp_bram_fu_2334/grp_bram_Pipeline_transfer_loop_bram_fu_1765/buffer_data_V_U/top_bram_Pipeline_transfer_loop_bram_buffer_data_V_RAM_2P_BRAM_1R1W_ram_u/ram_reg_bram_164 | BLOCKRAM.BRAM.RAMB36E2 |
+    +--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------------------------+
+
+    +--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------------------------+
+    | Path2 Cells                                                                                                                                                                                                  | Primitive Type         |
+    +--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------------------------+
+    | dedup_U0/grp_check_duplicate_fu_332/grp_bram_fu_2334/grp_bram_Pipeline_transfer_loop_bram_fu_1765_ap_start_reg_reg                                                                                           | REGISTER.SDR.FDRE      |
+    | dedup_U0/grp_check_duplicate_fu_332/grp_bram_fu_2334/grp_bram_Pipeline_transfer_loop_bram_fu_1765/buffer_data_V_U/top_bram_Pipeline_transfer_loop_bram_buffer_data_V_RAM_2P_BRAM_1R1W_ram_u/ram_reg_bram_176 | BLOCKRAM.BRAM.RAMB36E2 |
+    +--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------------------------+
+
+    +--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------------------------+
+    | Path3 Cells                                                                                                                                                                                                  | Primitive Type         |
+    +--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------------------------+
+    | dedup_U0/grp_check_duplicate_fu_332/grp_bram_fu_2334/grp_bram_Pipeline_transfer_loop_bram_fu_1765_ap_start_reg_reg                                                                                           | REGISTER.SDR.FDRE      |
+    | dedup_U0/grp_check_duplicate_fu_332/grp_bram_fu_2334/grp_bram_Pipeline_transfer_loop_bram_fu_1765/buffer_data_V_U/top_bram_Pipeline_transfer_loop_bram_buffer_data_V_RAM_2P_BRAM_1R1W_ram_u/ram_reg_bram_163 | BLOCKRAM.BRAM.RAMB36E2 |
+    +--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------------------------+
+
+    +--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------------------------+
+    | Path4 Cells                                                                                                                                                                                                  | Primitive Type         |
+    +--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------------------------+
+    | dedup_U0/grp_check_duplicate_fu_332/grp_bram_fu_2334/grp_bram_Pipeline_transfer_loop_bram_fu_1765_ap_start_reg_reg                                                                                           | REGISTER.SDR.FDRE      |
+    | dedup_U0/grp_check_duplicate_fu_332/grp_bram_fu_2334/grp_bram_Pipeline_transfer_loop_bram_fu_1765/buffer_data_V_U/top_bram_Pipeline_transfer_loop_bram_buffer_data_V_RAM_2P_BRAM_1R1W_ram_u/ram_reg_bram_165 | BLOCKRAM.BRAM.RAMB36E2 |
+    +--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------------------------+
+
+    +--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------------------------+
+    | Path5 Cells                                                                                                                                                                                                  | Primitive Type         |
+    +--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------------------------+
+    | dedup_U0/grp_check_duplicate_fu_332/grp_bram_fu_2334/grp_bram_Pipeline_transfer_loop_bram_fu_1765_ap_start_reg_reg                                                                                           | REGISTER.SDR.FDRE      |
+    | dedup_U0/grp_check_duplicate_fu_332/grp_bram_fu_2334/grp_bram_Pipeline_transfer_loop_bram_fu_1765/buffer_data_V_U/top_bram_Pipeline_transfer_loop_bram_buffer_data_V_RAM_2P_BRAM_1R1W_ram_u/ram_reg_bram_178 | BLOCKRAM.BRAM.RAMB36E2 |
+    +--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------------------------+
+
+
+================================================================
+== Place & Route Vivado Reports
+================================================================
++--------------------------+-------------------------------------------------------------+
+| Report Type              | Report Location                                             |
++--------------------------+-------------------------------------------------------------+
+| design_analysis          | impl/verilog/report/top_design_analysis_routed.rpt          |
+| failfast                 | impl/verilog/report/top_failfast_routed.rpt                 |
+| status                   | impl/verilog/report/top_status_routed.rpt                   |
+| timing                   | impl/verilog/report/top_timing_routed.rpt                   |
+| timing_paths             | impl/verilog/report/top_timing_paths_routed.rpt             |
+| utilization              | impl/verilog/report/top_utilization_routed.rpt              |
+| utilization_hierarchical | impl/verilog/report/top_utilization_hierarchical_routed.rpt |
++--------------------------+-------------------------------------------------------------+
+
+

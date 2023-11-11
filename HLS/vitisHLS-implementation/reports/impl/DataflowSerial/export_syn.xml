@@ -1,0 +1,913 @@
+<profile>
+  <RunData>
+    <RUN_TYPE>synth</RUN_TYPE>
+    <VIVADO_VERSION>v.2022.2</VIVADO_VERSION>
+    <ROOT_MODULE_CELL>bd_0_i/hls_inst</ROOT_MODULE_CELL>
+  </RunData>
+  <TimingReport>
+    <TargetClockPeriod>10.000</TargetClockPeriod>
+    <AchievedClockPeriod>4.638</AchievedClockPeriod>
+    <CLOCK_NAME>ap_clk</CLOCK_NAME>
+    <CP_FINAL>4.638</CP_FINAL>
+    <CP_ROUTE>NA</CP_ROUTE>
+    <CP_SYNTH>4.638</CP_SYNTH>
+    <CP_TARGET>10.000</CP_TARGET>
+    <SLACK_FINAL>5.362</SLACK_FINAL>
+    <SLACK_ROUTE/>
+    <SLACK_SYNTH>5.362</SLACK_SYNTH>
+    <TIMING_MET>TRUE</TIMING_MET>
+    <TNS_FINAL>0.000</TNS_FINAL>
+    <TNS_ROUTE>NA</TNS_ROUTE>
+    <TNS_SYNTH>0.000</TNS_SYNTH>
+    <WNS_FINAL>5.362</WNS_FINAL>
+    <WNS_ROUTE>NA</WNS_ROUTE>
+    <WNS_SYNTH>5.362</WNS_SYNTH>
+  </TimingReport>
+  <AreaReport>
+    <Resources>
+      <BRAM>992</BRAM>
+      <CLB>0</CLB>
+      <DSP>41</DSP>
+      <FF>116810</FF>
+      <LATCH>0</LATCH>
+      <LUT>58661</LUT>
+      <SRL>16</SRL>
+      <URAM>0</URAM>
+    </Resources>
+    <AvailableResources>
+      <BRAM>1824</BRAM>
+      <CLB>0</CLB>
+      <DSP>2520</DSP>
+      <FF>548160</FF>
+      <LUT>274080</LUT>
+      <URAM>0</URAM>
+    </AvailableResources>
+  </AreaReport>
+  <RtlModules>
+    <RtlModule CELL="inst" DEPTH="0" IS_TOP="1" TYPE="function" MODULENAME="top" DISPNAME="inst" RTLNAME="top">
+      <SubModules count="26">dedup_U0 end_in_buffer_U end_out_buffer_U fragment_U0 fragment_refine_U0 in_buffer_U out_buffer_U post_fragment_data_buffer_U post_fragment_end_buffer_U post_fragment_meta_buffer_U post_refine_data_buffer_U post_refine_end_buffer_U post_refine_meta_buffer_U pre_reorder_data_buffer_U pre_reorder_end_buffer_U pre_reorder_meta_buffer_U read_in_U0 reorder_U0 size_in_buffer_U size_out_buffer_U start_for_dedup_U0_U start_for_fragment_U0_U start_for_fragment_refine_U0_U start_for_reorder_U0_U start_for_write_out_U0_U write_out_U0</SubModules>
+      <Resources BRAM="992" DSP="41" FF="116810" LUT="58661"/>
+      <LocalResources BRAM="8"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0" DEPTH="1" TYPE="function" MODULENAME="dedup" DISPNAME="dedup_U0" RTLNAME="top_dedup">
+      <SubModules count="20">bram_data_fifo_U bram_meta_fifo_U buffer_hash_V_U dcmp_64ns_64ns_1_2_no_dsp_1_U325 dmul_64ns_64ns_64_5_max_dsp_1_U324 grp_check_duplicate_fu_332 grp_dedup_Pipeline_VITIS_LOOP_36_1_fu_308 grp_dedup_Pipeline_write_fu_348 grp_dedup_Pipeline_write_to_sha1_buff_fu_314 grp_sha1_32u_s_fu_323 mask_table_U sha1_digest_fifo_U sha1_end_digest_fifo_U sha1_end_len_fifo_U sha1_len_fifo_U sha1_msg_fifo_U sitodp_64ns_64_4_no_dsp_1_U327 uitodp_64ns_64_4_no_dsp_1_U326 write_out_data_fifo_U write_out_meta_fifo_U</SubModules>
+      <Resources BRAM="850" DSP="17" FF="21333" LUT="22630"/>
+      <LocalResources FF="1746" LUT="134"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/bram_data_fifo_U" BINDMODULE="top_fifo_w1024_d81_A" DEPTH="2" TYPE="resource" MODULENAME="fifo_w1024_d81_A" DISPNAME="bram_data_fifo_U" RTLNAME="top_fifo_w1024_d81_A">
+      <Resources BRAM="29" FF="32" LUT="27"/>
+      <LocalResources FF="25" LUT="21"/>
+      <BindNode BINDTYPE="storage" BRAM="57" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="memory" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="bram_data_fifo_U" SOURCE="src/dedup.cpp:148" URAM="0" VARIABLE="bram_data"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/bram_meta_fifo_U" BINDMODULE="top_fifo_w258_d2_S" DEPTH="2" TYPE="resource" MODULENAME="fifo_w258_d2_S_x" DISPNAME="bram_meta_fifo_U" RTLNAME="top_fifo_w258_d2_S_x">
+      <Resources FF="132" LUT="69"/>
+      <LocalResources FF="4" LUT="5"/>
+      <BindNode BINDTYPE="storage" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="srl" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="bram_meta_fifo_U" SOURCE="" URAM="0" VARIABLE="bram_meta"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/buffer_hash_V_U" BINDMODULE="top_dedup_buffer_hash_V_RAM_2P_BRAM_1R1W" DEPTH="2" TYPE="resource" MODULENAME="dedup_buffer_hash_V_RAM_2P_BRAM_1R1W" DISPNAME="buffer_hash_V_U" RTLNAME="top_dedup_buffer_hash_V_RAM_2P_BRAM_1R1W">
+      <Resources BRAM="5" FF="420" LUT="300"/>
+      <LocalResources FF="420" LUT="111"/>
+      <BindNode BINDTYPE="storage" BRAM="5" BUNDLEDNAME="" DISPNAME="bind_storage ram_2p" DSP="0" ID="" IMPL="bram" LATENCY="1" LOOP="" OPTYPE="ram_2p" PRAGMA="pragma" RTLNAME="buffer_hash_V_U" SOURCE="src/bram.cpp:32" URAM="0" VARIABLE="buffer_hash_V"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/dcmp_64ns_64ns_1_2_no_dsp_1_U325" BINDMODULE="top_dcmp_64ns_64ns_1_2_no_dsp_1" DEPTH="2" TYPE="rtl" MODULENAME="dcmp_64ns_64ns_1_2_no_dsp_1" DISPNAME="dcmp_64ns_64ns_1_2_no_dsp_1_U325" RTLNAME="top_dcmp_64ns_64ns_1_2_no_dsp_1">
+      <Resources FF="132" LUT="105"/>
+      <LocalResources FF="132" LUT="1"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/dmul_64ns_64ns_64_5_max_dsp_1_U324" BINDMODULE="top_dmul_64ns_64ns_64_5_max_dsp_1" DEPTH="2" TYPE="resource" MODULENAME="dmul_64ns_64ns_64_5_max_dsp_1" DISPNAME="dmul_64ns_64ns_64_5_max_dsp_1_U324" RTLNAME="top_dmul_64ns_64ns_64_5_max_dsp_1">
+      <Resources DSP="8" FF="188" LUT="149"/>
+      <LocalResources FF="66" LUT="63"/>
+      <BindNode BINDTYPE="op" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_op dmul" DSP="11" ID="" IMPL="maxdsp" LATENCY="4" LOOP="dedup_loop" OPTYPE="dmul" PRAGMA="" RTLNAME="dmul_64ns_64ns_64_5_max_dsp_1_U324" SOURCE="src/dedup.cpp:28" URAM="0" VARIABLE="mul_i"/>
+      <BindNode BINDTYPE="op" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_op dmul" DSP="11" ID="" IMPL="maxdsp" LATENCY="4" LOOP="dedup_loop" OPTYPE="dmul" PRAGMA="" RTLNAME="dmul_64ns_64ns_64_5_max_dsp_1_U324" SOURCE="src/dedup.cpp:28" URAM="0" VARIABLE="dc"/>
+      <BindNode BINDTYPE="op" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_op dmul" DSP="11" ID="" IMPL="maxdsp" LATENCY="4" LOOP="dedup_loop" OPTYPE="dmul" PRAGMA="" RTLNAME="dmul_64ns_64ns_64_5_max_dsp_1_U324" SOURCE="src/dedup.cpp:122" URAM="0" VARIABLE="mul_i1"/>
+      <BindNode BINDTYPE="op" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_op dmul" DSP="11" ID="" IMPL="maxdsp" LATENCY="4" LOOP="dedup_loop" OPTYPE="dmul" PRAGMA="" RTLNAME="dmul_64ns_64ns_64_5_max_dsp_1_U324" SOURCE="src/dedup.cpp:122" URAM="0" VARIABLE="dc_1"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_check_duplicate_fu_332" DEPTH="2" TYPE="function" MODULENAME="check_duplicate" DISPNAME="grp_check_duplicate_fu_332" RTLNAME="top_check_duplicate">
+      <SubModules count="8">agg_tmp15_0_i_U agg_tmp_0_i_U grp_bram_fu_2334 grp_check_duplicate_Pipeline_check_equality_sc_fu_2355 grp_check_duplicate_Pipeline_copy_to_bram_fu_2322 mask_table_U packet_r_data_V_U packet_w_data_V_U</SubModules>
+      <Resources BRAM="776" DSP="8" FF="12068" LUT="16428"/>
+      <LocalResources FF="597" LUT="299"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_check_duplicate_fu_332/agg_tmp15_0_i_U" BINDMODULE="top_check_duplicate_agg_tmp_0_i_RAM_AUTO_1R1W" DEPTH="3" TYPE="resource" MODULENAME="check_duplicate_agg_tmp_0_i_RAM_AUTO_1R1W" DISPNAME="agg_tmp15_0_i_U" RTLNAME="top_check_duplicate_agg_tmp_0_i_RAM_AUTO_1R1W">
+      <Resources BRAM="57" LUT="1122"/>
+      <BindNode BINDTYPE="storage" BRAM="57" BUNDLEDNAME="" DISPNAME="bind_storage ram_t2p" DSP="0" ID="" IMPL="auto" LATENCY="1" LOOP="" OPTYPE="ram_t2p" PRAGMA="" RTLNAME="agg_tmp15_0_i_U" SOURCE="" URAM="0" VARIABLE="agg_tmp15_0_i"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_check_duplicate_fu_332/agg_tmp_0_i_U" BINDMODULE="top_check_duplicate_agg_tmp_0_i_RAM_AUTO_1R1W" DEPTH="3" TYPE="resource" MODULENAME="check_duplicate_agg_tmp_0_i_RAM_AUTO_1R1W" DISPNAME="agg_tmp_0_i_U" RTLNAME="top_check_duplicate_agg_tmp_0_i_RAM_AUTO_1R1W">
+      <Resources BRAM="57" LUT="99"/>
+      <BindNode BINDTYPE="storage" BRAM="57" BUNDLEDNAME="" DISPNAME="bind_storage ram_t2p" DSP="0" ID="" IMPL="auto" LATENCY="1" LOOP="" OPTYPE="ram_t2p" PRAGMA="" RTLNAME="agg_tmp_0_i_U" SOURCE="" URAM="0" VARIABLE="agg_tmp_0_i"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_check_duplicate_fu_332/grp_bram_fu_2334" DEPTH="3" TYPE="function" MODULENAME="bram" DISPNAME="grp_bram_fu_2334" RTLNAME="top_bram">
+      <SubModules count="8">dcmp_64ns_64ns_1_2_no_dsp_1_U284 dmul_64ns_64ns_64_5_max_dsp_1_U283 grp_bram_Pipeline_VITIS_LOOP_36_1_fu_1749 grp_bram_Pipeline_find_addr_fu_1755 grp_bram_Pipeline_transfer_loop_bram_fu_1765 packet_w_data_V_U sitodp_64ns_64_4_no_dsp_1_U285 urem_160ns_10ns_9_164_seq_1_U286</SubModules>
+      <Resources BRAM="574" DSP="8" FF="10878" LUT="13790"/>
+      <LocalResources FF="788" LUT="480"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_check_duplicate_fu_332/grp_bram_fu_2334/dcmp_64ns_64ns_1_2_no_dsp_1_U284" BINDMODULE="top_dcmp_64ns_64ns_1_2_no_dsp_1" DEPTH="4" TYPE="rtl" MODULENAME="dcmp_64ns_64ns_1_2_no_dsp_1" DISPNAME="dcmp_64ns_64ns_1_2_no_dsp_1_U284" RTLNAME="top_dcmp_64ns_64ns_1_2_no_dsp_1">
+      <Resources FF="128" LUT="92"/>
+      <LocalResources FF="128"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_check_duplicate_fu_332/grp_bram_fu_2334/dmul_64ns_64ns_64_5_max_dsp_1_U283" BINDMODULE="top_dmul_64ns_64ns_64_5_max_dsp_1" DEPTH="4" TYPE="resource" MODULENAME="dmul_64ns_64ns_64_5_max_dsp_1" DISPNAME="dmul_64ns_64ns_64_5_max_dsp_1_U283" RTLNAME="top_dmul_64ns_64ns_64_5_max_dsp_1">
+      <Resources DSP="8" FF="188" LUT="123"/>
+      <LocalResources FF="66" LUT="33"/>
+      <BindNode BINDTYPE="op" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_op dmul" DSP="11" ID="" IMPL="maxdsp" LATENCY="4" LOOP="" OPTYPE="dmul" PRAGMA="" RTLNAME="dmul_64ns_64ns_64_5_max_dsp_1_U283" SOURCE="" URAM="0" VARIABLE="mul_i"/>
+      <BindNode BINDTYPE="op" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_op dmul" DSP="11" ID="" IMPL="maxdsp" LATENCY="4" LOOP="" OPTYPE="dmul" PRAGMA="" RTLNAME="dmul_64ns_64ns_64_5_max_dsp_1_U283" SOURCE="" URAM="0" VARIABLE="dc"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_check_duplicate_fu_332/grp_bram_fu_2334/grp_bram_Pipeline_VITIS_LOOP_36_1_fu_1749" DEPTH="4" TYPE="function" MODULENAME="bram_Pipeline_VITIS_LOOP_36_1" DISPNAME="grp_bram_Pipeline_VITIS_LOOP_36_1_fu_1749" RTLNAME="top_bram_Pipeline_VITIS_LOOP_36_1">
+      <SubModules count="1">flow_control_loop_pipe_sequential_init_U</SubModules>
+      <Resources FF="11" LUT="31"/>
+      <LocalResources FF="9"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_check_duplicate_fu_332/grp_bram_fu_2334/grp_bram_Pipeline_VITIS_LOOP_36_1_fu_1749/flow_control_loop_pipe_sequential_init_U" BINDMODULE="top_flow_control_loop_pipe_sequential_init" DEPTH="5" TYPE="rtl" MODULENAME="flow_control_loop_pipe_sequential_init" DISPNAME="flow_control_loop_pipe_sequential_init_U" RTLNAME="top_flow_control_loop_pipe_sequential_init">
+      <Resources FF="2" LUT="31"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_check_duplicate_fu_332/grp_bram_fu_2334/grp_bram_Pipeline_find_addr_fu_1755" DEPTH="4" TYPE="function" MODULENAME="bram_Pipeline_find_addr" DISPNAME="grp_bram_Pipeline_find_addr_fu_1755" RTLNAME="top_bram_Pipeline_find_addr">
+      <SubModules count="1">flow_control_loop_pipe_sequential_init_U</SubModules>
+      <Resources FF="146" LUT="140"/>
+      <LocalResources FF="144" LUT="70"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_check_duplicate_fu_332/grp_bram_fu_2334/grp_bram_Pipeline_find_addr_fu_1755/flow_control_loop_pipe_sequential_init_U" BINDMODULE="top_flow_control_loop_pipe_sequential_init" DEPTH="5" TYPE="rtl" MODULENAME="flow_control_loop_pipe_sequential_init" DISPNAME="flow_control_loop_pipe_sequential_init_U" RTLNAME="top_flow_control_loop_pipe_sequential_init">
+      <Resources FF="2" LUT="70"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_check_duplicate_fu_332/grp_bram_fu_2334/grp_bram_Pipeline_transfer_loop_bram_fu_1765" DEPTH="4" TYPE="function" MODULENAME="bram_Pipeline_transfer_loop_bram" DISPNAME="grp_bram_Pipeline_transfer_loop_bram_fu_1765" RTLNAME="top_bram_Pipeline_transfer_loop_bram">
+      <SubModules count="2">buffer_data_V_U flow_control_loop_pipe_sequential_init_U</SubModules>
+      <Resources BRAM="517" FF="8603" LUT="12049"/>
+      <LocalResources FF="178" LUT="2"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_check_duplicate_fu_332/grp_bram_fu_2334/grp_bram_Pipeline_transfer_loop_bram_fu_1765/buffer_data_V_U" BINDMODULE="top_bram_Pipeline_transfer_loop_bram_buffer_data_V_RAM_2P_BRAM_1R1W" DEPTH="5" TYPE="resource" MODULENAME="bram_Pipeline_transfer_loop_bram_buffer_data_V_RAM_2P_BRAM_1R1W" DISPNAME="buffer_data_V_U" RTLNAME="top_bram_Pipeline_transfer_loop_bram_buffer_data_V_RAM_2P_BRAM_1R1W">
+      <Resources BRAM="517" FF="8423" LUT="11979"/>
+      <LocalResources FF="8395" LUT="10826"/>
+      <BindNode BINDTYPE="storage" BRAM="490" BUNDLEDNAME="" DISPNAME="bind_storage ram_2p" DSP="0" ID="" IMPL="bram" LATENCY="1" LOOP="" OPTYPE="ram_2p" PRAGMA="pragma" RTLNAME="buffer_data_V_U" SOURCE=":0" URAM="0" VARIABLE="buffer_data_V"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_check_duplicate_fu_332/grp_bram_fu_2334/grp_bram_Pipeline_transfer_loop_bram_fu_1765/flow_control_loop_pipe_sequential_init_U" BINDMODULE="top_flow_control_loop_pipe_sequential_init" DEPTH="5" TYPE="rtl" MODULENAME="flow_control_loop_pipe_sequential_init" DISPNAME="flow_control_loop_pipe_sequential_init_U" RTLNAME="top_flow_control_loop_pipe_sequential_init">
+      <Resources FF="2" LUT="68"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_check_duplicate_fu_332/grp_bram_fu_2334/packet_w_data_V_U" BINDMODULE="top_bram_packet_w_data_V_RAM_AUTO_1R1W" DEPTH="4" TYPE="resource" MODULENAME="bram_packet_w_data_V_RAM_AUTO_1R1W" DISPNAME="packet_w_data_V_U" RTLNAME="top_bram_packet_w_data_V_RAM_AUTO_1R1W">
+      <Resources BRAM="57" LUT="68"/>
+      <BindNode BINDTYPE="storage" BRAM="57" BUNDLEDNAME="" DISPNAME="bind_storage ram_s2p" DSP="0" ID="" IMPL="auto" LATENCY="1" LOOP="" OPTYPE="ram_s2p" PRAGMA="" RTLNAME="packet_w_data_V_U" SOURCE="src/dedup.cpp:82" URAM="0" VARIABLE="packet_w_data_V"/>
+      <BindNode BINDTYPE="storage" BRAM="57" BUNDLEDNAME="" DISPNAME="bind_storage ram_t2p" DSP="0" ID="" IMPL="auto" LATENCY="1" LOOP="" OPTYPE="ram_t2p" PRAGMA="" RTLNAME="packet_w_data_V_U" SOURCE="src/bram.cpp:26" URAM="0" VARIABLE="packet_w_data_V"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_check_duplicate_fu_332/grp_bram_fu_2334/sitodp_64ns_64_4_no_dsp_1_U285" BINDMODULE="top_sitodp_64ns_64_4_no_dsp_1" DEPTH="4" TYPE="rtl" MODULENAME="sitodp_64ns_64_4_no_dsp_1" DISPNAME="sitodp_64ns_64_4_no_dsp_1_U285" RTLNAME="top_sitodp_64ns_64_4_no_dsp_1">
+      <Resources FF="200" LUT="319"/>
+      <LocalResources FF="64" LUT="2"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_check_duplicate_fu_332/grp_bram_fu_2334/urem_160ns_10ns_9_164_seq_1_U286" BINDMODULE="top_urem_160ns_10ns_9_164_seq_1" DEPTH="4" TYPE="rtl" MODULENAME="urem_160ns_10ns_9_164_seq_1" DISPNAME="urem_160ns_10ns_9_164_seq_1_U286" RTLNAME="top_urem_160ns_10ns_9_164_seq_1">
+      <Resources FF="814" LUT="488"/>
+      <LocalResources FF="170" LUT="7"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_check_duplicate_fu_332/grp_check_duplicate_Pipeline_check_equality_sc_fu_2355" DEPTH="3" TYPE="function" MODULENAME="check_duplicate_Pipeline_check_equality_sc" DISPNAME="grp_check_duplicate_Pipeline_check_equality_sc_fu_2355" RTLNAME="top_check_duplicate_Pipeline_check_equality_sc">
+      <SubModules count="2">flow_control_loop_pipe_sequential_init_U sitodp_32ns_64_4_no_dsp_1_U298</SubModules>
+      <Resources FF="316" LUT="238"/>
+      <LocalResources FF="174" LUT="77"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_check_duplicate_fu_332/grp_check_duplicate_Pipeline_check_equality_sc_fu_2355/flow_control_loop_pipe_sequential_init_U" BINDMODULE="top_flow_control_loop_pipe_sequential_init" DEPTH="4" TYPE="rtl" MODULENAME="flow_control_loop_pipe_sequential_init" DISPNAME="flow_control_loop_pipe_sequential_init_U" RTLNAME="top_flow_control_loop_pipe_sequential_init">
+      <Resources FF="2" LUT="8"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_check_duplicate_fu_332/grp_check_duplicate_Pipeline_check_equality_sc_fu_2355/sitodp_32ns_64_4_no_dsp_1_U298" BINDMODULE="top_sitodp_32ns_64_4_no_dsp_1" DEPTH="4" TYPE="rtl" MODULENAME="sitodp_32ns_64_4_no_dsp_1" DISPNAME="sitodp_32ns_64_4_no_dsp_1_U298" RTLNAME="top_sitodp_32ns_64_4_no_dsp_1">
+      <Resources FF="140" LUT="153"/>
+      <LocalResources FF="32"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_check_duplicate_fu_332/grp_check_duplicate_Pipeline_copy_to_bram_fu_2322" DEPTH="3" TYPE="function" MODULENAME="check_duplicate_Pipeline_copy_to_bram" DISPNAME="grp_check_duplicate_Pipeline_copy_to_bram_fu_2322" RTLNAME="top_check_duplicate_Pipeline_copy_to_bram">
+      <SubModules count="2">flow_control_loop_pipe_sequential_init_U sitodp_32ns_64_4_no_dsp_1_U262</SubModules>
+      <Resources FF="277" LUT="230"/>
+      <LocalResources FF="97" LUT="61"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_check_duplicate_fu_332/grp_check_duplicate_Pipeline_copy_to_bram_fu_2322/flow_control_loop_pipe_sequential_init_U" BINDMODULE="top_flow_control_loop_pipe_sequential_init" DEPTH="4" TYPE="rtl" MODULENAME="flow_control_loop_pipe_sequential_init" DISPNAME="flow_control_loop_pipe_sequential_init_U" RTLNAME="top_flow_control_loop_pipe_sequential_init">
+      <Resources FF="2" LUT="10"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_check_duplicate_fu_332/grp_check_duplicate_Pipeline_copy_to_bram_fu_2322/sitodp_32ns_64_4_no_dsp_1_U262" BINDMODULE="top_sitodp_32ns_64_4_no_dsp_1" DEPTH="4" TYPE="rtl" MODULENAME="sitodp_32ns_64_4_no_dsp_1" DISPNAME="sitodp_32ns_64_4_no_dsp_1_U262" RTLNAME="top_sitodp_32ns_64_4_no_dsp_1">
+      <Resources FF="178" LUT="159"/>
+      <LocalResources FF="72" LUT="35"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_check_duplicate_fu_332/mask_table_U" BINDMODULE="top_write_out_1_mask_table_ROM_AUTO_1R" DEPTH="3" TYPE="resource" MODULENAME="write_out_1_mask_table_ROM_AUTO_1R" DISPNAME="mask_table_U" RTLNAME="top_write_out_1_mask_table_ROM_AUTO_1R">
+      <Resources BRAM="2" LUT="174"/>
+      <BindNode BINDTYPE="storage" BRAM="2" BUNDLEDNAME="" DISPNAME="bind_storage rom_1p" DSP="0" ID="" IMPL="auto" LATENCY="1" LOOP="" OPTYPE="rom_1p" PRAGMA="" RTLNAME="mask_table_U" SOURCE="" URAM="0" VARIABLE="mask_table"/>
+      <BindNode BINDTYPE="storage" BRAM="2" BUNDLEDNAME="" DISPNAME="bind_storage rom_1p" DSP="0" ID="" IMPL="auto" LATENCY="1" LOOP="" OPTYPE="rom_1p" PRAGMA="" RTLNAME="mask_table_U" SOURCE="" URAM="0" VARIABLE="mask_table"/>
+      <BindNode BINDTYPE="storage" BRAM="2" BUNDLEDNAME="" DISPNAME="bind_storage rom_1p" DSP="0" ID="" IMPL="auto" LATENCY="1" LOOP="" OPTYPE="rom_1p" PRAGMA="" RTLNAME="mask_table_U" SOURCE="" URAM="0" VARIABLE="mask_table"/>
+      <BindNode BINDTYPE="storage" BRAM="2" BUNDLEDNAME="" DISPNAME="bind_storage rom_1p" DSP="0" ID="" IMPL="auto" LATENCY="1" LOOP="" OPTYPE="rom_1p" PRAGMA="" RTLNAME="mask_table_U" SOURCE="" URAM="0" VARIABLE="mask_table"/>
+      <BindNode BINDTYPE="storage" BRAM="2" BUNDLEDNAME="" DISPNAME="bind_storage rom_1p" DSP="0" ID="" IMPL="auto" LATENCY="1" LOOP="" OPTYPE="rom_1p" PRAGMA="" RTLNAME="mask_table_U" SOURCE="" URAM="0" VARIABLE="mask_table"/>
+      <BindNode BINDTYPE="storage" BRAM="2" BUNDLEDNAME="" DISPNAME="bind_storage rom_1p" DSP="0" ID="" IMPL="auto" LATENCY="1" LOOP="" OPTYPE="rom_1p" PRAGMA="" RTLNAME="mask_table_U" SOURCE="" URAM="0" VARIABLE="mask_table"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_check_duplicate_fu_332/packet_r_data_V_U" BINDMODULE="top_check_duplicate_packet_r_data_V_RAM_AUTO_1R1W" DEPTH="3" TYPE="resource" MODULENAME="check_duplicate_packet_r_data_V_RAM_AUTO_1R1W" DISPNAME="packet_r_data_V_U" RTLNAME="top_check_duplicate_packet_r_data_V_RAM_AUTO_1R1W">
+      <Resources BRAM="29" LUT="1"/>
+      <BindNode BINDTYPE="storage" BRAM="29" BUNDLEDNAME="" DISPNAME="bind_storage ram_1p" DSP="0" ID="" IMPL="auto" LATENCY="1" LOOP="" OPTYPE="ram_1p" PRAGMA="" RTLNAME="packet_r_data_V_U" SOURCE="src/dedup.cpp:82" URAM="0" VARIABLE="packet_r_data_V"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_check_duplicate_fu_332/packet_w_data_V_U" BINDMODULE="top_check_duplicate_packet_w_data_V_RAM_AUTO_1R1W" DEPTH="3" TYPE="resource" MODULENAME="check_duplicate_packet_w_data_V_RAM_AUTO_1R1W" DISPNAME="packet_w_data_V_U" RTLNAME="top_check_duplicate_packet_w_data_V_RAM_AUTO_1R1W">
+      <Resources BRAM="57" LUT="475"/>
+      <BindNode BINDTYPE="storage" BRAM="57" BUNDLEDNAME="" DISPNAME="bind_storage ram_s2p" DSP="0" ID="" IMPL="auto" LATENCY="1" LOOP="" OPTYPE="ram_s2p" PRAGMA="" RTLNAME="packet_w_data_V_U" SOURCE="src/dedup.cpp:82" URAM="0" VARIABLE="packet_w_data_V"/>
+      <BindNode BINDTYPE="storage" BRAM="57" BUNDLEDNAME="" DISPNAME="bind_storage ram_t2p" DSP="0" ID="" IMPL="auto" LATENCY="1" LOOP="" OPTYPE="ram_t2p" PRAGMA="" RTLNAME="packet_w_data_V_U" SOURCE="src/bram.cpp:26" URAM="0" VARIABLE="packet_w_data_V"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_dedup_Pipeline_VITIS_LOOP_36_1_fu_308" DEPTH="2" TYPE="function" MODULENAME="dedup_Pipeline_VITIS_LOOP_36_1" DISPNAME="grp_dedup_Pipeline_VITIS_LOOP_36_1_fu_308" RTLNAME="top_dedup_Pipeline_VITIS_LOOP_36_1">
+      <SubModules count="1">flow_control_loop_pipe_sequential_init_U</SubModules>
+      <Resources FF="11" LUT="473"/>
+      <LocalResources FF="9"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_dedup_Pipeline_VITIS_LOOP_36_1_fu_308/flow_control_loop_pipe_sequential_init_U" BINDMODULE="top_flow_control_loop_pipe_sequential_init" DEPTH="3" TYPE="rtl" MODULENAME="flow_control_loop_pipe_sequential_init" DISPNAME="flow_control_loop_pipe_sequential_init_U" RTLNAME="top_flow_control_loop_pipe_sequential_init">
+      <Resources FF="2" LUT="473"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_dedup_Pipeline_write_fu_348" DEPTH="2" TYPE="function" MODULENAME="dedup_Pipeline_write" DISPNAME="grp_dedup_Pipeline_write_fu_348" RTLNAME="top_dedup_Pipeline_write">
+      <SubModules count="2">flow_control_loop_pipe_sequential_init_U uitodp_32ns_64_4_no_dsp_1_U317</SubModules>
+      <Resources FF="266" LUT="247"/>
+      <LocalResources FF="90" LUT="94"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_dedup_Pipeline_write_fu_348/flow_control_loop_pipe_sequential_init_U" BINDMODULE="top_flow_control_loop_pipe_sequential_init" DEPTH="3" TYPE="rtl" MODULENAME="flow_control_loop_pipe_sequential_init" DISPNAME="flow_control_loop_pipe_sequential_init_U" RTLNAME="top_flow_control_loop_pipe_sequential_init">
+      <Resources FF="2" LUT="12"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_dedup_Pipeline_write_fu_348/uitodp_32ns_64_4_no_dsp_1_U317" BINDMODULE="top_uitodp_32ns_64_4_no_dsp_1" DEPTH="3" TYPE="rtl" MODULENAME="uitodp_32ns_64_4_no_dsp_1" DISPNAME="uitodp_32ns_64_4_no_dsp_1_U317" RTLNAME="top_uitodp_32ns_64_4_no_dsp_1">
+      <Resources FF="174" LUT="141"/>
+      <LocalResources FF="72" LUT="35"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_dedup_Pipeline_write_to_sha1_buff_fu_314" DEPTH="2" TYPE="function" MODULENAME="dedup_Pipeline_write_to_sha1_buff" DISPNAME="grp_dedup_Pipeline_write_to_sha1_buff_fu_314" RTLNAME="top_dedup_Pipeline_write_to_sha1_buff">
+      <SubModules count="1">flow_control_loop_pipe_sequential_init_U</SubModules>
+      <Resources FF="42" LUT="376"/>
+      <LocalResources FF="40" LUT="323"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_dedup_Pipeline_write_to_sha1_buff_fu_314/flow_control_loop_pipe_sequential_init_U" BINDMODULE="top_flow_control_loop_pipe_sequential_init" DEPTH="3" TYPE="rtl" MODULENAME="flow_control_loop_pipe_sequential_init" DISPNAME="flow_control_loop_pipe_sequential_init_U" RTLNAME="top_flow_control_loop_pipe_sequential_init">
+      <Resources FF="2" LUT="53"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_sha1_32u_s_fu_323" DEPTH="2" TYPE="function" MODULENAME="sha1_32u_s" DISPNAME="grp_sha1_32u_s_fu_323" RTLNAME="top_sha1_32u_s">
+      <SubModules count="11">SHA1Digest_32u_U0 blk_strm_U end_nblk_strm1_U end_nblk_strm2_U generateMsgSchedule_32u_U0 nblk_strm1_U nblk_strm2_U preProcessing_U0 start_for_SHA1Digest_32u_U0_U start_for_generateMsgSchedule_32u_U0_U w_strm_U</SubModules>
+      <Resources BRAM="1" DSP="1" FF="4892" LUT="2784"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0" DEPTH="3" TYPE="function" MODULENAME="SHA1Digest_32u_s" DISPNAME="SHA1Digest_32u_U0" RTLNAME="top_SHA1Digest_32u_s">
+      <SubModules count="2">grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129 mul_64ns_8ns_71_1_1_U241</SubModules>
+      <Resources DSP="1" FF="637" LUT="681"/>
+      <LocalResources FF="233" LUT="16"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129" DEPTH="4" TYPE="function" MODULENAME="SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS" DISPNAME="grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129" RTLNAME="top_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS">
+      <SubModules count="2">flow_control_loop_pipe_sequential_init_U mul_7ns_9ns_15_1_1_U230</SubModules>
+      <Resources DSP="1" FF="404" LUT="602"/>
+      <LocalResources FF="402" LUT="527"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/flow_control_loop_pipe_sequential_init_U" BINDMODULE="top_flow_control_loop_pipe_sequential_init" DEPTH="5" TYPE="rtl" MODULENAME="flow_control_loop_pipe_sequential_init" DISPNAME="flow_control_loop_pipe_sequential_init_U" RTLNAME="top_flow_control_loop_pipe_sequential_init">
+      <Resources FF="2" LUT="7"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230" BINDMODULE="top_mul_7ns_9ns_15_1_1" DEPTH="5" TYPE="resource" MODULENAME="mul_7ns_9ns_15_1_1" DISPNAME="mul_7ns_9ns_15_1_1_U230" RTLNAME="top_mul_7ns_9ns_15_1_1">
+      <Resources DSP="1" LUT="68"/>
+      <BindNode BINDTYPE="op" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_op mul" DSP="0" ID="" IMPL="auto" LATENCY="0" LOOP="LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS" OPTYPE="mul" PRAGMA="" RTLNAME="mul_7ns_9ns_15_1_1_U230" SOURCE="src/sha1.hpp:484" URAM="0" VARIABLE="mul"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/mul_64ns_8ns_71_1_1_U241" BINDMODULE="top_mul_64ns_8ns_71_1_1" DEPTH="4" TYPE="resource" MODULENAME="mul_64ns_8ns_71_1_1" DISPNAME="mul_64ns_8ns_71_1_1_U241" RTLNAME="top_mul_64ns_8ns_71_1_1">
+      <Resources LUT="63"/>
+      <BindNode BINDTYPE="op" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_op mul" DSP="3" ID="" IMPL="auto" LATENCY="0" LOOP="LOOP_SHA1_MAIN" OPTYPE="mul" PRAGMA="" RTLNAME="mul_64ns_8ns_71_1_1_U241" SOURCE="src/sha1.hpp:475" URAM="0" VARIABLE="mul_ln475"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_sha1_32u_s_fu_323/blk_strm_U" BINDMODULE="top_fifo_w512_d4_D" DEPTH="3" TYPE="resource" MODULENAME="fifo_w512_d4_D" DISPNAME="blk_strm_U" RTLNAME="top_fifo_w512_d4_D">
+      <Resources FF="524" LUT="305"/>
+      <LocalResources FF="10" LUT="7"/>
+      <BindNode BINDTYPE="storage" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="lutram" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="yes" RTLNAME="blk_strm_U" SOURCE="" URAM="0" VARIABLE="blk_strm"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_sha1_32u_s_fu_323/end_nblk_strm1_U" BINDMODULE="top_fifo_w1_d4_D" DEPTH="3" TYPE="resource" MODULENAME="fifo_w1_d4_D" DISPNAME="end_nblk_strm1_U" RTLNAME="top_fifo_w1_d4_D">
+      <Resources FF="13" LUT="12"/>
+      <LocalResources FF="10" LUT="8"/>
+      <BindNode BINDTYPE="storage" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="lutram" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="yes" RTLNAME="end_nblk_strm1_U" SOURCE="src/sha1.hpp:609" URAM="0" VARIABLE="end_nblk_strm1"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_sha1_32u_s_fu_323/end_nblk_strm2_U" BINDMODULE="top_fifo_w1_d4_D" DEPTH="3" TYPE="resource" MODULENAME="fifo_w1_d4_D" DISPNAME="end_nblk_strm2_U" RTLNAME="top_fifo_w1_d4_D">
+      <Resources FF="13" LUT="10"/>
+      <LocalResources FF="10" LUT="7"/>
+      <BindNode BINDTYPE="storage" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="lutram" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="yes" RTLNAME="end_nblk_strm2_U" SOURCE="src/sha1.hpp:612" URAM="0" VARIABLE="end_nblk_strm2"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_sha1_32u_s_fu_323/generateMsgSchedule_32u_U0" DEPTH="3" TYPE="function" MODULENAME="generateMsgSchedule_32u_s" DISPNAME="generateMsgSchedule_32u_U0" RTLNAME="top_generateMsgSchedule_32u_s">
+      <SubModules count="2">grp_generateMsgSchedule_32u_Pipeline_LOOP_SHA1_GEN_WT16_fu_242 grp_generateMsgSchedule_32u_Pipeline_LOOP_SHA1_GEN_WT64_fu_280</SubModules>
+      <Resources FF="1819" LUT="557"/>
+      <LocalResources FF="712" LUT="38"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_sha1_32u_s_fu_323/generateMsgSchedule_32u_U0/grp_generateMsgSchedule_32u_Pipeline_LOOP_SHA1_GEN_WT16_fu_242" DEPTH="4" TYPE="function" MODULENAME="generateMsgSchedule_32u_Pipeline_LOOP_SHA1_GEN_WT16" DISPNAME="grp_generateMsgSchedule_32u_Pipeline_LOOP_SHA1_GEN_WT16_fu_242" RTLNAME="top_generateMsgSchedule_32u_Pipeline_LOOP_SHA1_GEN_WT16">
+      <SubModules count="1">flow_control_loop_pipe_sequential_init_U</SubModules>
+      <Resources FF="552" LUT="192"/>
+      <LocalResources FF="550" LUT="33"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_sha1_32u_s_fu_323/generateMsgSchedule_32u_U0/grp_generateMsgSchedule_32u_Pipeline_LOOP_SHA1_GEN_WT16_fu_242/flow_control_loop_pipe_sequential_init_U" BINDMODULE="top_flow_control_loop_pipe_sequential_init" DEPTH="5" TYPE="rtl" MODULENAME="flow_control_loop_pipe_sequential_init" DISPNAME="flow_control_loop_pipe_sequential_init_U" RTLNAME="top_flow_control_loop_pipe_sequential_init">
+      <Resources FF="2" LUT="159"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_sha1_32u_s_fu_323/generateMsgSchedule_32u_U0/grp_generateMsgSchedule_32u_Pipeline_LOOP_SHA1_GEN_WT64_fu_280" DEPTH="4" TYPE="function" MODULENAME="generateMsgSchedule_32u_Pipeline_LOOP_SHA1_GEN_WT64" DISPNAME="grp_generateMsgSchedule_32u_Pipeline_LOOP_SHA1_GEN_WT64_fu_280" RTLNAME="top_generateMsgSchedule_32u_Pipeline_LOOP_SHA1_GEN_WT64">
+      <SubModules count="1">flow_control_loop_pipe_sequential_init_U</SubModules>
+      <Resources FF="555" LUT="327"/>
+      <LocalResources FF="553" LUT="44"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_sha1_32u_s_fu_323/generateMsgSchedule_32u_U0/grp_generateMsgSchedule_32u_Pipeline_LOOP_SHA1_GEN_WT64_fu_280/flow_control_loop_pipe_sequential_init_U" BINDMODULE="top_flow_control_loop_pipe_sequential_init" DEPTH="5" TYPE="rtl" MODULENAME="flow_control_loop_pipe_sequential_init" DISPNAME="flow_control_loop_pipe_sequential_init_U" RTLNAME="top_flow_control_loop_pipe_sequential_init">
+      <Resources FF="2" LUT="283"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_sha1_32u_s_fu_323/nblk_strm1_U" BINDMODULE="top_fifo_w64_d4_D" DEPTH="3" TYPE="resource" MODULENAME="fifo_w64_d4_D" DISPNAME="nblk_strm1_U" RTLNAME="top_fifo_w64_d4_D">
+      <Resources FF="72" LUT="46"/>
+      <LocalResources FF="10" LUT="8"/>
+      <BindNode BINDTYPE="storage" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="lutram" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="yes" RTLNAME="nblk_strm1_U" SOURCE="src/sha1.hpp:601" URAM="0" VARIABLE="nblk_strm1"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_sha1_32u_s_fu_323/nblk_strm2_U" BINDMODULE="top_fifo_w64_d4_D" DEPTH="3" TYPE="resource" MODULENAME="fifo_w64_d4_D" DISPNAME="nblk_strm2_U" RTLNAME="top_fifo_w64_d4_D">
+      <Resources FF="72" LUT="46"/>
+      <LocalResources FF="10" LUT="8"/>
+      <BindNode BINDTYPE="storage" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="lutram" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="yes" RTLNAME="nblk_strm2_U" SOURCE="src/sha1.hpp:604" URAM="0" VARIABLE="nblk_strm2"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_sha1_32u_s_fu_323/preProcessing_U0" DEPTH="3" TYPE="function" MODULENAME="preProcessing" DISPNAME="preProcessing_U0" RTLNAME="top_preProcessing">
+      <SubModules count="2">grp_preProcessing_Pipeline_LOOP_COPY_TAIL_AND_PAD_1_fu_316 grp_preProcessing_Pipeline_LOOP_GEN_FULL_BLKS_fu_307</SubModules>
+      <Resources FF="1694" LUT="1082"/>
+      <LocalResources FF="674" LUT="209"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_sha1_32u_s_fu_323/preProcessing_U0/grp_preProcessing_Pipeline_LOOP_COPY_TAIL_AND_PAD_1_fu_316" DEPTH="4" TYPE="function" MODULENAME="preProcessing_Pipeline_LOOP_COPY_TAIL_AND_PAD_1" DISPNAME="grp_preProcessing_Pipeline_LOOP_COPY_TAIL_AND_PAD_1_fu_316" RTLNAME="top_preProcessing_Pipeline_LOOP_COPY_TAIL_AND_PAD_1">
+      <SubModules count="1">flow_control_loop_pipe_sequential_init_U</SubModules>
+      <Resources FF="461" LUT="284"/>
+      <LocalResources FF="459" LUT="113"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_sha1_32u_s_fu_323/preProcessing_U0/grp_preProcessing_Pipeline_LOOP_COPY_TAIL_AND_PAD_1_fu_316/flow_control_loop_pipe_sequential_init_U" BINDMODULE="top_flow_control_loop_pipe_sequential_init" DEPTH="5" TYPE="rtl" MODULENAME="flow_control_loop_pipe_sequential_init" DISPNAME="flow_control_loop_pipe_sequential_init_U" RTLNAME="top_flow_control_loop_pipe_sequential_init">
+      <Resources FF="2" LUT="171"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_sha1_32u_s_fu_323/preProcessing_U0/grp_preProcessing_Pipeline_LOOP_GEN_FULL_BLKS_fu_307" DEPTH="4" TYPE="function" MODULENAME="preProcessing_Pipeline_LOOP_GEN_FULL_BLKS" DISPNAME="grp_preProcessing_Pipeline_LOOP_GEN_FULL_BLKS_fu_307" RTLNAME="top_preProcessing_Pipeline_LOOP_GEN_FULL_BLKS">
+      <SubModules count="1">flow_control_loop_pipe_sequential_init_U</SubModules>
+      <Resources FF="559" LUT="589"/>
+      <LocalResources FF="557" LUT="562"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_sha1_32u_s_fu_323/preProcessing_U0/grp_preProcessing_Pipeline_LOOP_GEN_FULL_BLKS_fu_307/flow_control_loop_pipe_sequential_init_U" BINDMODULE="top_flow_control_loop_pipe_sequential_init" DEPTH="5" TYPE="rtl" MODULENAME="flow_control_loop_pipe_sequential_init" DISPNAME="flow_control_loop_pipe_sequential_init_U" RTLNAME="top_flow_control_loop_pipe_sequential_init">
+      <Resources FF="2" LUT="27"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_sha1_32u_s_fu_323/start_for_SHA1Digest_32u_U0_U" BINDMODULE="top_start_for_SHA1Digest_32u_U0" DEPTH="3" TYPE="rtl" MODULENAME="start_for_SHA1Digest_32u_U0" DISPNAME="start_for_SHA1Digest_32u_U0_U" RTLNAME="top_start_for_SHA1Digest_32u_U0">
+      <Resources FF="4" LUT="3"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_sha1_32u_s_fu_323/start_for_generateMsgSchedule_32u_U0_U" BINDMODULE="top_start_for_generateMsgSchedule_32u_U0" DEPTH="3" TYPE="rtl" MODULENAME="start_for_generateMsgSchedule_32u_U0" DISPNAME="start_for_generateMsgSchedule_32u_U0_U" RTLNAME="top_start_for_generateMsgSchedule_32u_U0">
+      <Resources FF="4" LUT="2"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/grp_sha1_32u_s_fu_323/w_strm_U" BINDMODULE="top_fifo_w32_d320_B" DEPTH="3" TYPE="resource" MODULENAME="fifo_w32_d320_B" DISPNAME="w_strm_U" RTLNAME="top_fifo_w32_d320_B">
+      <Resources BRAM="1" FF="40" LUT="40"/>
+      <LocalResources FF="31" LUT="26"/>
+      <BindNode BINDTYPE="storage" BRAM="2" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="bram" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="yes" RTLNAME="w_strm_U" SOURCE="src/sha1.hpp:617" URAM="0" VARIABLE="w_strm"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/mask_table_U" BINDMODULE="top_write_out_1_mask_table_ROM_AUTO_1R" DEPTH="2" TYPE="resource" MODULENAME="write_out_1_mask_table_ROM_AUTO_1R" DISPNAME="mask_table_U" RTLNAME="top_write_out_1_mask_table_ROM_AUTO_1R">
+      <Resources BRAM="2" LUT="348"/>
+      <BindNode BINDTYPE="storage" BRAM="2" BUNDLEDNAME="" DISPNAME="bind_storage rom_1p" DSP="0" ID="" IMPL="auto" LATENCY="1" LOOP="" OPTYPE="rom_1p" PRAGMA="" RTLNAME="mask_table_U" SOURCE="" URAM="0" VARIABLE="mask_table"/>
+      <BindNode BINDTYPE="storage" BRAM="2" BUNDLEDNAME="" DISPNAME="bind_storage rom_1p" DSP="0" ID="" IMPL="auto" LATENCY="1" LOOP="" OPTYPE="rom_1p" PRAGMA="" RTLNAME="mask_table_U" SOURCE="" URAM="0" VARIABLE="mask_table"/>
+      <BindNode BINDTYPE="storage" BRAM="2" BUNDLEDNAME="" DISPNAME="bind_storage rom_1p" DSP="0" ID="" IMPL="auto" LATENCY="1" LOOP="" OPTYPE="rom_1p" PRAGMA="" RTLNAME="mask_table_U" SOURCE="" URAM="0" VARIABLE="mask_table"/>
+      <BindNode BINDTYPE="storage" BRAM="2" BUNDLEDNAME="" DISPNAME="bind_storage rom_1p" DSP="0" ID="" IMPL="auto" LATENCY="1" LOOP="" OPTYPE="rom_1p" PRAGMA="" RTLNAME="mask_table_U" SOURCE="" URAM="0" VARIABLE="mask_table"/>
+      <BindNode BINDTYPE="storage" BRAM="2" BUNDLEDNAME="" DISPNAME="bind_storage rom_1p" DSP="0" ID="" IMPL="auto" LATENCY="1" LOOP="" OPTYPE="rom_1p" PRAGMA="" RTLNAME="mask_table_U" SOURCE="" URAM="0" VARIABLE="mask_table"/>
+      <BindNode BINDTYPE="storage" BRAM="2" BUNDLEDNAME="" DISPNAME="bind_storage rom_1p" DSP="0" ID="" IMPL="auto" LATENCY="1" LOOP="" OPTYPE="rom_1p" PRAGMA="" RTLNAME="mask_table_U" SOURCE="" URAM="0" VARIABLE="mask_table"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/sha1_digest_fifo_U" BINDMODULE="top_fifo_w160_d2_S" DEPTH="2" TYPE="resource" MODULENAME="fifo_w160_d2_S" DISPNAME="sha1_digest_fifo_U" RTLNAME="top_fifo_w160_d2_S">
+      <Resources FF="324" LUT="163"/>
+      <LocalResources FF="4" LUT="3"/>
+      <BindNode BINDTYPE="storage" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="srl" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="sha1_digest_fifo_U" SOURCE="src/dedup.cpp:155" URAM="0" VARIABLE="sha1_digest"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/sha1_end_digest_fifo_U" BINDMODULE="top_fifo_w1_d2_S" DEPTH="2" TYPE="resource" MODULENAME="fifo_w1_d2_S_x0" DISPNAME="sha1_end_digest_fifo_U" RTLNAME="top_fifo_w1_d2_S_x0">
+      <Resources FF="6" LUT="5"/>
+      <LocalResources FF="4" LUT="4"/>
+      <BindNode BINDTYPE="storage" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="srl" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="sha1_end_digest_fifo_U" SOURCE="src/dedup.cpp:156" URAM="0" VARIABLE="sha1_end_digest"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/sha1_end_len_fifo_U" BINDMODULE="top_fifo_w1_d2_S" DEPTH="2" TYPE="resource" MODULENAME="fifo_w1_d2_S_x0" DISPNAME="sha1_end_len_fifo_U" RTLNAME="top_fifo_w1_d2_S_x0">
+      <Resources FF="6" LUT="14"/>
+      <LocalResources FF="4" LUT="11"/>
+      <BindNode BINDTYPE="storage" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="srl" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="sha1_end_len_fifo_U" SOURCE="src/dedup.cpp:154" URAM="0" VARIABLE="sha1_end_len"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/sha1_len_fifo_U" BINDMODULE="top_fifo_w64_d2_S" DEPTH="2" TYPE="resource" MODULENAME="fifo_w64_d2_S_x" DISPNAME="sha1_len_fifo_U" RTLNAME="top_fifo_w64_d2_S_x">
+      <Resources FF="132" LUT="126"/>
+      <LocalResources FF="4" LUT="3"/>
+      <BindNode BINDTYPE="storage" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="srl" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="sha1_len_fifo_U" SOURCE="src/dedup.cpp:153" URAM="0" VARIABLE="sha1_len"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/sha1_msg_fifo_U" BINDMODULE="top_fifo_w32_d2561_A" DEPTH="2" TYPE="resource" MODULENAME="fifo_w32_d2561_A" DISPNAME="sha1_msg_fifo_U" RTLNAME="top_fifo_w32_d2561_A">
+      <Resources BRAM="8" FF="52" LUT="45"/>
+      <LocalResources FF="40" LUT="30"/>
+      <BindNode BINDTYPE="storage" BRAM="8" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="memory" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="sha1_msg_fifo_U" SOURCE="src/dedup.cpp:152" URAM="0" VARIABLE="sha1_msg"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/sitodp_64ns_64_4_no_dsp_1_U327" BINDMODULE="top_sitodp_64ns_64_4_no_dsp_1" DEPTH="2" TYPE="rtl" MODULENAME="sitodp_64ns_64_4_no_dsp_1" DISPNAME="sitodp_64ns_64_4_no_dsp_1_U327" RTLNAME="top_sitodp_64ns_64_4_no_dsp_1">
+      <Resources FF="200" LUT="317"/>
+      <LocalResources FF="64"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/uitodp_64ns_64_4_no_dsp_1_U326" BINDMODULE="top_uitodp_64ns_64_4_no_dsp_1" DEPTH="2" TYPE="rtl" MODULENAME="uitodp_64ns_64_4_no_dsp_1" DISPNAME="uitodp_64ns_64_4_no_dsp_1_U326" RTLNAME="top_uitodp_64ns_64_4_no_dsp_1">
+      <Resources FF="198" LUT="260"/>
+      <LocalResources FF="64" LUT="5"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/write_out_data_fifo_U" BINDMODULE="top_fifo_w1024_d81_A" DEPTH="2" TYPE="resource" MODULENAME="fifo_w1024_d81_A" DISPNAME="write_out_data_fifo_U" RTLNAME="top_fifo_w1024_d81_A">
+      <Resources BRAM="29" FF="32" LUT="27"/>
+      <LocalResources FF="25" LUT="21"/>
+      <BindNode BINDTYPE="storage" BRAM="57" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="memory" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="write_out_data_fifo_U" SOURCE="src/dedup.cpp:149" URAM="0" VARIABLE="write_out_data"/>
+    </RtlModule>
+    <RtlModule CELL="inst/dedup_U0/write_out_meta_fifo_U" BINDMODULE="top_fifo_w258_d2_S" DEPTH="2" TYPE="resource" MODULENAME="fifo_w258_d2_S_x" DISPNAME="write_out_meta_fifo_U" RTLNAME="top_fifo_w258_d2_S_x">
+      <Resources FF="454" LUT="233"/>
+      <LocalResources FF="4" LUT="7"/>
+      <BindNode BINDTYPE="storage" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="srl" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="write_out_meta_fifo_U" SOURCE="" URAM="0" VARIABLE="write_out_meta"/>
+    </RtlModule>
+    <RtlModule CELL="inst/end_in_buffer_U" BINDMODULE="top_fifo_w1_d2_S" DEPTH="1" TYPE="resource" MODULENAME="fifo_w1_d2_S_x1" DISPNAME="end_in_buffer_U" RTLNAME="top_fifo_w1_d2_S_x1">
+      <Resources FF="6" LUT="4"/>
+      <LocalResources FF="4" LUT="3"/>
+      <BindNode BINDTYPE="storage" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="srl" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="end_in_buffer_U" SOURCE="src/top.cpp:109" URAM="0" VARIABLE="end_in_buffer"/>
+    </RtlModule>
+    <RtlModule CELL="inst/end_out_buffer_U" BINDMODULE="top_fifo_w1_d2_S" DEPTH="1" TYPE="resource" MODULENAME="fifo_w1_d2_S_x1" DISPNAME="end_out_buffer_U" RTLNAME="top_fifo_w1_d2_S_x1">
+      <Resources FF="6" LUT="4"/>
+      <LocalResources FF="4" LUT="3"/>
+      <BindNode BINDTYPE="storage" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="srl" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="end_out_buffer_U" SOURCE="src/top.cpp:113" URAM="0" VARIABLE="end_out_buffer"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_U0" DEPTH="1" TYPE="function" MODULENAME="fragment" DISPNAME="fragment_U0" RTLNAME="top_fragment">
+      <SubModules count="11">convert_to_byte_stream_U0 segment_bc_packet_U0 segment_data_U segment_end_U segment_size_U start_for_segment_bc_packet_U0_U start_for_write_out_1_U0_U write_data_U write_end_U write_out_1_U0 write_size_U</SubModules>
+      <Resources BRAM="46" DSP="8" FF="3714" LUT="3431"/>
+      <LocalResources FF="1"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_U0/convert_to_byte_stream_U0" DEPTH="2" TYPE="function" MODULENAME="convert_to_byte_stream" DISPNAME="convert_to_byte_stream_U0" RTLNAME="top_convert_to_byte_stream">
+      <SubModules count="1">grp_convert_to_byte_stream_Pipeline_read_data_fu_84</SubModules>
+      <Resources FF="162" LUT="356"/>
+      <LocalResources FF="72" LUT="11"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_U0/convert_to_byte_stream_U0/grp_convert_to_byte_stream_Pipeline_read_data_fu_84" DEPTH="3" TYPE="function" MODULENAME="convert_to_byte_stream_Pipeline_read_data" DISPNAME="grp_convert_to_byte_stream_Pipeline_read_data_fu_84" RTLNAME="top_convert_to_byte_stream_Pipeline_read_data">
+      <SubModules count="1">flow_control_loop_pipe_sequential_init_U</SubModules>
+      <Resources FF="90" LUT="345"/>
+      <LocalResources FF="88" LUT="228"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_U0/convert_to_byte_stream_U0/grp_convert_to_byte_stream_Pipeline_read_data_fu_84/flow_control_loop_pipe_sequential_init_U" BINDMODULE="top_flow_control_loop_pipe_sequential_init" DEPTH="4" TYPE="rtl" MODULENAME="flow_control_loop_pipe_sequential_init" DISPNAME="flow_control_loop_pipe_sequential_init_U" RTLNAME="top_flow_control_loop_pipe_sequential_init">
+      <Resources FF="2" LUT="117"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_U0/segment_bc_packet_U0" DEPTH="2" TYPE="function" MODULENAME="segment_bc_packet" DISPNAME="segment_bc_packet_U0" RTLNAME="top_segment_bc_packet">
+      <SubModules count="4">buffer_fifo_U grp_segment_bc_packet_Pipeline_init_buffer_fu_248 grp_segment_bc_packet_Pipeline_segment_stream_fu_264 rabintab_U</SubModules>
+      <Resources BRAM="2" FF="1115" LUT="633"/>
+      <LocalResources FF="610" LUT="178"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_U0/segment_bc_packet_U0/buffer_fifo_U" BINDMODULE="top_fifo_w8_d32_S" DEPTH="3" TYPE="resource" MODULENAME="fifo_w8_d32_S" DISPNAME="buffer_fifo_U" RTLNAME="top_fifo_w8_d32_S">
+      <Resources FF="8" LUT="28"/>
+      <LocalResources FF="8" LUT="16"/>
+      <BindNode BINDTYPE="storage" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="srl" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="buffer_fifo_U" SOURCE="src/parsec/rabin.cpp:79" URAM="0" VARIABLE="buffer"/>
+      <BindNode BINDTYPE="storage" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="srl" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="buffer_fifo_U" SOURCE="src/parsec/rabin.cpp:79" URAM="0" VARIABLE="buffer"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_U0/segment_bc_packet_U0/grp_segment_bc_packet_Pipeline_init_buffer_fu_248" DEPTH="3" TYPE="function" MODULENAME="segment_bc_packet_Pipeline_init_buffer" DISPNAME="grp_segment_bc_packet_Pipeline_init_buffer_fu_248" RTLNAME="top_segment_bc_packet_Pipeline_init_buffer">
+      <SubModules count="1">flow_control_loop_pipe_sequential_init_U</SubModules>
+      <Resources FF="131" LUT="140"/>
+      <LocalResources FF="129" LUT="51"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_U0/segment_bc_packet_U0/grp_segment_bc_packet_Pipeline_init_buffer_fu_248/flow_control_loop_pipe_sequential_init_U" BINDMODULE="top_flow_control_loop_pipe_sequential_init" DEPTH="4" TYPE="rtl" MODULENAME="flow_control_loop_pipe_sequential_init" DISPNAME="flow_control_loop_pipe_sequential_init_U" RTLNAME="top_flow_control_loop_pipe_sequential_init">
+      <Resources FF="2" LUT="89"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_U0/segment_bc_packet_U0/grp_segment_bc_packet_Pipeline_segment_stream_fu_264" DEPTH="3" TYPE="function" MODULENAME="segment_bc_packet_Pipeline_segment_stream" DISPNAME="grp_segment_bc_packet_Pipeline_segment_stream_fu_264" RTLNAME="top_segment_bc_packet_Pipeline_segment_stream">
+      <SubModules count="1">rabinwintab_U</SubModules>
+      <Resources BRAM="1" FF="366" LUT="287"/>
+      <LocalResources FF="366" LUT="253"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_U0/segment_bc_packet_U0/grp_segment_bc_packet_Pipeline_segment_stream_fu_264/rabinwintab_U" BINDMODULE="top_segment_bc_packet_Pipeline_segment_stream_rabinwintab_ROM_1P_AUTO_1R" DEPTH="4" TYPE="resource" MODULENAME="segment_bc_packet_Pipeline_segment_stream_rabinwintab_ROM_1P_AUTO_1R" DISPNAME="rabinwintab_U" RTLNAME="top_segment_bc_packet_Pipeline_segment_stream_rabinwintab_ROM_1P_AUTO_1R">
+      <Resources BRAM="1" LUT="34"/>
+      <BindNode BINDTYPE="storage" BRAM="1" BUNDLEDNAME="" DISPNAME="bind_storage rom_1p" DSP="0" ID="" IMPL="auto" LATENCY="1" LOOP="" OPTYPE="rom_1p" PRAGMA="pragma" RTLNAME="rabinwintab_U" SOURCE=":0" URAM="0" VARIABLE="rabinwintab"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_U0/segment_bc_packet_U0/rabintab_U" BINDMODULE="top_segment_bc_packet_rabintab_ROM_1P_AUTO_1R" DEPTH="3" TYPE="resource" MODULENAME="segment_bc_packet_rabintab_ROM_1P_AUTO_1R" DISPNAME="rabintab_U" RTLNAME="top_segment_bc_packet_rabintab_ROM_1P_AUTO_1R">
+      <Resources BRAM="1"/>
+      <BindNode BINDTYPE="storage" BRAM="1" BUNDLEDNAME="" DISPNAME="bind_storage rom_1p" DSP="0" ID="" IMPL="auto" LATENCY="1" LOOP="" OPTYPE="rom_1p" PRAGMA="pragma" RTLNAME="rabintab_U" SOURCE="src/fragment.cpp:104" URAM="0" VARIABLE="rabintab"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_U0/segment_data_U" BINDMODULE="top_fifo_w8_d43009_A" DEPTH="2" TYPE="resource" MODULENAME="fifo_w8_d43009_A" DISPNAME="segment_data_U" RTLNAME="top_fifo_w8_d43009_A">
+      <Resources BRAM="22" FF="70" LUT="80"/>
+      <LocalResources FF="52" LUT="29"/>
+      <BindNode BINDTYPE="storage" BRAM="24" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="memory" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="segment_data_U" SOURCE="src/fragment.cpp:180" URAM="0" VARIABLE="segment_data"/>
+      <BindNode BINDTYPE="storage" BRAM="24" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="memory" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="segment_data_U" SOURCE="src/fragment_refine.cpp:156" URAM="0" VARIABLE="segment_data"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_U0/segment_end_U" BINDMODULE="top_fifo_w1_d2_S" DEPTH="2" TYPE="resource" MODULENAME="fifo_w1_d2_S" DISPNAME="segment_end_U" RTLNAME="top_fifo_w1_d2_S">
+      <Resources FF="6" LUT="4"/>
+      <LocalResources FF="4" LUT="3"/>
+      <BindNode BINDTYPE="storage" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="srl" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="segment_end_U" SOURCE="src/fragment.cpp:182" URAM="0" VARIABLE="segment_end"/>
+      <BindNode BINDTYPE="storage" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="srl" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="segment_end_U" SOURCE="src/fragment_refine.cpp:157" URAM="0" VARIABLE="segment_end"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_U0/segment_size_U" BINDMODULE="top_fifo_w64_d2_S" DEPTH="2" TYPE="resource" MODULENAME="fifo_w64_d2_S" DISPNAME="segment_size_U" RTLNAME="top_fifo_w64_d2_S">
+      <Resources FF="132" LUT="69"/>
+      <LocalResources FF="4" LUT="5"/>
+      <BindNode BINDTYPE="storage" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="srl" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="segment_size_U" SOURCE="src/fragment.cpp:181" URAM="0" VARIABLE="segment_size"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_U0/start_for_segment_bc_packet_U0_U" BINDMODULE="top_start_for_segment_bc_packet_U0" DEPTH="2" TYPE="rtl" MODULENAME="start_for_segment_bc_packet_U0" DISPNAME="start_for_segment_bc_packet_U0_U" RTLNAME="top_start_for_segment_bc_packet_U0">
+      <Resources FF="4" LUT="7"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_U0/start_for_write_out_1_U0_U" BINDMODULE="top_start_for_write_out_1_U0" DEPTH="2" TYPE="rtl" MODULENAME="start_for_write_out_1_U0" DISPNAME="start_for_write_out_1_U0_U" RTLNAME="top_start_for_write_out_1_U0">
+      <Resources FF="4" LUT="5"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_U0/write_data_U" BINDMODULE="top_fifo_w8_d43009_A" DEPTH="2" TYPE="resource" MODULENAME="fifo_w8_d43009_A" DISPNAME="write_data_U" RTLNAME="top_fifo_w8_d43009_A">
+      <Resources BRAM="22" FF="70" LUT="110"/>
+      <LocalResources FF="52" LUT="51"/>
+      <BindNode BINDTYPE="storage" BRAM="24" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="memory" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="write_data_U" SOURCE="src/fragment.cpp:184" URAM="0" VARIABLE="write_data"/>
+      <BindNode BINDTYPE="storage" BRAM="8" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="memory" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="write_data_U" SOURCE="src/fragment_refine.cpp:160" URAM="0" VARIABLE="write_data"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_U0/write_end_U" BINDMODULE="top_fifo_w1_d2_S" DEPTH="2" TYPE="resource" MODULENAME="fifo_w1_d2_S" DISPNAME="write_end_U" RTLNAME="top_fifo_w1_d2_S">
+      <Resources FF="6" LUT="4"/>
+      <LocalResources FF="4" LUT="3"/>
+      <BindNode BINDTYPE="storage" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="srl" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="write_end_U" SOURCE="src/fragment.cpp:186" URAM="0" VARIABLE="write_end"/>
+      <BindNode BINDTYPE="storage" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="srl" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="write_end_U" SOURCE="src/fragment_refine.cpp:161" URAM="0" VARIABLE="write_end"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_U0/write_out_1_U0" DEPTH="2" TYPE="function" MODULENAME="write_out_1" DISPNAME="write_out_1_U0" RTLNAME="top_write_out_1">
+      <SubModules count="4">dcmp_64ns_64ns_1_2_no_dsp_1_U51 dmul_64ns_64ns_64_5_max_dsp_1_U50 grp_write_out_1_Pipeline_convert_to_c_data_t_fu_191 sitodp_64ns_64_4_no_dsp_1_U52</SubModules>
+      <Resources DSP="8" FF="2012" LUT="2094"/>
+      <LocalResources FF="444" LUT="234"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_U0/write_out_1_U0/dcmp_64ns_64ns_1_2_no_dsp_1_U51" BINDMODULE="top_dcmp_64ns_64ns_1_2_no_dsp_1" DEPTH="3" TYPE="rtl" MODULENAME="dcmp_64ns_64ns_1_2_no_dsp_1" DISPNAME="dcmp_64ns_64ns_1_2_no_dsp_1_U51" RTLNAME="top_dcmp_64ns_64ns_1_2_no_dsp_1">
+      <Resources FF="130" LUT="89"/>
+      <LocalResources FF="130"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_U0/write_out_1_U0/dmul_64ns_64ns_64_5_max_dsp_1_U50" BINDMODULE="top_dmul_64ns_64ns_64_5_max_dsp_1" DEPTH="3" TYPE="resource" MODULENAME="dmul_64ns_64ns_64_5_max_dsp_1" DISPNAME="dmul_64ns_64ns_64_5_max_dsp_1_U50" RTLNAME="top_dmul_64ns_64ns_64_5_max_dsp_1">
+      <Resources DSP="8" FF="188" LUT="123"/>
+      <LocalResources FF="66" LUT="33"/>
+      <BindNode BINDTYPE="op" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_op dmul" DSP="11" ID="" IMPL="maxdsp" LATENCY="4" LOOP="VITIS_LOOP_34_1" OPTYPE="dmul" PRAGMA="" RTLNAME="dmul_64ns_64ns_64_5_max_dsp_1_U50" SOURCE="src/fragment.cpp:42" URAM="0" VARIABLE="mul"/>
+      <BindNode BINDTYPE="op" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_op dmul" DSP="11" ID="" IMPL="maxdsp" LATENCY="4" LOOP="VITIS_LOOP_34_1" OPTYPE="dmul" PRAGMA="" RTLNAME="dmul_64ns_64ns_64_5_max_dsp_1_U50" SOURCE="src/fragment.cpp:42" URAM="0" VARIABLE="dc"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_U0/write_out_1_U0/grp_write_out_1_Pipeline_convert_to_c_data_t_fu_191" DEPTH="3" TYPE="function" MODULENAME="write_out_1_Pipeline_convert_to_c_data_t" DISPNAME="grp_write_out_1_Pipeline_convert_to_c_data_t_fu_191" RTLNAME="top_write_out_1_Pipeline_convert_to_c_data_t">
+      <SubModules count="1">flow_control_loop_pipe_sequential_init_U</SubModules>
+      <Resources FF="1050" LUT="1326"/>
+      <LocalResources FF="1048" LUT="1285"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_U0/write_out_1_U0/grp_write_out_1_Pipeline_convert_to_c_data_t_fu_191/flow_control_loop_pipe_sequential_init_U" BINDMODULE="top_flow_control_loop_pipe_sequential_init" DEPTH="4" TYPE="rtl" MODULENAME="flow_control_loop_pipe_sequential_init" DISPNAME="flow_control_loop_pipe_sequential_init_U" RTLNAME="top_flow_control_loop_pipe_sequential_init">
+      <Resources FF="2" LUT="41"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_U0/write_out_1_U0/sitodp_64ns_64_4_no_dsp_1_U52" BINDMODULE="top_sitodp_64ns_64_4_no_dsp_1" DEPTH="3" TYPE="rtl" MODULENAME="sitodp_64ns_64_4_no_dsp_1" DISPNAME="sitodp_64ns_64_4_no_dsp_1_U52" RTLNAME="top_sitodp_64ns_64_4_no_dsp_1">
+      <Resources FF="200" LUT="322"/>
+      <LocalResources FF="64" LUT="5"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_U0/write_size_U" BINDMODULE="top_fifo_w64_d2_S" DEPTH="2" TYPE="resource" MODULENAME="fifo_w64_d2_S" DISPNAME="write_size_U" RTLNAME="top_fifo_w64_d2_S">
+      <Resources FF="132" LUT="69"/>
+      <LocalResources FF="4" LUT="5"/>
+      <BindNode BINDTYPE="storage" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="srl" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="write_size_U" SOURCE="src/fragment.cpp:185" URAM="0" VARIABLE="write_size"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_refine_U0" DEPTH="1" TYPE="function" MODULENAME="fragment_refine" DISPNAME="fragment_refine_U0" RTLNAME="top_fragment_refine">
+      <SubModules count="11">convert_to_byte_stream_2_U0 segment_data_U segment_end_U segment_meta_U segment_sc_packet_U0 start_for_segment_sc_packet_U0_U start_for_write_out_3_U0_U write_data_U write_end_U write_meta_U write_out_3_U0</SubModules>
+      <Resources BRAM="30" DSP="8" FF="4489" LUT="3373"/>
+      <LocalResources FF="1"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_refine_U0/convert_to_byte_stream_2_U0" DEPTH="2" TYPE="function" MODULENAME="convert_to_byte_stream_2" DISPNAME="convert_to_byte_stream_2_U0" RTLNAME="top_convert_to_byte_stream_2">
+      <SubModules count="1">grp_convert_to_byte_stream_2_Pipeline_convert_to_byte_fu_119</SubModules>
+      <Resources FF="1164" LUT="419"/>
+      <LocalResources FF="1144" LUT="54"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_refine_U0/convert_to_byte_stream_2_U0/grp_convert_to_byte_stream_2_Pipeline_convert_to_byte_fu_119" DEPTH="3" TYPE="function" MODULENAME="convert_to_byte_stream_2_Pipeline_convert_to_byte" DISPNAME="grp_convert_to_byte_stream_2_Pipeline_convert_to_byte_fu_119" RTLNAME="top_convert_to_byte_stream_2_Pipeline_convert_to_byte">
+      <SubModules count="1">flow_control_loop_pipe_sequential_init_U</SubModules>
+      <Resources FF="20" LUT="365"/>
+      <LocalResources FF="18" LUT="60"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_refine_U0/convert_to_byte_stream_2_U0/grp_convert_to_byte_stream_2_Pipeline_convert_to_byte_fu_119/flow_control_loop_pipe_sequential_init_U" BINDMODULE="top_flow_control_loop_pipe_sequential_init" DEPTH="4" TYPE="rtl" MODULENAME="flow_control_loop_pipe_sequential_init" DISPNAME="flow_control_loop_pipe_sequential_init_U" RTLNAME="top_flow_control_loop_pipe_sequential_init">
+      <Resources FF="2" LUT="306"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_refine_U0/segment_data_U" BINDMODULE="top_fifo_w8_d43009_A" DEPTH="2" TYPE="resource" MODULENAME="fifo_w8_d43009_A_x" DISPNAME="segment_data_U" RTLNAME="top_fifo_w8_d43009_A_x">
+      <Resources BRAM="22" FF="70" LUT="100"/>
+      <LocalResources FF="52" LUT="47"/>
+      <BindNode BINDTYPE="storage" BRAM="24" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="memory" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="segment_data_U" SOURCE="src/fragment.cpp:180" URAM="0" VARIABLE="segment_data"/>
+      <BindNode BINDTYPE="storage" BRAM="24" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="memory" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="segment_data_U" SOURCE="src/fragment_refine.cpp:156" URAM="0" VARIABLE="segment_data"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_refine_U0/segment_end_U" BINDMODULE="top_fifo_w1_d2_S" DEPTH="2" TYPE="resource" MODULENAME="fifo_w1_d2_S_x" DISPNAME="segment_end_U" RTLNAME="top_fifo_w1_d2_S_x">
+      <Resources FF="6" LUT="4"/>
+      <LocalResources FF="4" LUT="3"/>
+      <BindNode BINDTYPE="storage" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="srl" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="segment_end_U" SOURCE="src/fragment.cpp:182" URAM="0" VARIABLE="segment_end"/>
+      <BindNode BINDTYPE="storage" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="srl" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="segment_end_U" SOURCE="src/fragment_refine.cpp:157" URAM="0" VARIABLE="segment_end"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_refine_U0/segment_meta_U" BINDMODULE="top_fifo_w80_d2_S" DEPTH="2" TYPE="resource" MODULENAME="fifo_w80_d2_S" DISPNAME="segment_meta_U" RTLNAME="top_fifo_w80_d2_S">
+      <Resources FF="132" LUT="69"/>
+      <LocalResources FF="4" LUT="5"/>
+      <BindNode BINDTYPE="storage" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="srl" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="segment_meta_U" SOURCE="" URAM="0" VARIABLE="segment_meta"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_refine_U0/segment_sc_packet_U0" DEPTH="2" TYPE="function" MODULENAME="segment_sc_packet" DISPNAME="segment_sc_packet_U0" RTLNAME="top_segment_sc_packet">
+      <SubModules count="5">buffer_fifo_U grp_segment_sc_packet_Pipeline_VITIS_LOOP_128_1_fu_204 grp_segment_sc_packet_Pipeline_init_buffer_fu_169 grp_segment_sc_packet_Pipeline_segment_stream_fu_185 rabintab_1_U</SubModules>
+      <Resources BRAM="2" FF="896" LUT="537"/>
+      <LocalResources FF="383" LUT="94"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_refine_U0/segment_sc_packet_U0/buffer_fifo_U" BINDMODULE="top_fifo_w8_d32_S" DEPTH="3" TYPE="resource" MODULENAME="fifo_w8_d32_S_x" DISPNAME="buffer_fifo_U" RTLNAME="top_fifo_w8_d32_S_x">
+      <Resources FF="8" LUT="22"/>
+      <LocalResources FF="8" LUT="11"/>
+      <BindNode BINDTYPE="storage" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="srl" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="buffer_fifo_U" SOURCE="src/parsec/rabin.cpp:79" URAM="0" VARIABLE="buffer"/>
+      <BindNode BINDTYPE="storage" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="srl" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="buffer_fifo_U" SOURCE="src/parsec/rabin.cpp:79" URAM="0" VARIABLE="buffer"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_refine_U0/segment_sc_packet_U0/grp_segment_sc_packet_Pipeline_VITIS_LOOP_128_1_fu_204" DEPTH="3" TYPE="function" MODULENAME="segment_sc_packet_Pipeline_VITIS_LOOP_128_1" DISPNAME="grp_segment_sc_packet_Pipeline_VITIS_LOOP_128_1_fu_204" RTLNAME="top_segment_sc_packet_Pipeline_VITIS_LOOP_128_1">
+      <SubModules count="1">flow_control_loop_pipe_sequential_init_U</SubModules>
+      <Resources FF="8" LUT="13"/>
+      <LocalResources FF="6"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_refine_U0/segment_sc_packet_U0/grp_segment_sc_packet_Pipeline_VITIS_LOOP_128_1_fu_204/flow_control_loop_pipe_sequential_init_U" BINDMODULE="top_flow_control_loop_pipe_sequential_init" DEPTH="4" TYPE="rtl" MODULENAME="flow_control_loop_pipe_sequential_init" DISPNAME="flow_control_loop_pipe_sequential_init_U" RTLNAME="top_flow_control_loop_pipe_sequential_init">
+      <Resources FF="2" LUT="13"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_refine_U0/segment_sc_packet_U0/grp_segment_sc_packet_Pipeline_init_buffer_fu_169" DEPTH="3" TYPE="function" MODULENAME="segment_sc_packet_Pipeline_init_buffer" DISPNAME="grp_segment_sc_packet_Pipeline_init_buffer_fu_169" RTLNAME="top_segment_sc_packet_Pipeline_init_buffer">
+      <SubModules count="1">flow_control_loop_pipe_sequential_init_U</SubModules>
+      <Resources FF="131" LUT="140"/>
+      <LocalResources FF="129" LUT="51"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_refine_U0/segment_sc_packet_U0/grp_segment_sc_packet_Pipeline_init_buffer_fu_169/flow_control_loop_pipe_sequential_init_U" BINDMODULE="top_flow_control_loop_pipe_sequential_init" DEPTH="4" TYPE="rtl" MODULENAME="flow_control_loop_pipe_sequential_init" DISPNAME="flow_control_loop_pipe_sequential_init_U" RTLNAME="top_flow_control_loop_pipe_sequential_init">
+      <Resources FF="2" LUT="89"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_refine_U0/segment_sc_packet_U0/grp_segment_sc_packet_Pipeline_segment_stream_fu_185" DEPTH="3" TYPE="function" MODULENAME="segment_sc_packet_Pipeline_segment_stream" DISPNAME="grp_segment_sc_packet_Pipeline_segment_stream_fu_185" RTLNAME="top_segment_sc_packet_Pipeline_segment_stream">
+      <SubModules count="1">rabinwintab_2_U</SubModules>
+      <Resources BRAM="1" FF="366" LUT="268"/>
+      <LocalResources FF="366" LUT="234"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_refine_U0/segment_sc_packet_U0/grp_segment_sc_packet_Pipeline_segment_stream_fu_185/rabinwintab_2_U" BINDMODULE="top_segment_bc_packet_Pipeline_segment_stream_rabinwintab_ROM_1P_AUTO_1R" DEPTH="4" TYPE="resource" MODULENAME="segment_bc_packet_Pipeline_segment_stream_rabinwintab_ROM_1P_AUTO_1R" DISPNAME="rabinwintab_2_U" RTLNAME="top_segment_bc_packet_Pipeline_segment_stream_rabinwintab_ROM_1P_AUTO_1R">
+      <Resources BRAM="1" LUT="34"/>
+      <BindNode BINDTYPE="storage" BRAM="1" BUNDLEDNAME="" DISPNAME="bind_storage rom_1p" DSP="0" ID="" IMPL="auto" LATENCY="1" LOOP="" OPTYPE="rom_1p" PRAGMA="" RTLNAME="rabinwintab_2_U" SOURCE="" URAM="0" VARIABLE="rabinwintab_2"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_refine_U0/segment_sc_packet_U0/rabintab_1_U" BINDMODULE="top_segment_sc_packet_rabintab_1_ROM_AUTO_1R" DEPTH="3" TYPE="resource" MODULENAME="segment_sc_packet_rabintab_1_ROM_AUTO_1R" DISPNAME="rabintab_1_U" RTLNAME="top_segment_sc_packet_rabintab_1_ROM_AUTO_1R">
+      <Resources BRAM="1"/>
+      <BindNode BINDTYPE="storage" BRAM="1" BUNDLEDNAME="" DISPNAME="bind_storage rom_1p" DSP="0" ID="" IMPL="auto" LATENCY="1" LOOP="" OPTYPE="rom_1p" PRAGMA="" RTLNAME="rabintab_1_U" SOURCE="" URAM="0" VARIABLE="rabintab_1"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_refine_U0/start_for_segment_sc_packet_U0_U" BINDMODULE="top_start_for_segment_sc_packet_U0" DEPTH="2" TYPE="rtl" MODULENAME="start_for_segment_sc_packet_U0" DISPNAME="start_for_segment_sc_packet_U0_U" RTLNAME="top_start_for_segment_sc_packet_U0">
+      <Resources FF="4" LUT="7"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_refine_U0/start_for_write_out_3_U0_U" BINDMODULE="top_start_for_write_out_3_U0" DEPTH="2" TYPE="rtl" MODULENAME="start_for_write_out_3_U0" DISPNAME="start_for_write_out_3_U0_U" RTLNAME="top_start_for_write_out_3_U0">
+      <Resources FF="4" LUT="5"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_refine_U0/write_data_U" BINDMODULE="top_fifo_w8_d10241_A" DEPTH="2" TYPE="resource" MODULENAME="fifo_w8_d10241_A" DISPNAME="write_data_U" RTLNAME="top_fifo_w8_d10241_A">
+      <Resources BRAM="6" FF="60" LUT="63"/>
+      <LocalResources FF="46" LUT="40"/>
+      <BindNode BINDTYPE="storage" BRAM="24" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="memory" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="write_data_U" SOURCE="src/fragment.cpp:184" URAM="0" VARIABLE="write_data"/>
+      <BindNode BINDTYPE="storage" BRAM="8" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="memory" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="write_data_U" SOURCE="src/fragment_refine.cpp:160" URAM="0" VARIABLE="write_data"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_refine_U0/write_end_U" BINDMODULE="top_fifo_w1_d2_S" DEPTH="2" TYPE="resource" MODULENAME="fifo_w1_d2_S_x" DISPNAME="write_end_U" RTLNAME="top_fifo_w1_d2_S_x">
+      <Resources FF="6" LUT="4"/>
+      <LocalResources FF="4" LUT="3"/>
+      <BindNode BINDTYPE="storage" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="srl" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="write_end_U" SOURCE="src/fragment.cpp:186" URAM="0" VARIABLE="write_end"/>
+      <BindNode BINDTYPE="storage" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="srl" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="write_end_U" SOURCE="src/fragment_refine.cpp:161" URAM="0" VARIABLE="write_end"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_refine_U0/write_meta_U" BINDMODULE="top_fifo_w258_d2_S" DEPTH="2" TYPE="resource" MODULENAME="fifo_w258_d2_S" DISPNAME="write_meta_U" RTLNAME="top_fifo_w258_d2_S">
+      <Resources FF="132" LUT="69"/>
+      <LocalResources FF="4" LUT="5"/>
+      <BindNode BINDTYPE="storage" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="srl" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="write_meta_U" SOURCE="" URAM="0" VARIABLE="write_meta"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_refine_U0/write_out_3_U0" DEPTH="2" TYPE="function" MODULENAME="write_out_3" DISPNAME="write_out_3_U0" RTLNAME="top_write_out_3">
+      <SubModules count="4">dcmp_64ns_64ns_1_2_no_dsp_1_U119 dmul_64ns_64ns_64_5_max_dsp_1_U118 grp_write_out_3_Pipeline_convert_to_c_data_t_fu_184 sitodp_64ns_64_4_no_dsp_1_U120</SubModules>
+      <Resources DSP="8" FF="2014" LUT="2096"/>
+      <LocalResources FF="438" LUT="237"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_refine_U0/write_out_3_U0/dcmp_64ns_64ns_1_2_no_dsp_1_U119" BINDMODULE="top_dcmp_64ns_64ns_1_2_no_dsp_1" DEPTH="3" TYPE="rtl" MODULENAME="dcmp_64ns_64ns_1_2_no_dsp_1" DISPNAME="dcmp_64ns_64ns_1_2_no_dsp_1_U119" RTLNAME="top_dcmp_64ns_64ns_1_2_no_dsp_1">
+      <Resources FF="130" LUT="89"/>
+      <LocalResources FF="130"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_refine_U0/write_out_3_U0/dmul_64ns_64ns_64_5_max_dsp_1_U118" BINDMODULE="top_dmul_64ns_64ns_64_5_max_dsp_1" DEPTH="3" TYPE="resource" MODULENAME="dmul_64ns_64ns_64_5_max_dsp_1" DISPNAME="dmul_64ns_64ns_64_5_max_dsp_1_U118" RTLNAME="top_dmul_64ns_64ns_64_5_max_dsp_1">
+      <Resources DSP="8" FF="188" LUT="123"/>
+      <LocalResources FF="66" LUT="33"/>
+      <BindNode BINDTYPE="op" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_op dmul" DSP="11" ID="" IMPL="maxdsp" LATENCY="4" LOOP="VITIS_LOOP_25_1" OPTYPE="dmul" PRAGMA="" RTLNAME="dmul_64ns_64ns_64_5_max_dsp_1_U118" SOURCE="src/fragment_refine.cpp:28" URAM="0" VARIABLE="mul"/>
+      <BindNode BINDTYPE="op" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_op dmul" DSP="11" ID="" IMPL="maxdsp" LATENCY="4" LOOP="VITIS_LOOP_25_1" OPTYPE="dmul" PRAGMA="" RTLNAME="dmul_64ns_64ns_64_5_max_dsp_1_U118" SOURCE="src/fragment_refine.cpp:28" URAM="0" VARIABLE="dc"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_refine_U0/write_out_3_U0/grp_write_out_3_Pipeline_convert_to_c_data_t_fu_184" DEPTH="3" TYPE="function" MODULENAME="write_out_3_Pipeline_convert_to_c_data_t" DISPNAME="grp_write_out_3_Pipeline_convert_to_c_data_t_fu_184" RTLNAME="top_write_out_3_Pipeline_convert_to_c_data_t">
+      <SubModules count="1">flow_control_loop_pipe_sequential_init_U</SubModules>
+      <Resources FF="1058" LUT="1326"/>
+      <LocalResources FF="1056" LUT="1283"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_refine_U0/write_out_3_U0/grp_write_out_3_Pipeline_convert_to_c_data_t_fu_184/flow_control_loop_pipe_sequential_init_U" BINDMODULE="top_flow_control_loop_pipe_sequential_init" DEPTH="4" TYPE="rtl" MODULENAME="flow_control_loop_pipe_sequential_init" DISPNAME="flow_control_loop_pipe_sequential_init_U" RTLNAME="top_flow_control_loop_pipe_sequential_init">
+      <Resources FF="2" LUT="43"/>
+    </RtlModule>
+    <RtlModule CELL="inst/fragment_refine_U0/write_out_3_U0/sitodp_64ns_64_4_no_dsp_1_U120" BINDMODULE="top_sitodp_64ns_64_4_no_dsp_1" DEPTH="3" TYPE="rtl" MODULENAME="sitodp_64ns_64_4_no_dsp_1" DISPNAME="sitodp_64ns_64_4_no_dsp_1_U120" RTLNAME="top_sitodp_64ns_64_4_no_dsp_1">
+      <Resources FF="200" LUT="321"/>
+      <LocalResources FF="64" LUT="4"/>
+    </RtlModule>
+    <RtlModule CELL="inst/in_buffer_U" BINDMODULE="top_fifo_w64_d32_A" DEPTH="1" TYPE="resource" MODULENAME="fifo_w64_d32_A" DISPNAME="in_buffer_U" RTLNAME="top_fifo_w64_d32_A">
+      <Resources FF="88" LUT="61"/>
+      <LocalResources FF="19" LUT="15"/>
+      <BindNode BINDTYPE="storage" BRAM="4" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="memory" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="in_buffer_U" SOURCE="src/top.cpp:107" URAM="0" VARIABLE="in_buffer"/>
+    </RtlModule>
+    <RtlModule CELL="inst/out_buffer_U" BINDMODULE="top_fifo_w64_d32_A" DEPTH="1" TYPE="resource" MODULENAME="fifo_w64_d32_A" DISPNAME="out_buffer_U" RTLNAME="top_fifo_w64_d32_A">
+      <Resources FF="88" LUT="63"/>
+      <LocalResources FF="19" LUT="14"/>
+      <BindNode BINDTYPE="storage" BRAM="4" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="memory" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="out_buffer_U" SOURCE="src/top.cpp:111" URAM="0" VARIABLE="out_buffer"/>
+    </RtlModule>
+    <RtlModule CELL="inst/post_fragment_data_buffer_U" BINDMODULE="top_fifo_w1024_d8_A" DEPTH="1" TYPE="resource" MODULENAME="fifo_w1024_d8_A" DISPNAME="post_fragment_data_buffer_U" RTLNAME="top_fifo_w1024_d8_A">
+      <Resources FF="1040" LUT="600"/>
+      <LocalResources FF="13" LUT="9"/>
+      <BindNode BINDTYPE="storage" BRAM="57" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="memory" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="post_fragment_data_buffer_U" SOURCE="src/top.cpp:116" URAM="0" VARIABLE="post_fragment_data_buffer"/>
+    </RtlModule>
+    <RtlModule CELL="inst/post_fragment_end_buffer_U" BINDMODULE="top_fifo_w1_d2_S" DEPTH="1" TYPE="resource" MODULENAME="fifo_w1_d2_S_x1" DISPNAME="post_fragment_end_buffer_U" RTLNAME="top_fifo_w1_d2_S_x1">
+      <Resources FF="6" LUT="6"/>
+      <LocalResources FF="4" LUT="5"/>
+      <BindNode BINDTYPE="storage" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="srl" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="post_fragment_end_buffer_U" SOURCE="src/top.cpp:117" URAM="0" VARIABLE="post_fragment_end_buffer"/>
+    </RtlModule>
+    <RtlModule CELL="inst/post_fragment_meta_buffer_U" BINDMODULE="top_fifo_w80_d2_S" DEPTH="1" TYPE="resource" MODULENAME="fifo_w80_d2_S_x" DISPNAME="post_fragment_meta_buffer_U" RTLNAME="top_fifo_w80_d2_S_x">
+      <Resources FF="132" LUT="69"/>
+      <LocalResources FF="4" LUT="5"/>
+      <BindNode BINDTYPE="storage" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="srl" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="post_fragment_meta_buffer_U" SOURCE="" URAM="0" VARIABLE="post_fragment_meta_buffer"/>
+    </RtlModule>
+    <RtlModule CELL="inst/post_refine_data_buffer_U" BINDMODULE="top_fifo_w1024_d81_A" DEPTH="1" TYPE="resource" MODULENAME="fifo_w1024_d81_A_x" DISPNAME="post_refine_data_buffer_U" RTLNAME="top_fifo_w1024_d81_A_x">
+      <Resources BRAM="29" FF="32" LUT="45"/>
+      <LocalResources FF="25" LUT="23"/>
+      <BindNode BINDTYPE="storage" BRAM="57" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="memory" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="post_refine_data_buffer_U" SOURCE="src/top.cpp:124" URAM="0" VARIABLE="post_refine_data_buffer"/>
+    </RtlModule>
+    <RtlModule CELL="inst/post_refine_end_buffer_U" BINDMODULE="top_fifo_w1_d2_S" DEPTH="1" TYPE="resource" MODULENAME="fifo_w1_d2_S_x1" DISPNAME="post_refine_end_buffer_U" RTLNAME="top_fifo_w1_d2_S_x1">
+      <Resources FF="6" LUT="6"/>
+      <LocalResources FF="4" LUT="5"/>
+      <BindNode BINDTYPE="storage" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="srl" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="post_refine_end_buffer_U" SOURCE="src/top.cpp:125" URAM="0" VARIABLE="post_refine_end_buffer"/>
+    </RtlModule>
+    <RtlModule CELL="inst/post_refine_meta_buffer_U" BINDMODULE="top_fifo_w258_d2_S" DEPTH="1" TYPE="resource" MODULENAME="fifo_w258_d2_S_x0" DISPNAME="post_refine_meta_buffer_U" RTLNAME="top_fifo_w258_d2_S_x0">
+      <Resources FF="132" LUT="69"/>
+      <LocalResources FF="4" LUT="5"/>
+      <BindNode BINDTYPE="storage" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="srl" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="post_refine_meta_buffer_U" SOURCE="" URAM="0" VARIABLE="post_refine_meta_buffer"/>
+    </RtlModule>
+    <RtlModule CELL="inst/pre_reorder_data_buffer_U" BINDMODULE="top_fifo_w1024_d81_A" DEPTH="1" TYPE="resource" MODULENAME="fifo_w1024_d81_A_x" DISPNAME="pre_reorder_data_buffer_U" RTLNAME="top_fifo_w1024_d81_A_x">
+      <Resources BRAM="29" FF="32" LUT="553"/>
+      <LocalResources FF="25" LUT="20"/>
+      <BindNode BINDTYPE="storage" BRAM="57" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="memory" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="pre_reorder_data_buffer_U" SOURCE="src/top.cpp:120" URAM="0" VARIABLE="pre_reorder_data_buffer"/>
+    </RtlModule>
+    <RtlModule CELL="inst/pre_reorder_end_buffer_U" BINDMODULE="top_fifo_w1_d2_S" DEPTH="1" TYPE="resource" MODULENAME="fifo_w1_d2_S_x1" DISPNAME="pre_reorder_end_buffer_U" RTLNAME="top_fifo_w1_d2_S_x1">
+      <Resources FF="6" LUT="6"/>
+      <LocalResources FF="4" LUT="3"/>
+      <BindNode BINDTYPE="storage" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="srl" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="pre_reorder_end_buffer_U" SOURCE="src/top.cpp:121" URAM="0" VARIABLE="pre_reorder_end_buffer"/>
+    </RtlModule>
+    <RtlModule CELL="inst/pre_reorder_meta_buffer_U" BINDMODULE="top_fifo_w258_d2_S" DEPTH="1" TYPE="resource" MODULENAME="fifo_w258_d2_S_x0" DISPNAME="pre_reorder_meta_buffer_U" RTLNAME="top_fifo_w258_d2_S_x0">
+      <Resources FF="454" LUT="231"/>
+      <LocalResources FF="4" LUT="6"/>
+      <BindNode BINDTYPE="storage" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="srl" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="pre_reorder_meta_buffer_U" SOURCE="" URAM="0" VARIABLE="pre_reorder_meta_buffer"/>
+    </RtlModule>
+    <RtlModule CELL="inst/read_in_U0" DEPTH="1" TYPE="function" MODULENAME="read_in" DISPNAME="read_in_U0" RTLNAME="top_read_in">
+      <SubModules count="1">grp_read_in_Pipeline_read_file_fu_84</SubModules>
+      <Resources FF="88" LUT="70"/>
+      <LocalResources FF="72" LUT="10"/>
+    </RtlModule>
+    <RtlModule CELL="inst/read_in_U0/grp_read_in_Pipeline_read_file_fu_84" DEPTH="2" TYPE="function" MODULENAME="read_in_Pipeline_read_file" DISPNAME="grp_read_in_Pipeline_read_file_fu_84" RTLNAME="top_read_in_Pipeline_read_file">
+      <SubModules count="1">flow_control_loop_pipe_sequential_init_U</SubModules>
+      <Resources FF="16" LUT="60"/>
+      <LocalResources FF="14" LUT="26"/>
+    </RtlModule>
+    <RtlModule CELL="inst/read_in_U0/grp_read_in_Pipeline_read_file_fu_84/flow_control_loop_pipe_sequential_init_U" BINDMODULE="top_flow_control_loop_pipe_sequential_init" DEPTH="3" TYPE="rtl" MODULENAME="flow_control_loop_pipe_sequential_init" DISPNAME="flow_control_loop_pipe_sequential_init_U" RTLNAME="top_flow_control_loop_pipe_sequential_init">
+      <Resources FF="2" LUT="34"/>
+    </RtlModule>
+    <RtlModule CELL="inst/reorder_U0" DEPTH="1" TYPE="function" MODULENAME="reorder" DISPNAME="reorder_U0" RTLNAME="top_reorder">
+      <SubModules count="1">grp_check_input_fu_88</SubModules>
+      <Resources DSP="8" FF="84765" LUT="27168"/>
+      <LocalResources FF="135" LUT="5"/>
+    </RtlModule>
+    <RtlModule CELL="inst/reorder_U0/grp_check_input_fu_88" DEPTH="2" TYPE="function" MODULENAME="check_input" DISPNAME="grp_check_input_fu_88" RTLNAME="top_check_input">
+      <SubModules count="3">dcmp_64ns_64ns_1_2_no_dsp_1_U346 dmul_64ns_64ns_64_5_max_dsp_1_U345 sitodp_64ns_64_4_no_dsp_1_U347</SubModules>
+      <Resources DSP="8" FF="84630" LUT="27163"/>
+      <LocalResources FF="84045" LUT="26431"/>
+    </RtlModule>
+    <RtlModule CELL="inst/reorder_U0/grp_check_input_fu_88/dcmp_64ns_64ns_1_2_no_dsp_1_U346" BINDMODULE="top_dcmp_64ns_64ns_1_2_no_dsp_1" DEPTH="3" TYPE="rtl" MODULENAME="dcmp_64ns_64ns_1_2_no_dsp_1" DISPNAME="dcmp_64ns_64ns_1_2_no_dsp_1_U346" RTLNAME="top_dcmp_64ns_64ns_1_2_no_dsp_1">
+      <Resources FF="132" LUT="215"/>
+      <LocalResources FF="132" LUT="2"/>
+    </RtlModule>
+    <RtlModule CELL="inst/reorder_U0/grp_check_input_fu_88/dmul_64ns_64ns_64_5_max_dsp_1_U345" BINDMODULE="top_dmul_64ns_64ns_64_5_max_dsp_1" DEPTH="3" TYPE="resource" MODULENAME="dmul_64ns_64ns_64_5_max_dsp_1" DISPNAME="dmul_64ns_64ns_64_5_max_dsp_1_U345" RTLNAME="top_dmul_64ns_64ns_64_5_max_dsp_1">
+      <Resources DSP="8" FF="188" LUT="123"/>
+      <LocalResources FF="66" LUT="33"/>
+      <BindNode BINDTYPE="op" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_op dmul" DSP="11" ID="" IMPL="maxdsp" LATENCY="4" LOOP="" OPTYPE="dmul" PRAGMA="" RTLNAME="dmul_64ns_64ns_64_5_max_dsp_1_U345" SOURCE="src/reorder.cpp:62" URAM="0" VARIABLE="mul_i"/>
+      <BindNode BINDTYPE="op" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_op dmul" DSP="11" ID="" IMPL="maxdsp" LATENCY="4" LOOP="" OPTYPE="dmul" PRAGMA="" RTLNAME="dmul_64ns_64ns_64_5_max_dsp_1_U345" SOURCE="src/reorder.cpp:62" URAM="0" VARIABLE="dc"/>
+    </RtlModule>
+    <RtlModule CELL="inst/reorder_U0/grp_check_input_fu_88/sitodp_64ns_64_4_no_dsp_1_U347" BINDMODULE="top_sitodp_64ns_64_4_no_dsp_1" DEPTH="3" TYPE="rtl" MODULENAME="sitodp_64ns_64_4_no_dsp_1" DISPNAME="sitodp_64ns_64_4_no_dsp_1_U347" RTLNAME="top_sitodp_64ns_64_4_no_dsp_1">
+      <Resources FF="265" LUT="394"/>
+      <LocalResources FF="129" LUT="75"/>
+    </RtlModule>
+    <RtlModule CELL="inst/size_in_buffer_U" BINDMODULE="top_fifo_w64_d2_S" DEPTH="1" TYPE="resource" MODULENAME="fifo_w64_d2_S_x0" DISPNAME="size_in_buffer_U" RTLNAME="top_fifo_w64_d2_S_x0">
+      <Resources FF="132" LUT="68"/>
+      <LocalResources FF="4" LUT="4"/>
+      <BindNode BINDTYPE="storage" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="srl" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="size_in_buffer_U" SOURCE="src/top.cpp:108" URAM="0" VARIABLE="size_in_buffer"/>
+    </RtlModule>
+    <RtlModule CELL="inst/size_out_buffer_U" BINDMODULE="top_fifo_w64_d2_S" DEPTH="1" TYPE="resource" MODULENAME="fifo_w64_d2_S_x0" DISPNAME="size_out_buffer_U" RTLNAME="top_fifo_w64_d2_S_x0">
+      <Resources FF="132" LUT="70"/>
+      <LocalResources FF="4" LUT="6"/>
+      <BindNode BINDTYPE="storage" BRAM="0" BUNDLEDNAME="" DISPNAME="bind_storage fifo" DSP="0" ID="" IMPL="srl" LATENCY="0" LOOP="" OPTYPE="fifo" PRAGMA="" RTLNAME="size_out_buffer_U" SOURCE="src/top.cpp:112" URAM="0" VARIABLE="size_out_buffer"/>
+    </RtlModule>
+    <RtlModule CELL="inst/start_for_dedup_U0_U" BINDMODULE="top_start_for_dedup_U0" DEPTH="1" TYPE="rtl" MODULENAME="start_for_dedup_U0" DISPNAME="start_for_dedup_U0_U" RTLNAME="top_start_for_dedup_U0">
+      <Resources FF="4" LUT="7"/>
+    </RtlModule>
+    <RtlModule CELL="inst/start_for_fragment_U0_U" BINDMODULE="top_start_for_fragment_U0" DEPTH="1" TYPE="rtl" MODULENAME="start_for_fragment_U0" DISPNAME="start_for_fragment_U0_U" RTLNAME="top_start_for_fragment_U0">
+      <Resources FF="4" LUT="7"/>
+    </RtlModule>
+    <RtlModule CELL="inst/start_for_fragment_refine_U0_U" BINDMODULE="top_start_for_fragment_refine_U0" DEPTH="1" TYPE="rtl" MODULENAME="start_for_fragment_refine_U0" DISPNAME="start_for_fragment_refine_U0_U" RTLNAME="top_start_for_fragment_refine_U0">
+      <Resources FF="4" LUT="6"/>
+    </RtlModule>
+    <RtlModule CELL="inst/start_for_reorder_U0_U" BINDMODULE="top_start_for_reorder_U0" DEPTH="1" TYPE="rtl" MODULENAME="start_for_reorder_U0" DISPNAME="start_for_reorder_U0_U" RTLNAME="top_start_for_reorder_U0">
+      <Resources FF="4" LUT="6"/>
+    </RtlModule>
+    <RtlModule CELL="inst/start_for_write_out_U0_U" BINDMODULE="top_start_for_write_out_U0" DEPTH="1" TYPE="rtl" MODULENAME="start_for_write_out_U0" DISPNAME="start_for_write_out_U0_U" RTLNAME="top_start_for_write_out_U0">
+      <Resources FF="4" LUT="7"/>
+    </RtlModule>
+    <RtlModule CELL="inst/write_out_U0" DEPTH="1" TYPE="function" MODULENAME="write_out" DISPNAME="write_out_U0" RTLNAME="top_write_out">
+      <SubModules count="2">grp_write_out_Pipeline_VITIS_LOOP_69_1_fu_150 grp_write_out_Pipeline_write_rest_data_fu_158</SubModules>
+      <Resources FF="109" LUT="101"/>
+      <LocalResources FF="89" LUT="15"/>
+    </RtlModule>
+    <RtlModule CELL="inst/write_out_U0/grp_write_out_Pipeline_VITIS_LOOP_69_1_fu_150" DEPTH="2" TYPE="function" MODULENAME="write_out_Pipeline_VITIS_LOOP_69_1" DISPNAME="grp_write_out_Pipeline_VITIS_LOOP_69_1_fu_150" RTLNAME="top_write_out_Pipeline_VITIS_LOOP_69_1">
+      <SubModules count="1">flow_control_loop_pipe_sequential_init_U</SubModules>
+      <Resources FF="1" LUT="3"/>
+    </RtlModule>
+    <RtlModule CELL="inst/write_out_U0/grp_write_out_Pipeline_VITIS_LOOP_69_1_fu_150/flow_control_loop_pipe_sequential_init_U" BINDMODULE="top_flow_control_loop_pipe_sequential_init" DEPTH="3" TYPE="rtl" MODULENAME="flow_control_loop_pipe_sequential_init" DISPNAME="flow_control_loop_pipe_sequential_init_U" RTLNAME="top_flow_control_loop_pipe_sequential_init">
+      <Resources FF="1" LUT="3"/>
+    </RtlModule>
+    <RtlModule CELL="inst/write_out_U0/grp_write_out_Pipeline_write_rest_data_fu_158" DEPTH="2" TYPE="function" MODULENAME="write_out_Pipeline_write_rest_data" DISPNAME="grp_write_out_Pipeline_write_rest_data_fu_158" RTLNAME="top_write_out_Pipeline_write_rest_data">
+      <SubModules count="1">flow_control_loop_pipe_sequential_init_U</SubModules>
+      <Resources FF="19" LUT="83"/>
+      <LocalResources FF="17" LUT="17"/>
+    </RtlModule>
+    <RtlModule CELL="inst/write_out_U0/grp_write_out_Pipeline_write_rest_data_fu_158/flow_control_loop_pipe_sequential_init_U" BINDMODULE="top_flow_control_loop_pipe_sequential_init" DEPTH="3" TYPE="rtl" MODULENAME="flow_control_loop_pipe_sequential_init" DISPNAME="flow_control_loop_pipe_sequential_init_U" RTLNAME="top_flow_control_loop_pipe_sequential_init">
+      <Resources FF="2" LUT="66"/>
+    </RtlModule>
+  </RtlModules>
+  <TimingPaths>
+    <TPATH DATAPATH_DELAY="4.620" DATAPATH_LOGIC_DELAY="2.651" DATAPATH_NET_DELAY="1.969" ENDPOINT_PIN="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/a_V_4_reg_208_reg[31]/D" LOGIC_LEVELS="18" MAX_FANOUT="270" SLACK="5.362" STARTPOINT_PIN="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/t_V_fu_122_reg[3]/C">
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/t_V_fu_122_reg[3]" PRIMITIVE_TYPE="REGISTER.SDR.FDRE" LINE_NUMBER="372"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/t_V_fu_122[6]_i_6" PRIMITIVE_TYPE="CLB.LUT.LUT4" LINE_NUMBER="558"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/t_V_fu_122[6]_i_5" PRIMITIVE_TYPE="CLB.LUT.LUT4" LINE_NUMBER="558"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/dout_i_7" PRIMITIVE_TYPE="CLB.LUT.LUT2" LINE_NUMBER="67"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/dout__0/DSP_A_B_DATA_INST" PRIMITIVE_TYPE="ARITHMETIC.DSP.DSP48E2" LINE_NUMBER=""/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/dout__0/DSP_PREADD_DATA_INST" PRIMITIVE_TYPE="ARITHMETIC.DSP.DSP48E2" LINE_NUMBER=""/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/dout__0/DSP_MULTIPLIER_INST" PRIMITIVE_TYPE="ARITHMETIC.DSP.DSP48E2" LINE_NUMBER=""/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/dout__0/DSP_M_DATA_INST" PRIMITIVE_TYPE="ARITHMETIC.DSP.DSP48E2" LINE_NUMBER=""/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/dout__0/DSP_ALU_INST" PRIMITIVE_TYPE="ARITHMETIC.DSP.DSP48E2" LINE_NUMBER=""/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/dout__0/DSP_OUTPUT_INST" PRIMITIVE_TYPE="ARITHMETIC.DSP.DSP48E2" LINE_NUMBER=""/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/T_fu_618_p2__1_carry_i_17" PRIMITIVE_TYPE="CLB.LUT.LUT2" LINE_NUMBER="38"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/T_fu_618_p2__1_carry_i_14" PRIMITIVE_TYPE="CLB.LUT.LUT6" LINE_NUMBER="492"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/T_fu_618_p2__1_carry" PRIMITIVE_TYPE="CLB.CARRY.CARRY8" LINE_NUMBER="67"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/T_fu_618_p2__1_carry__0" PRIMITIVE_TYPE="CLB.CARRY.CARRY8" LINE_NUMBER="67"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/T_fu_618_p2__1_carry__1" PRIMITIVE_TYPE="CLB.CARRY.CARRY8" LINE_NUMBER="67"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/T_fu_618_p2__95_carry__1_i_3" PRIMITIVE_TYPE="CLB.LUT.LUT5" LINE_NUMBER="492"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/T_fu_618_p2__95_carry__1_i_11" PRIMITIVE_TYPE="CLB.LUT.LUT6" LINE_NUMBER="492"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/T_fu_618_p2__95_carry__1" PRIMITIVE_TYPE="CLB.CARRY.CARRY8" LINE_NUMBER="67"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/T_fu_618_p2__95_carry__2" PRIMITIVE_TYPE="CLB.CARRY.CARRY8" LINE_NUMBER="67"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/a_V_4_reg_208_reg[31]" PRIMITIVE_TYPE="REGISTER.SDR.FDRE" LINE_NUMBER="257"/>
+    </TPATH>
+    <TPATH DATAPATH_DELAY="4.619" DATAPATH_LOGIC_DELAY="2.651" DATAPATH_NET_DELAY="1.968" ENDPOINT_PIN="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/a_V_4_reg_208_reg[29]/D" LOGIC_LEVELS="18" MAX_FANOUT="270" SLACK="5.363" STARTPOINT_PIN="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/t_V_fu_122_reg[3]/C">
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/t_V_fu_122_reg[3]" PRIMITIVE_TYPE="REGISTER.SDR.FDRE" LINE_NUMBER="372"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/t_V_fu_122[6]_i_6" PRIMITIVE_TYPE="CLB.LUT.LUT4" LINE_NUMBER="558"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/t_V_fu_122[6]_i_5" PRIMITIVE_TYPE="CLB.LUT.LUT4" LINE_NUMBER="558"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/dout_i_7" PRIMITIVE_TYPE="CLB.LUT.LUT2" LINE_NUMBER="67"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/dout__0/DSP_A_B_DATA_INST" PRIMITIVE_TYPE="ARITHMETIC.DSP.DSP48E2" LINE_NUMBER=""/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/dout__0/DSP_PREADD_DATA_INST" PRIMITIVE_TYPE="ARITHMETIC.DSP.DSP48E2" LINE_NUMBER=""/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/dout__0/DSP_MULTIPLIER_INST" PRIMITIVE_TYPE="ARITHMETIC.DSP.DSP48E2" LINE_NUMBER=""/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/dout__0/DSP_M_DATA_INST" PRIMITIVE_TYPE="ARITHMETIC.DSP.DSP48E2" LINE_NUMBER=""/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/dout__0/DSP_ALU_INST" PRIMITIVE_TYPE="ARITHMETIC.DSP.DSP48E2" LINE_NUMBER=""/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/dout__0/DSP_OUTPUT_INST" PRIMITIVE_TYPE="ARITHMETIC.DSP.DSP48E2" LINE_NUMBER=""/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/T_fu_618_p2__1_carry_i_17" PRIMITIVE_TYPE="CLB.LUT.LUT2" LINE_NUMBER="38"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/T_fu_618_p2__1_carry_i_14" PRIMITIVE_TYPE="CLB.LUT.LUT6" LINE_NUMBER="492"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/T_fu_618_p2__1_carry" PRIMITIVE_TYPE="CLB.CARRY.CARRY8" LINE_NUMBER="67"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/T_fu_618_p2__1_carry__0" PRIMITIVE_TYPE="CLB.CARRY.CARRY8" LINE_NUMBER="67"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/T_fu_618_p2__1_carry__1" PRIMITIVE_TYPE="CLB.CARRY.CARRY8" LINE_NUMBER="67"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/T_fu_618_p2__95_carry__1_i_3" PRIMITIVE_TYPE="CLB.LUT.LUT5" LINE_NUMBER="492"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/T_fu_618_p2__95_carry__1_i_11" PRIMITIVE_TYPE="CLB.LUT.LUT6" LINE_NUMBER="492"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/T_fu_618_p2__95_carry__1" PRIMITIVE_TYPE="CLB.CARRY.CARRY8" LINE_NUMBER="67"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/T_fu_618_p2__95_carry__2" PRIMITIVE_TYPE="CLB.CARRY.CARRY8" LINE_NUMBER="67"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/a_V_4_reg_208_reg[29]" PRIMITIVE_TYPE="REGISTER.SDR.FDSE" LINE_NUMBER="257"/>
+    </TPATH>
+    <TPATH DATAPATH_DELAY="4.607" DATAPATH_LOGIC_DELAY="2.638" DATAPATH_NET_DELAY="1.969" ENDPOINT_PIN="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/a_V_4_reg_208_reg[30]/D" LOGIC_LEVELS="18" MAX_FANOUT="270" SLACK="5.375" STARTPOINT_PIN="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/t_V_fu_122_reg[3]/C">
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/t_V_fu_122_reg[3]" PRIMITIVE_TYPE="REGISTER.SDR.FDRE" LINE_NUMBER="372"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/t_V_fu_122[6]_i_6" PRIMITIVE_TYPE="CLB.LUT.LUT4" LINE_NUMBER="558"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/t_V_fu_122[6]_i_5" PRIMITIVE_TYPE="CLB.LUT.LUT4" LINE_NUMBER="558"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/dout_i_7" PRIMITIVE_TYPE="CLB.LUT.LUT2" LINE_NUMBER="67"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/dout__0/DSP_A_B_DATA_INST" PRIMITIVE_TYPE="ARITHMETIC.DSP.DSP48E2" LINE_NUMBER=""/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/dout__0/DSP_PREADD_DATA_INST" PRIMITIVE_TYPE="ARITHMETIC.DSP.DSP48E2" LINE_NUMBER=""/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/dout__0/DSP_MULTIPLIER_INST" PRIMITIVE_TYPE="ARITHMETIC.DSP.DSP48E2" LINE_NUMBER=""/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/dout__0/DSP_M_DATA_INST" PRIMITIVE_TYPE="ARITHMETIC.DSP.DSP48E2" LINE_NUMBER=""/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/dout__0/DSP_ALU_INST" PRIMITIVE_TYPE="ARITHMETIC.DSP.DSP48E2" LINE_NUMBER=""/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/dout__0/DSP_OUTPUT_INST" PRIMITIVE_TYPE="ARITHMETIC.DSP.DSP48E2" LINE_NUMBER=""/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/T_fu_618_p2__1_carry_i_17" PRIMITIVE_TYPE="CLB.LUT.LUT2" LINE_NUMBER="38"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/T_fu_618_p2__1_carry_i_14" PRIMITIVE_TYPE="CLB.LUT.LUT6" LINE_NUMBER="492"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/T_fu_618_p2__1_carry" PRIMITIVE_TYPE="CLB.CARRY.CARRY8" LINE_NUMBER="67"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/T_fu_618_p2__1_carry__0" PRIMITIVE_TYPE="CLB.CARRY.CARRY8" LINE_NUMBER="67"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/T_fu_618_p2__1_carry__1" PRIMITIVE_TYPE="CLB.CARRY.CARRY8" LINE_NUMBER="67"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/T_fu_618_p2__95_carry__1_i_3" PRIMITIVE_TYPE="CLB.LUT.LUT5" LINE_NUMBER="492"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/T_fu_618_p2__95_carry__1_i_11" PRIMITIVE_TYPE="CLB.LUT.LUT6" LINE_NUMBER="492"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/T_fu_618_p2__95_carry__1" PRIMITIVE_TYPE="CLB.CARRY.CARRY8" LINE_NUMBER="67"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/T_fu_618_p2__95_carry__2" PRIMITIVE_TYPE="CLB.CARRY.CARRY8" LINE_NUMBER="67"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/a_V_4_reg_208_reg[30]" PRIMITIVE_TYPE="REGISTER.SDR.FDSE" LINE_NUMBER="257"/>
+    </TPATH>
+    <TPATH DATAPATH_DELAY="4.593" DATAPATH_LOGIC_DELAY="2.629" DATAPATH_NET_DELAY="1.964" ENDPOINT_PIN="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/a_V_4_reg_208_reg[23]/D" LOGIC_LEVELS="17" MAX_FANOUT="270" SLACK="5.389" STARTPOINT_PIN="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/t_V_fu_122_reg[3]/C">
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/t_V_fu_122_reg[3]" PRIMITIVE_TYPE="REGISTER.SDR.FDRE" LINE_NUMBER="372"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/t_V_fu_122[6]_i_6" PRIMITIVE_TYPE="CLB.LUT.LUT4" LINE_NUMBER="558"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/t_V_fu_122[6]_i_5" PRIMITIVE_TYPE="CLB.LUT.LUT4" LINE_NUMBER="558"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/dout_i_7" PRIMITIVE_TYPE="CLB.LUT.LUT2" LINE_NUMBER="67"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/dout__0/DSP_A_B_DATA_INST" PRIMITIVE_TYPE="ARITHMETIC.DSP.DSP48E2" LINE_NUMBER=""/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/dout__0/DSP_PREADD_DATA_INST" PRIMITIVE_TYPE="ARITHMETIC.DSP.DSP48E2" LINE_NUMBER=""/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/dout__0/DSP_MULTIPLIER_INST" PRIMITIVE_TYPE="ARITHMETIC.DSP.DSP48E2" LINE_NUMBER=""/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/dout__0/DSP_M_DATA_INST" PRIMITIVE_TYPE="ARITHMETIC.DSP.DSP48E2" LINE_NUMBER=""/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/dout__0/DSP_ALU_INST" PRIMITIVE_TYPE="ARITHMETIC.DSP.DSP48E2" LINE_NUMBER=""/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/dout__0/DSP_OUTPUT_INST" PRIMITIVE_TYPE="ARITHMETIC.DSP.DSP48E2" LINE_NUMBER=""/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/T_fu_618_p2__1_carry_i_17" PRIMITIVE_TYPE="CLB.LUT.LUT2" LINE_NUMBER="38"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/T_fu_618_p2__1_carry_i_14" PRIMITIVE_TYPE="CLB.LUT.LUT6" LINE_NUMBER="492"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/T_fu_618_p2__1_carry" PRIMITIVE_TYPE="CLB.CARRY.CARRY8" LINE_NUMBER="67"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/T_fu_618_p2__1_carry__0" PRIMITIVE_TYPE="CLB.CARRY.CARRY8" LINE_NUMBER="67"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/T_fu_618_p2__95_carry__0_i_3" PRIMITIVE_TYPE="CLB.LUT.LUT5" LINE_NUMBER="492"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/T_fu_618_p2__95_carry__0_i_11" PRIMITIVE_TYPE="CLB.LUT.LUT6" LINE_NUMBER="492"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/T_fu_618_p2__95_carry__0" PRIMITIVE_TYPE="CLB.CARRY.CARRY8" LINE_NUMBER="67"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/T_fu_618_p2__95_carry__1" PRIMITIVE_TYPE="CLB.CARRY.CARRY8" LINE_NUMBER="67"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/a_V_4_reg_208_reg[23]" PRIMITIVE_TYPE="REGISTER.SDR.FDRE" LINE_NUMBER="257"/>
+    </TPATH>
+    <TPATH DATAPATH_DELAY="4.592" DATAPATH_LOGIC_DELAY="2.629" DATAPATH_NET_DELAY="1.963" ENDPOINT_PIN="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/a_V_4_reg_208_reg[21]/D" LOGIC_LEVELS="17" MAX_FANOUT="270" SLACK="5.390" STARTPOINT_PIN="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/t_V_fu_122_reg[3]/C">
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/t_V_fu_122_reg[3]" PRIMITIVE_TYPE="REGISTER.SDR.FDRE" LINE_NUMBER="372"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/t_V_fu_122[6]_i_6" PRIMITIVE_TYPE="CLB.LUT.LUT4" LINE_NUMBER="558"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/t_V_fu_122[6]_i_5" PRIMITIVE_TYPE="CLB.LUT.LUT4" LINE_NUMBER="558"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/dout_i_7" PRIMITIVE_TYPE="CLB.LUT.LUT2" LINE_NUMBER="67"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/dout__0/DSP_A_B_DATA_INST" PRIMITIVE_TYPE="ARITHMETIC.DSP.DSP48E2" LINE_NUMBER=""/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/dout__0/DSP_PREADD_DATA_INST" PRIMITIVE_TYPE="ARITHMETIC.DSP.DSP48E2" LINE_NUMBER=""/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/dout__0/DSP_MULTIPLIER_INST" PRIMITIVE_TYPE="ARITHMETIC.DSP.DSP48E2" LINE_NUMBER=""/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/dout__0/DSP_M_DATA_INST" PRIMITIVE_TYPE="ARITHMETIC.DSP.DSP48E2" LINE_NUMBER=""/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/dout__0/DSP_ALU_INST" PRIMITIVE_TYPE="ARITHMETIC.DSP.DSP48E2" LINE_NUMBER=""/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/dout__0/DSP_OUTPUT_INST" PRIMITIVE_TYPE="ARITHMETIC.DSP.DSP48E2" LINE_NUMBER=""/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/T_fu_618_p2__1_carry_i_17" PRIMITIVE_TYPE="CLB.LUT.LUT2" LINE_NUMBER="38"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/mul_7ns_9ns_15_1_1_U230/T_fu_618_p2__1_carry_i_14" PRIMITIVE_TYPE="CLB.LUT.LUT6" LINE_NUMBER="492"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/T_fu_618_p2__1_carry" PRIMITIVE_TYPE="CLB.CARRY.CARRY8" LINE_NUMBER="67"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/T_fu_618_p2__1_carry__0" PRIMITIVE_TYPE="CLB.CARRY.CARRY8" LINE_NUMBER="67"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/T_fu_618_p2__95_carry__0_i_3" PRIMITIVE_TYPE="CLB.LUT.LUT5" LINE_NUMBER="492"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/T_fu_618_p2__95_carry__0_i_11" PRIMITIVE_TYPE="CLB.LUT.LUT6" LINE_NUMBER="492"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/T_fu_618_p2__95_carry__0" PRIMITIVE_TYPE="CLB.CARRY.CARRY8" LINE_NUMBER="67"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/T_fu_618_p2__95_carry__1" PRIMITIVE_TYPE="CLB.CARRY.CARRY8" LINE_NUMBER="67"/>
+      <CELL NAME="dedup_U0/grp_sha1_32u_s_fu_323/SHA1Digest_32u_U0/grp_SHA1Digest_32u_Pipeline_LOOP_SHA1_DIGEST_NBLK_LOOP_SHA1_UPDATE_80_ROUNDS_fu_129/a_V_4_reg_208_reg[21]" PRIMITIVE_TYPE="REGISTER.SDR.FDRE" LINE_NUMBER="257"/>
+    </TPATH>
+  </TimingPaths>
+  <VivadoReportFiles>
+    <ReportFile TYPE="design_analysis" PATH="verilog/report/top_design_analysis_synth.rpt"/>
+    <ReportFile TYPE="failfast" PATH="verilog/report/top_failfast_synth.rpt"/>
+    <ReportFile TYPE="timing" PATH="verilog/report/top_timing_synth.rpt"/>
+    <ReportFile TYPE="timing_paths" PATH="verilog/report/top_timing_paths_synth.rpt"/>
+    <ReportFile TYPE="utilization" PATH="verilog/report/top_utilization_synth.rpt"/>
+    <ReportFile TYPE="utilization_hierarchical" PATH="verilog/report/top_utilization_hierarchical_synth.rpt"/>
+  </VivadoReportFiles>
+  <GeneralInfo NAME="General Information">
+    <item NAME="Date" VALUE="Fri Nov 10 13:23:15 CET 2023"/>
+    <item NAME="Version" VALUE="2022.2 (Build 3670227 on Oct 13 2022)"/>
+    <item NAME="Project" VALUE="Dedup"/>
+    <item NAME="Solution" VALUE="solution1 (Vivado IP Flow Target)"/>
+    <item NAME="Product family" VALUE="zynquplus"/>
+    <item NAME="Target device" VALUE="xczu9eg-ffvb1156-2-e"/>
+  </GeneralInfo>
+  <RunOptions NAME="Run Constraints &amp; Options">
+    <General NAME="Design Constraints &amp; Options">
+      <item NAME="RTL Synthesis target clock" VALUE="10 ns"/>
+      <item NAME="C-Synthesis target clock" VALUE="10 ns"/>
+      <item NAME="C-Synthesis uncertainty" VALUE="27%"/>
+      <item NAME="config_export -ip_xdc_file" VALUE=""/>
+      <item NAME="config_export -ip_xdc_ooc_file" VALUE=""/>
+    </General>
+    <Syn NAME="RTL Synthesis Options">
+      <item NAME="config_export -vivado_synth_strategy" VALUE="default"/>
+      <item NAME="config_export -vivado_synth_design_args" VALUE="-directive sdx_optimization_effort_high"/>
+    </Syn>
+    <Reporting NAME="Reporting Options">
+      <item NAME="config_export -vivado_report_level" VALUE="2"/>
+      <item NAME="config_export -vivado_max_timing_paths" VALUE="10"/>
+    </Reporting>
+  </RunOptions>
+</profile>
+

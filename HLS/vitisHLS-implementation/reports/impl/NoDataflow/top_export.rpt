@@ -1,0 +1,24 @@
+
+
+Implementation tool: Xilinx Vivado v.2022.2
+Project:             Dedup
+Solution:            solution1
+Device target:       xczu9eg-ffvb1156-2-e
+Report date:         Thu Nov 09 15:32:25 CET 2023
+
+#=== Post-Implementation Resource usage ===
+SLICE:            0
+LUT:          58787
+FF:          115626
+DSP:             17
+BRAM:          1016
+URAM:             0
+LATCH:            0
+SRL:             25
+CLB:          29204
+
+#=== Final timing ===
+CP required:                     10.000
+CP achieved post-synthesis:      6.386
+CP achieved post-implementation: 8.953
+Timing met
