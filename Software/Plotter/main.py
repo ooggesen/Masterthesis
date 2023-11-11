@@ -37,6 +37,8 @@ def parse_report(path: str):
 
     output = {}
     for cat in categories:
+        if cat == "synth" or cat == "impl":
+            continue
         output[cat] = {}
 
         input_type_path = join(path, cat)
@@ -78,13 +80,11 @@ def main():
     :return: Void
     """
     data = parse_report("../../HLS/vitisHLS-implementation/reports")
-
+    timing = {"NoDataflow": 8.953, "DataflowSerial": 9.696 , "DatflowParallel": 9.488} #ns
     # parse schedule types and data types into list ----------------------------------
     data_types = []
     schedule_types = []
     for schedule_type, schedule_data in data.items():
-        if schedule_type == "synth":
-            continue
 
         schedule_types.append(schedule_type)
         for data_type, type_data in schedule_data.items():
@@ -97,9 +97,8 @@ def main():
 
 
     # plot individual categories -------------- --------------------
+    # latency as clock cycles
     for schedule_type, schedule_data in data.items():
-        if schedule_type == "synth":
-            continue
 
         plt.figure()
         #plt.title(match_legend_labels(schedule_type))
@@ -114,18 +113,33 @@ def main():
         plt.xlim((0, 1000))
         plt.grid(linestyle="--")
         plt.legend()
-        plt.savefig("./Plots/" + match_legend_labels(schedule_type).replace(" ", "_") + ".pdf", format="pdf")
+        plt.savefig("./Plots/" + match_legend_labels(schedule_type).replace(" ", "_") + "CC.pdf", format="pdf")
 
+    # latency in ms
+    for schedule_type, schedule_data in data.items():
 
+        plt.figure()
+        #plt.title(match_legend_labels(schedule_type))
+
+        for data_type, type_data in schedule_data.items():
+            plt.plot(list(map(lambda d: d / 1000, type_data["input size"])),
+                     list(map(lambda d: d * timing[schedule_type] / 10 ** 6, type_data["delay"])),
+                     label=data_type)
+
+        plt.xlabel("Input size in kBytes")
+        plt.ylabel("Latency in ms")
+        plt.xlim((0, 1000))
+        plt.grid(linestyle="--")
+        plt.legend()
+        plt.savefig("./Plots/" + match_legend_labels(schedule_type).replace(" ", "_") + "MS.pdf", format="pdf")
 
     # plot comparisons between the scheduler/program types ----------------------------------
+    # latency in clock cycles
     for data_type in data_types:
         plt.figure()
         #plt.title(data_type)
 
         for schedule_type, schedule_data in data.items():
-            if schedule_type == "synth":
-                continue
             plt.plot(list(map(lambda d: d / 1000, schedule_data[data_type]["input size"])),
                      list(map(lambda d: d / 10 ** 6, schedule_data[data_type]["delay"])),
                      label=match_legend_labels(schedule_type))
@@ -135,7 +149,24 @@ def main():
         plt.xlim((0, 1000))
         plt.grid(linestyle="--")
         plt.legend()
-        plt.savefig("./Plots/" + data_type.replace(" ", "_")+".pdf", format="pdf")
+        plt.savefig("./Plots/" + data_type.replace(" ", "_")+"CC.pdf", format="pdf")
+
+    # latency in ms
+    for data_type in data_types:
+        plt.figure()
+        #plt.title(data_type)
+
+        for schedule_type, schedule_data in data.items():
+            plt.plot(list(map(lambda d: d / 1000, schedule_data[data_type]["input size"])),
+                     list(map(lambda d: d * timing[schedule_type]/ 10 ** 6, schedule_data[data_type]["delay"])),
+                     label=match_legend_labels(schedule_type))
+
+        plt.xlabel("Input size in  kBytes")
+        plt.ylabel("Latency in ms")
+        plt.xlim((0, 1000))
+        plt.grid(linestyle="--")
+        plt.legend()
+        plt.savefig("./Plots/" + data_type.replace(" ", "_")+"MS.pdf", format="pdf")
 
     # print acceleration per category ----------------------------------
     for data_type in data_types:
@@ -147,7 +178,7 @@ def main():
 
                 max_delay_1 = data[schedule_type_1][data_type]["delay"][-1]
                 max_delay_2 = data[schedule_type_2][data_type]["delay"][-1]
-                print("\t" + schedule_type_1 + "/" + schedule_type_2 + "=", max_delay_1 / max_delay_2)
+                print("\t" + schedule_type_1 + "/" + schedule_type_2 + "=", max_delay_1 / max_delay_2 * timing[schedule_type_1] / timing[schedule_type_2])
         print("")
 
 
