@@ -18,7 +18,7 @@ int main(int argc, char **argv) {
     config.log_file_path = "../../log";
     config.to_file = FALSE;
     config.repetitions = 50;
-    config.program = "./dedup -i ../inputs/ST2019_1666008272.zip -o ../outputs/test.ddp";
+    config.program = "./dedup -c -i../inputs/partlyDuplicate.bin -o../outputs/partlyDuplicate.ddp -w none -v";
 
     //parsing config flags
     int option;
